@@ -1,24 +1,28 @@
 <template>
   <div>
     <canvas id="aa" width="450" height="500"></canvas>
-    <div>
+<!--    <div>
       <input v-model="url"/>
     </div>
     <div>
       <input v-model="name"/>
-    </div>
-      <button @click="initQrCode">生成二维码</button>
+    </div>-->
+      <button v-show=false @click="initQrCode">生成二维码</button>
   </div>
 </template>
 
 <script>
   import { getAction } from '@/api/manage'
   export default {
+<<<<<<< HEAD
 //    props: ['sex','name'],
+=======
+
+>>>>>>> 5a174d768da36968ded58102e78ff6e1425ad9e2
     data () {
       return {
-        url: 'https://cdn.jsdelivr.net/gh/looly/hutool-site/docs/extra/images/qrcodeCustom.jpg',
-        name: '',
+        url: 'http://localhost:8080/smart-system/qrCode/generate/v3?content=http://localhost:3000/review',
+        name: '阳光评廉',
         formLayout: 'horizontal',
         model: {},
         rules: {
@@ -43,9 +47,9 @@
             bb.drawImage(img, 70,70);
         }
 
-        bb.fillStyle = '#fff';
-        bb.font = '40px Adobe Ming Std';
-        bb.fillText(this.name,120,450);
+        bb.fillStyle = '#000';//字体颜色
+        bb.font = '20px Adobe Ming Std';//字体样式大小
+        bb.fillText(this.name,180,450);//位置
 
         bb.stroke();
       }
@@ -53,7 +57,8 @@
     mounted() {
       this.initQrCode()
     },
-    created (){
+
+    /*created (){
       console.log('============= online href common props ============= ');
       console.log('props sex: ',this.sex);
       console.log('props name: ',this.name);
@@ -68,6 +73,7 @@
           console.log('$route sex: ', sex);
         }
       }
-    },
+    },*/
+
   }
 </script>

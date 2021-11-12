@@ -14,6 +14,7 @@ const editUser = (params)=>putAction("/sys/user/edit",params);
 const queryUserRole = (params)=>getAction("/sys/user/queryUserRole",params);
 const getUserList = (params)=>getAction("/sys/user/list",params);
 const frozenBatch = (params)=>putAction("/sys/user/frozenBatch",params);
+
 //验证用户是否存在
 const checkOnlyUser = (params)=>getAction("/sys/user/checkOnlyUser",params);
 //改变密码
@@ -38,8 +39,10 @@ const queryPermissionRule = (params)=>getAction("/sys/permission/queryPermission
 
 // 部门管理
 const queryDepartTreeList = (params)=>getAction("/sys/sysDepart/queryTreeList",params);
+const queryNaturalDepartTreeList = (params)=>getAction("/sys/sysDepart/queryNaturalTreeList",params);
 const queryDepartTreeSync = (params)=>getAction("/sys/sysDepart/queryDepartTreeSync",params);
 const queryIdTree = (params)=>getAction("/sys/sysDepart/queryIdTree",params);
+const queryNaturalIdTree = (params)=>getAction("/sys/sysDepart/queryNaturalIdTree",params);
 const queryParentName   = (params)=>getAction("/sys/sysDepart/queryParentName",params);
 const searchByKeywords   = (params)=>getAction("/sys/sysDepart/searchBy",params);
 const deleteByDepartId   = (params)=>deleteAction("/sys/sysDepart/delete",params);
@@ -126,8 +129,10 @@ export {
   getPermissionRuleList,
   queryPermissionRule,
   queryDepartTreeList,
+  queryNaturalDepartTreeList,
   queryDepartTreeSync,
   queryIdTree,
+  queryNaturalIdTree,
   queryParentName,
   searchByKeywords,
   deleteByDepartId,
