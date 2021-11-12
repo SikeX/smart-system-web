@@ -14,7 +14,7 @@
 <script>
   import { getAction } from '@/api/manage'
   export default {
-    props: ['sex','name'],
+//    props: ['sex','name'],
     data () {
       return {
         url: 'https://cdn.jsdelivr.net/gh/looly/hutool-site/docs/extra/images/qrcodeCustom.jpg',
