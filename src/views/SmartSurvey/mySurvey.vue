@@ -286,8 +286,7 @@
             this.$msgbox({
               title: '',
               message: h('p', null, [
-                h('span', null, '本次考试成绩为 '),
-                h('i', { style: 'color: teal' }, grade)
+
                 h('span', null, '本次调查结束，感谢您的配合'),
 
               ]),
