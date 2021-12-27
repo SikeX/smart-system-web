@@ -98,6 +98,8 @@
                 return '户主'
               } else if (text === 2) {
                 return '家庭成员'
+              } else if (text === 0) {
+                return '待添加'
               } else {
                 return text
               }
