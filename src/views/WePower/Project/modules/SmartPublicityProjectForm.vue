@@ -5,43 +5,61 @@
       <a-form-model ref="form" :model="model" :rules="validatorRules" slot="detail">
         <a-row>
           <a-col :span="24" >
-            <a-form-model-item label="标题" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="title">
-              <a-input v-model="model.title" placeholder="请输入标题" ></a-input>
+            <a-form-model-item label="项目名称" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="title">
+              <a-input v-model="model.title" placeholder="请输入项目名称" ></a-input>
             </a-form-model-item>
           </a-col>
           <a-col :span="24" >
-            <a-form-model-item label="正文" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="content">
-              <j-editor v-model="model.content" />
+            <a-form-model-item label="建设单位" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="location">
+              <j-select-depart v-model="model.location" multi />
             </a-form-model-item>
           </a-col>
           <a-col :span="24" >
-            <a-form-model-item label="监督检查时间" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="supervisionTime">
-              <j-date placeholder="请选择监督检查时间" v-model="model.supervisionTime" style="width: 100%" />
+            <a-form-model-item label="合同内容" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="projectContent">
+              <j-editor v-model="model.projectContent" />
             </a-form-model-item>
           </a-col>
-          <!-- <a-col :span="24" >
-            <a-form-model-item label="创建人员工号" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="creatorNo">
-              <a-input v-model="model.creatorNo" placeholder="请输入创建人员工号" ></a-input>
+          <a-col :span="24" >
+            <a-form-model-item label="金额" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="money">
+              <a-input v-model="model.money" placeholder="请输入金额" ></a-input>
             </a-form-model-item>
-          </a-col> -->
+          </a-col>
+          <a-col :span="24" >
+            <a-form-model-item label="服务年限" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="period">
+              <a-input v-model="model.period" placeholder="请输入服务年限" ></a-input>
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="24" >
+            <a-form-model-item label="完成时限" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="endTime">
+              <j-date placeholder="请选择完成时限" v-model="model.endTime" style="width: 100%" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="24" >
+            <a-form-model-item label="签订日期" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="signTime">
+              <j-date placeholder="请选择签订日期" v-model="model.signTime" style="width: 100%" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="24" >
+            <a-form-model-item label="附件" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="file">
+              <j-upload v-model="model.file"  ></j-upload>
+            </a-form-model-item>
+          </a-col>
         </a-row>
       </a-form-model>
     </j-form-container>
       <!-- 子表单区域 -->
     <a-tabs v-model="activeKey" @change="handleChangeTabs">
-      <a-tab-pane tab="8项规定监督检查附件表" :key="refKeys[0]" :forceRender="true">
+      <a-tab-pane tab="项目审核" :key="refKeys[0]" :forceRender="true">
         <j-editable-table
           :ref="refKeys[0]"
-          :loading="smartSupervisionAnnexTable.loading"
-          :columns="smartSupervisionAnnexTable.columns"
-          :dataSource="smartSupervisionAnnexTable.dataSource"
+          :loading="smartPublicityProjectVerifyTable.loading"
+          :columns="smartPublicityProjectVerifyTable.columns"
+          :dataSource="smartPublicityProjectVerifyTable.dataSource"
           :maxHeight="300"
           :disabled="formDisabled"
           :rowNumber="true"
           :rowSelection="true"
-          :actionButton="true"
-          :rootUrl=rootUrl
-        />
+          :actionButton="true"/>
       </a-tab-pane>
     </a-tabs>
   </a-spin>
@@ -55,13 +73,12 @@
   import { validateDuplicateValue } from '@/utils/util'
 
   export default {
-    name: 'SmartSupervisionForm',
+    name: 'SmartPublicityProjectForm',
     mixins: [JEditableTableModelMixin],
     components: {
     },
     data() {
       return {
-        rootUrl: "/smartSupervision/smartSupervision",
         labelCol: {
           xs: { span: 24 },
           sm: { span: 6 },
@@ -83,43 +100,42 @@
         // 新增时子表默认添加几行空数据
         addDefaultRowNum: 1,
         validatorRules: {
-           title: [
-              { required: true, message: '请输入标题!'},
+           money: [
+              { required: false},
+              { pattern: /^(([1-9][0-9]*)|([0]\.\d{0,2}|[1-9][0-9]*\.\d{0,2}))$/, message: '请输入正确的金额!'},
            ],
-           supervisionTime: [
-              { required: true, message: '请输入监督检查时间!'},
-           ],
-           creatorNo: [
-              { required: true, message: '请输入创建人员工号!'},
+           period: [
+              { required: false},
+              { pattern: /^-?\d+\.?\d*$/, message: '请输入数字!'},
            ],
         },
-        refKeys: ['smartSupervisionAnnex', ],
-        tableKeys:['smartSupervisionAnnex', ],
-        activeKey: 'smartSupervisionAnnex',
-        // 8项规定监督检查附件表
-        smartSupervisionAnnexTable: {
+        refKeys: ['smartPublicityProjectVerify', ],
+        tableKeys:['smartPublicityProjectVerify', ],
+        activeKey: 'smartPublicityProjectVerify',
+        // 项目审核
+        smartPublicityProjectVerifyTable: {
           loading: false,
           dataSource: [],
           columns: [
             {
-              title: '上传时间',
-              key: 'createTime',
-              type: FormTypes.datetime,
-              width:"200px",
-              placeholder: '请输入${title}',
-              defaultValue:'',
-            },
-            {
-              title: '附件说明',
-              key: 'annexDesc',
+              title: '审核部门',
+              key: 'verifyDepart',
               type: FormTypes.input,
               width:"200px",
               placeholder: '请输入${title}',
               defaultValue:'',
             },
             {
-              title: '文件路径',
-              key: 'annexPath',
+              title: '审核意见',
+              key: 'verifyDesc',
+              type: FormTypes.input,
+              width:"200px",
+              placeholder: '请输入${title}',
+              defaultValue:'',
+            },
+            {
+              title: '附件',
+              key: 'file',
               type: FormTypes.file,
               token:true,
               responseName:"message",
@@ -127,22 +143,14 @@
               placeholder: '请选择文件',
               defaultValue:'',
             },
-            {
-              title: '下载次数',
-              key: 'downloadCount',
-              type: FormTypes.inputNumber,
-              disabled:true,
-              width:"200px",
-              defaultValue:'',
-            },
           ]
         },
         url: {
-          add: "/smartSupervision/smartSupervision/add",
-          edit: "/smartSupervision/smartSupervision/edit",
-          queryById: "/smartSupervision/smartSupervision/queryById",
-          smartSupervisionAnnex: {
-            list: '/smartSupervision/smartSupervision/querySmartSupervisionAnnexByMainId'
+          add: "/smartPublicityProject/smartPublicityProject/add",
+          edit: "/smartPublicityProject/smartPublicityProject/edit",
+          queryById: "/smartPublicityProject/smartPublicityProject/queryById",
+          smartPublicityProjectVerify: {
+            list: '/smartPublicityProject/smartPublicityProject/querySmartPublicityProjectVerifyByMainId'
           },
         }
       }
@@ -164,7 +172,7 @@
     },
     methods: {
       addBefore(){
-        this.smartSupervisionAnnexTable.dataSource=[]
+        this.smartPublicityProjectVerifyTable.dataSource=[]
       },
       getAllTable() {
         let values = this.tableKeys.map(key => getRefPromise(this, key))
@@ -177,13 +185,7 @@
         // 加载子表数据
         if (this.model.id) {
           let params = { id: this.model.id }
-          this.requestSubTableData(this.url.smartSupervisionAnnex.list, params, this.smartSupervisionAnnexTable)
-          getAction(this.url.queryById,params).then(res => {
-              if(res.success){
-                this.model = res.result
-                // console.log(model)
-              }
-            })
+          this.requestSubTableData(this.url.smartPublicityProjectVerify.list, params, this.smartPublicityProjectVerifyTable)
         }
       },
       //校验所有一对一子表表单
@@ -207,7 +209,7 @@
         let main = Object.assign(this.model, allValues.formValue)
         return {
           ...main, // 展开
-          smartSupervisionAnnexList: allValues.tablesValue[0].values,
+          smartPublicityProjectVerifyList: allValues.tablesValue[0].values,
         }
       },
       validateError(msg){

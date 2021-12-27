@@ -5,8 +5,8 @@
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
-            <a-form-item label="单位">
-              <j-select-depart placeholder="请选择单位"  v-model="queryParam.departId" customReturnField='id' :multi="false" :treeOpera="true"></j-select-depart>
+            <a-form-item label="村庄">
+              <a-input placeholder="请输入村庄" v-model="queryParam.village"></a-input>
             </a-form-item>
           </a-col>
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
@@ -16,8 +16,8 @@
           </a-col>
           <template v-if="toggleSearchStatus">
             <a-col :xl="6" :lg="7" :md="8" :sm="24">
-              <a-form-item label="收支类型">
-                <a-input placeholder="请输入收支类型" v-model="queryParam.financeType"></a-input>
+              <a-form-item label="时间">
+                <j-date :show-time="true" date-format="YYYY-MM-DD HH:mm:ss" placeholder="请选择时间" v-model="queryParam.time"></j-date>
               </a-form-item>
             </a-col>
           </template>
@@ -35,11 +35,11 @@
       </a-form>
     </div>
     <!-- 查询区域-END -->
-
+    
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('8项规定财物收支表')">导出</a-button>
+      <a-button type="primary" icon="download" @click="handleExportXls('宣传教育主表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
@@ -95,37 +95,46 @@
         </template>
 
         <span slot="action" slot-scope="text, record">
-          <a v-show="record.verifyStatus === '3'" @click="handleEdit(record)">编辑</a>
-          <a-divider type="vertical"/>
-          <a @click="handleDetail(record)">详情</a>
-          <a-divider type="vertical"/>
-          <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
-            <a v-show="record.verifyStatus === '3'">删除</a>
-          </a-popconfirm>
+          <a @click="handleEdit(record)">编辑</a>
+
+          <a-divider type="vertical" />
+          <a-dropdown>
+            <a class="ant-dropdown-link">更多 <a-icon type="down" /></a>
+            <a-menu slot="overlay">
+              <a-menu-item>
+                <a @click="handleDetail(record)">详情</a>
+              </a-menu-item>
+              <a-menu-item>
+                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
+                  <a>删除</a>
+                </a-popconfirm>
+              </a-menu-item>
+            </a-menu>
+          </a-dropdown>
         </span>
 
       </a-table>
     </div>
 
-    <smart-finance-result-modal ref="modalForm" @ok="modalFormOk"/>
+    <publicity-education-modal ref="modalForm" @ok="modalFormOk"/>
   </a-card>
 </template>
 
 <script>
 
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import SmartFinanceResultModal from './modules/SmartFinanceResultModal'
+  import PublicityEducationModal from './modules/PublicityEducationModal'
   import '@/assets/less/TableExpand.less'
 
   export default {
-    name: "SmartFinanceResultList",
+    name: "PublicityEducationList",
     mixins:[JeecgListMixin],
     components: {
-      SmartFinanceResultModal
+      PublicityEducationModal
     },
     data () {
       return {
-        description: '8项规定财物收支表管理页面',
+        description: '宣传教育主表管理页面',
         // 表头
         columns: [
           {
@@ -139,9 +148,9 @@
             }
           },
           {
-            title:'单位',
+            title:'村庄',
             align:"center",
-            dataIndex: 'departId'
+            dataIndex: 'village'
           },
           {
             title:'标题',
@@ -149,40 +158,14 @@
             dataIndex: 'title'
           },
           {
-            title:'收支类型',
+            title:'地点',
             align:"center",
-            dataIndex: 'financeType'
+            dataIndex: 'address'
           },
           {
-            title:'收支时间',
+            title:'时间',
             align:"center",
-            dataIndex: 'financeTime'
-          },
-          {
-            title:'创建时间',
-            align:"center",
-            dataIndex: 'createTime'
-          },
-          {
-            title:'创建人',
-            align:"center",
-            dataIndex: 'creator'
-          },
-          {
-            title:'审核状态',
-            align:"center",
-            dataIndex: 'verifyStatus',
-            customRender: function (text) {
-              if (text === '0') {
-                return '不通过'
-              } else if (text === '1') {
-                return '通过'
-              } else if (text === '2') {
-                return '待审核'
-              } else if (text === '3') {
-                return '免审'
-              }
-            }
+            dataIndex: 'time'
           },
           {
             title: '操作',
@@ -194,12 +177,12 @@
           }
         ],
         url: {
-          list: "/smartFinanceResult/smartFinanceResult/list",
-          delete: "/smartFinanceResult/smartFinanceResult/delete",
-          deleteBatch: "/smartFinanceResult/smartFinanceResult/deleteBatch",
-          exportXlsUrl: "/smartFinanceResult/smartFinanceResult/exportXls",
-          importExcelUrl: "smartFinanceResult/smartFinanceResult/importExcel",
-
+          list: "/publicityEducation/publicityEducation/list",
+          delete: "/publicityEducation/publicityEducation/delete",
+          deleteBatch: "/publicityEducation/publicityEducation/deleteBatch",
+          exportXlsUrl: "/publicityEducation/publicityEducation/exportXls",
+          importExcelUrl: "publicityEducation/publicityEducation/importExcel",
+          
         },
         dictOptions:{},
         superFieldList:[],
@@ -218,13 +201,10 @@
       },
       getSuperFieldList(){
         let fieldList=[];
-         fieldList.push({type:'string',value:'departId',text:'单位',dictCode:''})
+         fieldList.push({type:'string',value:'village',text:'村庄',dictCode:''})
          fieldList.push({type:'string',value:'title',text:'标题',dictCode:''})
-         fieldList.push({type:'string',value:'financeType',text:'收支类型',dictCode:''})
-         fieldList.push({type:'datetime',value:'financeTime',text:'收支时间'})
-         fieldList.push({type:'datetime',value:'createTime',text:'创建时间'})
-         fieldList.push({type:'string',value:'creator',text:'创建人',dictCode:''})
-         fieldList.push({type:'int',value:'verifyStatus',text:'审核状态',dictCode:''})
+         fieldList.push({type:'string',value:'address',text:'地点',dictCode:''})
+         fieldList.push({type:'datetime',value:'time',text:'时间'})
         this.superFieldList = fieldList
       }
     }
