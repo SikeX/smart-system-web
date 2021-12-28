@@ -330,6 +330,11 @@ export const constantRouterMap = [
         name: 'alteration',
         component: () => import(/* webpackChunkName: "user" */ '@/views/user/alteration/Alteration')
       },
+      {
+        path: 'verify',
+        name: 'verify',
+        component: () => import(/* webpackChunkName: "user" */ '@/views/user/verification/Verification')
+      },
     ]
   },
 
@@ -451,6 +456,31 @@ export const constantRouterMap = [
     component: () => import( '@/views/SmartSurvey/mySurveyAdaptive.vue'),
     meta: {
       title: '小程序调查问卷页面'
+    }
+  },
+
+  {
+    path: '/createTriPrePlusSurvey/:opt',
+    name: 'createTriPrePlusSurvey',
+    component: () => import( '@/views/SmartTriPrePlusSurvey/createTriPrePlusSurvey.vue'),
+    meta:{
+      title:'新建三员+调查问卷'
+    },
+  },
+  {
+    path: '/createTriPrePlusSurvey/:opt/:id',
+    name: 'editTriPrePlusSurvey',
+    component: () => import( '@/views/SmartTriPrePlusSurvey/createTriPrePlusSurvey.vue'),
+    meta: {
+      title: '修改三员+调查问卷'
+    }
+  },
+  {
+    path: '/myTriPrePlusSurvey',
+    name: 'myTriPrePlusSurvey',
+    component: () => import( '@/views/SmartTriPrePlusSurvey/myTriPrePlusSurvey.vue'),
+    meta: {
+      title: '三员+调查问卷页面'
     }
   },
 
