@@ -198,6 +198,7 @@
             scopedSlots: { customRender: 'action' },
           }
         ],
+        roleId: [],
         url: {
           list: "/smartEvaluateMeeting/smartEvaluateMeeting/list",
           delete: "/smartEvaluateMeeting/smartEvaluateMeeting/delete",
