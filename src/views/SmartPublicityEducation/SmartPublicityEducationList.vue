@@ -5,25 +5,8 @@
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
-<!--            <a-form-item label="所属乡镇">-->
-<!--              <a-input placeholder="请输入所属乡镇" v-model="queryParam.departId"></a-input>-->
-<!--            </a-form-item>-->
-            <a-form-model-item label="所在乡镇、村" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="departId">
-              <!-- <j-select-depart v-model="model.selecteddeparts" :multi="false" @back="backDepartInfo" :backDepart="true" :treeOpera="true"/>-->
-              <a-tree-select
-                style="width:100%"
-                :dropdownStyle="{maxHeight:'200px',overflow:'auto'}"
-                :treeData="departTree"
-                v-model="queryParam.departId"
-                placeholder="请选择乡镇、村"
-                allow-clear
-                tree-default-expand-all>
-              </a-tree-select>
-            </a-form-model-item>
-          </a-col>
-          <a-col :xl="6" :lg="7" :md="8" :sm="24">
-            <a-form-item label="户主姓">
-              <a-input placeholder="请输入户主姓" v-model="queryParam.homeSurname"></a-input>
+            <a-form-item label="村庄">
+              <a-input placeholder="请输入村庄" v-model="queryParam.village"></a-input>
             </a-form-item>
           </a-col>
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
@@ -40,11 +23,11 @@
       </a-form>
     </div>
     <!-- 查询区域-END -->
-
+    
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('乡镇户口表')">导出</a-button>
+      <a-button type="primary" icon="download" @click="handleExportXls('宣传教育')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
@@ -68,15 +51,15 @@
       <a-table
         ref="table"
         size="middle"
-        :scroll="{x:true}"
         bordered
         rowKey="id"
+        class="j-table-force-nowrap"
+        :scroll="{x:true}"
         :columns="columns"
         :dataSource="dataSource"
         :pagination="ipagination"
         :loading="loading"
         :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-        class="j-table-force-nowrap"
         @change="handleTableChange">
 
         <template slot="htmlSlot" slot-scope="text">
@@ -121,27 +104,25 @@
       </a-table>
     </div>
 
-    <village-home-modal ref="modalForm" @ok="modalFormOk"></village-home-modal>
+    <smart-publicity-education-modal ref="modalForm" @ok="modalFormOk"/>
   </a-card>
 </template>
 
 <script>
 
-  import '@/assets/less/TableExpand.less'
-  import { mixinDevice } from '@/utils/mixin'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import villageHomeModal from './modules/villageHomeModal'
-  import { queryVillageIdTree} from '@/api/api'
+  import SmartPublicityEducationModal from './modules/SmartPublicityEducationModal'
+  import '@/assets/less/TableExpand.less'
 
   export default {
-    name: 'villageHomeList',
-    mixins:[JeecgListMixin, mixinDevice],
+    name: "SmartPublicityEducationList",
+    mixins:[JeecgListMixin],
     components: {
-      villageHomeModal
+      SmartPublicityEducationModal
     },
     data () {
       return {
-        description: '乡镇户口表管理页面',
+        description: '宣传教育管理页面',
         // 表头
         columns: [
           {
@@ -155,19 +136,30 @@
             }
           },
           {
-            title:'户籍编号',
+            title:'村庄',
             align:"center",
-            dataIndex: 'homeCode'
+            dataIndex: 'village'
           },
           {
-            title:'户主姓',
+            title:'标题',
             align:"center",
-            dataIndex: 'homeSurname'
+            dataIndex: 'title'
           },
           {
-            title:'家庭地址',
+            title:'地点',
             align:"center",
             dataIndex: 'address'
+          },
+          {
+            title:'时间',
+            align:"center",
+            dataIndex: 'time'
+          },
+          {
+            title:'附件',
+            align:"center",
+            dataIndex: 'files',
+            scopedSlots: {customRender: 'fileSlot'}
           },
           {
             title: '操作',
@@ -175,56 +167,40 @@
             align:"center",
             fixed:"right",
             width:147,
-            scopedSlots: { customRender: 'action' }
+            scopedSlots: { customRender: 'action' },
           }
         ],
         url: {
-          list: "/villageHome/villageHome/list",
-          delete: "/villageHome/villageHome/delete",
-          deleteBatch: "/villageHome/villageHome/deleteBatch",
-          exportXlsUrl: "/villageHome/villageHome/exportXls",
-          importExcelUrl: "villageHome/villageHome/importExcel",
+          list: "/smartPublicityEducation/smartPublicityEducation/list",
+          delete: "/smartPublicityEducation/smartPublicityEducation/delete",
+          deleteBatch: "/smartPublicityEducation/smartPublicityEducation/deleteBatch",
+          exportXlsUrl: "/smartPublicityEducation/smartPublicityEducation/exportXls",
+          importExcelUrl: "smartPublicityEducation/smartPublicityEducation/importExcel",
           
         },
         dictOptions:{},
         superFieldList:[],
-        departTree:[],
       }
     },
     created() {
-    this.getSuperFieldList();
-      this.loadVillageTreeData();
+      this.getSuperFieldList();
     },
     computed: {
       importExcelUrl: function(){
         return `${window._CONFIG['domianURL']}/${this.url.importExcelUrl}`;
-      },
+      }
     },
     methods: {
       initDictConfig(){
       },
       getSuperFieldList(){
         let fieldList=[];
-        fieldList.push({type:'string',value:'departId',text:'村庄',dictCode:''})
-        fieldList.push({type:'string',value:'homeCode',text:'户籍编号',dictCode:''})
-        fieldList.push({type:'string',value:'homeSurname',text:'户主姓',dictCode:''})
-        fieldList.push({type:'string',value:'hostId',text:'户主',dictCode:''})
-        fieldList.push({type:'string',value:'address',text:'家庭地址',dictCode:''})
+         fieldList.push({type:'string',value:'village',text:'村庄',dictCode:''})
+         fieldList.push({type:'string',value:'title',text:'标题',dictCode:''})
+         fieldList.push({type:'string',value:'address',text:'地点',dictCode:''})
+         fieldList.push({type:'datetime',value:'time',text:'时间'})
+         fieldList.push({type:'Text',value:'files',text:'附件',dictCode:''})
         this.superFieldList = fieldList
-      },
-      loadVillageTreeData(){
-        var that = this;
-        this.departTee = []
-        queryVillageIdTree().then((res)=>{
-          if(res.success){
-            that.departTree = [];
-            for (let j = 0; j < res.result.length; j++) {
-              let temp = res.result[j];
-              that.departTree.push(temp);
-            }
-          }
-
-        })
       }
     }
   }

@@ -504,7 +504,7 @@ export const constantRouterMap = [
     name: 'myTriPrePlusAppSurvey',
     component: () => import( '@/views/SmartTriPrePlusSurvey/myTriPrePlusAppSurvey.vue'),
     meta: {
-      title: '三员+调查问卷页面'
+      title: '三员+调查问卷小程序页面'
     }
   },
 
@@ -615,5 +615,9 @@ export const constantRouterMap = [
   {
     path: '/player',
     component: () => import('@/views/courcopy/learning/player/SmartVideoText')
+  },
+  {
+    path: 'webview/edu/upload',
+    component: () => import('@/views/SmartPublicityEducation/AddSmartPublicityEducation')
   },
 ]

@@ -131,7 +131,7 @@
     </div>
 
     <!-- 选择满意度及线索-->
-    <el-dialog title="补充调查" :visible.sync="dialogFormVisible"  @closed="handleClose">
+    <el-dialog customClass="customWidth" title="补充调查" :visible.sync="dialogFormVisible"  @closed="handleClose">
       <el-form :model="form" ref="form" :rules="rules">
 <!--        <el-form-item label="1、本次调查满意度" prop="satisfaction">
           <el-rate :style="{fontSize:'30px'}" v-model="form.satisfaction" show-text :texts="['不满意', '基本满意', '满意', '非常满意', '完全满意']"></el-rate>
@@ -162,7 +162,7 @@
   import {postAction, httpAction, getAction ,putAction} from '@/api/manage'
 
   export default {
-    name: "MyTripreSurvey",
+    name: "MyTripreAppSurvey",
     mixins: [testPaperMixin],
     data() {
       // 满意度必填
@@ -827,6 +827,11 @@
   .topics .topic .el-radio, .topics .topic .el-checkbox {
     width: 100%
   }
+
+  .customWidth{
+        width:80%;
+  }
+
 
 </style>
 
