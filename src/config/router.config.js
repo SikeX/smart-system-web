@@ -460,13 +460,25 @@ export const constantRouterMap = [
   },
 
   {
+    path: '/SmartTriPrePlusSurvey',
+    component: BlankLayout,
+    redirect: '/SmartTriPrePlusSurvey/SmartTriSurveyList',
+    children: [
+      {
+        path: '/SmartTriSurveyList',
+        name: 'SmartTriSurveyList',
+        component: () => import( '@/views/SmartTriPrePlusSurvey/SmartSurveyList.vue'),
+      }
+    ]
+  },
+/*  {
     path: '/SmartTriSurveyList',
     name: 'SmartTriSurveyList',
     component: () => import( '@/views/SmartTriPrePlusSurvey/SmartSurveyList.vue'),
     meta: {
       title: '三员+调查问卷list'
     },
-  },
+  },*/
   {
     path: '/SmartTriSurveyAppList',
     name: 'SmartTriSurveyAppList',
