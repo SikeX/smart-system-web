@@ -9,7 +9,7 @@
           <li class="test-info">调查问卷名称: {{ testData.paperName }}</li>
 
           <!--<li class="test-info">出卷者: {{testData.creatorName}}</li>-->
-          <li class="test-info" >调查人: {{ nickname() }}</li>
+          <li class="test-info" >调查人: {{ dcName }}</li>
           <li class="test-info">户主：{{userName}}</li>
           <li class="test-info">被访人：{{userName}}</li>
 <!--          <li class="test-info">答题时间: {{ testData.time }} 分钟</li>-->
@@ -30,7 +30,7 @@
           <!--<li class="test-info">试卷Id: E{{ testData.id }}</li>-->
           <li class="test-info">调查问卷名称: {{ testData.paperName }}</li>
           <!--<li class="test-info">出卷者: {{testData.creatorName}}</li>-->
-          <li class="test-info">调查人: {{ nickname() }}</li>
+          <li class="test-info">调查人: {{ dcName }}</li>
           <li class="test-info">户主： {{hostText}}</li>
           <li class="test-info">被访人：{{userName}}</li>
 <!--          <li class="test-info">答题时间: {{ testData.time }} 分钟</li>-->
@@ -131,12 +131,12 @@
     </div>
 
     <!-- 选择满意度及线索-->
-    <el-dialog title="补充调查" :visible.sync="dialogFormVisible"  @closed="handleClose">
+    <el-dialog customClass="customWidth" title="补充调查" :visible.sync="dialogFormVisible"  @closed="handleClose">
       <el-form :model="form" ref="form" :rules="rules">
-        <el-form-item label="1、本次调查满意度" prop="satisfaction">
+<!--        <el-form-item label="1、本次调查满意度" prop="satisfaction">
           <el-rate :style="{fontSize:'30px'}" v-model="form.satisfaction" show-text :texts="['不满意', '基本满意', '满意', '非常满意', '完全满意']"></el-rate>
-        </el-form-item>
-        <el-form-item label="2、是否发现线索" prop="isReport">
+        </el-form-item>-->
+        <el-form-item label="是否发现线索" prop="isReport">
           <el-radio-group v-model="form.isReport" >
             <el-radio :label="1">是</el-radio>
             <el-radio :label="0">否</el-radio>
@@ -179,6 +179,7 @@
         callback();
       };
       return {
+        dcName:'',
         dialogFormVisible: false,
         form:{
           satisfaction:'',
@@ -249,6 +250,7 @@
     created() {
       console.log(this.$route.query)
       this.userName = this.$route.query.userName
+      this.dcName = this.$route.query.dcName
       this.getTestPaperData();
     },
     watch:{
@@ -362,7 +364,7 @@
               grade = res.result;
             }else {
               title = "结果"
-              describe = "本次问卷结束，感谢您的参与！"
+              describe = "本次调查结束！"
               grade = ""
             }
             this.$message.success(res.message);
@@ -373,9 +375,10 @@
                 h('span', null, describe),
                 h('i', { style: 'color: teal' }, grade)
               ]),
-              showCancelButton: true,
+              //showCancelButton: true,
               confirmButtonText: '确定',
-              cancelButtonText: '取消',
+              //cancelButtonText: '取消',
+              customClass:'customWidth',
               beforeClose: (action, instance, done) => {
                 if (action === 'confirm') {
                   instance.confirmButtonLoading = true;
@@ -403,9 +406,12 @@
                   name: "InsertReportingInformation",
                 });
               }else{
-                window.location.href="about:blank";
+                this.$router.push({
+                  name: "SmartTriSurveyAppList",
+                });
+               /* window.location.href="about:blank";
                 window.close();
-                window.opener.location.reload();
+                window.opener.location.reload();*/
               }
             });
           }
@@ -634,7 +640,7 @@
               ]),
               showCancelButton: true,
               confirmButtonText: '确定',
-              cancelButtonText: '取消',
+              //cancelButtonText: '取消',
               beforeClose: (action, instance, done) => {
                 if (action === 'confirm') {
                   instance.confirmButtonLoading = true
@@ -824,6 +830,10 @@
   }
   .topics .topic .el-radio, .topics .topic .el-checkbox {
     width: 100%
+  }
+
+  .customWidth{
+        width:80%;
   }
 
 </style>

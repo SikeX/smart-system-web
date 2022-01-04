@@ -55,6 +55,7 @@ export default {
   components: {},
   data() {
     return {
+      dcName:'',
       title:'',
       paperId:'',
       description: '选择结果',
@@ -112,7 +113,8 @@ export default {
         {
           title: '户主',
           align: 'center',
-          dataIndex: 'hostId_dictText',
+          //dataIndex: 'hostId_dictText',
+          dataIndex: 'hostName',
         },
         {
           title: '被访人',
@@ -172,7 +174,7 @@ export default {
       }
     },
     edit(paperId,departId) {
-      console.log(paperId,departId)
+      console.log(paperId,departId,)
       this.$nextTick(() => {
         this.paperId = paperId
         // this.anntId = record.id
@@ -186,21 +188,22 @@ export default {
         let paperId = this.paperId
         let userName = record.realname
         let userId = record.userId
-      this.$router.push({
+        let dcName = this.dcName
+      /*this.$router.push({
         name: "myTriPrePlusSurvey",
-        query: {paperId,userName,userId}
-      });
-        // const { href } = this.$router.resolve({
-        //   name: "myTriPrePlusSurvey",
-        //   query: {paperId,userName,userId}
-        // });
-        // const win = window.open(href, "_blank");
-        // const loop = setInterval(item => {
-        //   if (win.closed) {
-        //     clearInterval(loop);
-        //     this.$ref.table.reload();
-        //   }
-        // }, 1000);
+        query: {paperId,userName,userId,dcName}
+      });*/
+        const { href } = this.$router.resolve({
+          name: "myTriPrePlusSurvey",
+          query: {paperId,userName,userId,dcName}
+        });
+        const win = window.open(href, "_blank");
+        const loop = setInterval(item => {
+          if (win.closed) {
+            clearInterval(loop);
+            this.$ref.table.reload();
+          }
+        }, 1000);
       },
     loadData(arg, paperId,departId) {
       if (!this.url.list) {
@@ -216,6 +219,8 @@ export default {
       getAction(this.url.list, {paperId:paperId,departId:departId})
         .then((res) => {
           if (res.success) {
+            console.log(res.message)
+            this.dcName = res.message
             this.dataSource = res.result.records || res.result
             let i = 0
             for(i=0;i<this.dataSource.length;i++){
