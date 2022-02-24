@@ -438,10 +438,10 @@ export default {
       console.log(this.selectedRowKeys)
       let ids = this.selectedRowKeys.join(",")
 
-      // if(ids.length == 0){
-      //   this.$message.error('请选择要导出的数据！')
-      //   return
-      // }
+      if(ids.length == 0){
+        this.$message.error('请选择要导出的数据！')
+        return
+      }
 
       //下载zip文件
       myDownload('/smartPremaritalFiling/smartPremaritalFiling/exportWord', ids).then((res) => {
