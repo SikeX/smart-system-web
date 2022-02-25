@@ -207,7 +207,7 @@
               placeholder: '请选择文件',
               defaultValue:'',
             },
-            {
+            /*{
               title: '下载次数',
               key: 'downloadCount',
               type: FormTypes.inputNumber,
@@ -215,7 +215,7 @@
               width:"200px",
               placeholder: '${title}',
               defaultValue:'',
-            },
+            },*/
           ]
         },
         url: {
