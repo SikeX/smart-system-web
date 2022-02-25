@@ -4,37 +4,6 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
-          <a-col :xl="6" :lg="7" :md="8" :sm="24">
-            <a-form-item label="所属村">
-              <j-select-depart placeholder="请选择所属村" v-model="queryParam.location"/>
-            </a-form-item>
-          </a-col>
-          <a-col :xl="6" :lg="7" :md="8" :sm="24">
-            <a-form-item label="填报部门">
-              <j-select-depart placeholder="请选择填报部门" v-model="queryParam.sysOrgCode" :trigger-change="true" customReturnField="orgCode" :multi="true">
-              </j-select-depart>
-              <!-- <a-input placeholder="请输入填报部门" v-model="queryParam.sysOrgCode"></a-input> -->
-            </a-form-item>
-          </a-col>
-          <template v-if="toggleSearchStatus">
-            <a-col :xl="10" :lg="11" :md="12" :sm="24">
-              <a-form-item label="上传时间">
-                <j-date :show-time="true" date-format="YYYY-MM-DD HH:mm:ss" placeholder="请选择开始时间" class="query-group-cust" v-model="queryParam.createTime_begin"></j-date>
-                <span class="query-group-split-cust"></span>
-                <j-date :show-time="true" date-format="YYYY-MM-DD HH:mm:ss" placeholder="请选择结束时间" class="query-group-cust" v-model="queryParam.createTime_end"></j-date>
-              </a-form-item>
-            </a-col>
-          </template>
-          <a-col :xl="6" :lg="7" :md="8" :sm="24">
-            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
-              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
-              <a @click="handleToggleSearch" style="margin-left: 8px">
-                {{ toggleSearchStatus ? '收起' : '展开' }}
-                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-              </a>
-            </span>
-          </a-col>
         </a-row>
       </a-form>
     </div>
@@ -43,7 +12,7 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('村（社区）领导班子')">导出</a-button>
+      <a-button type="primary" icon="download" @click="handleExportXls('农村集体经济组织')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
@@ -120,7 +89,7 @@
       </a-table>
     </div>
 
-    <smart-village-lead-modal ref="modalForm" @ok="modalFormOk"></smart-village-lead-modal>
+    <smart-group-economy-modal ref="modalForm" @ok="modalFormOk"></smart-group-economy-modal>
   </a-card>
 </template>
 
@@ -129,18 +98,18 @@
   import '@/assets/less/TableExpand.less'
   import { mixinDevice } from '@/utils/mixin'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import SmartVillageLeadModal from './modules/SmartVillageLeadModal'
+  import SmartGroupEconomyModal from './modules/SmartGroupEconomyModal'
   import {filterMultiDictText} from '@/components/dict/JDictSelectUtil'
 
   export default {
-    name: 'SmartVillageLeadList',
+    name: 'SmartGroupEconomyList',
     mixins:[JeecgListMixin, mixinDevice],
     components: {
-      SmartVillageLeadModal
+      SmartGroupEconomyModal
     },
     data () {
       return {
-        description: '村（社区）领导班子管理页面',
+        description: '农村集体经济组织管理页面',
         // 表头
         columns: [
           {
@@ -154,40 +123,39 @@
             }
           },
           {
-            title:'职务',
+            title:'农村集体经济组织类型',
             align:"center",
-            dataIndex: 'job'
+            dataIndex: 'type_dictText'
           },
           {
-            title:'照片',
+            title:'农村集体经济组织名称',
             align:"center",
-            dataIndex: 'picture',
-            scopedSlots: {customRender: 'imgSlot'}
+            dataIndex: 'name'
           },
           {
-            title:'上传人',
+            title:'理事长（法定代表人）',
             align:"center",
-            dataIndex: 'createBy'
+            dataIndex: 'councilBoard'
           },
           {
-            title:'标题',
+            title:'经理人',
             align:"center",
-            dataIndex: 'title'
+            dataIndex: 'manager'
           },
           {
-            title:'所属村',
+            title:'授权额度',
             align:"center",
-            dataIndex: 'location_dictText'
+            dataIndex: 'credit'
           },
           {
-            title:'填报部门',
+            title:'监事长',
             align:"center",
-            dataIndex: 'sysOrgCode_dictText'
+            dataIndex: 'supervisor'
           },
           {
-            title:'上传时间',
+            title:'财务成员代表',
             align:"center",
-            dataIndex: 'createTime'
+            dataIndex: 'financialOfficer'
           },
           {
             title: '操作',
@@ -199,11 +167,11 @@
           }
         ],
         url: {
-          list: "/smartVillageLead/smartVillageLead/list",
-          delete: "/smartVillageLead/smartVillageLead/delete",
-          deleteBatch: "/smartVillageLead/smartVillageLead/deleteBatch",
-          exportXlsUrl: "/smartVillageLead/smartVillageLead/exportXls",
-          importExcelUrl: "smartVillageLead/smartVillageLead/importExcel",
+          list: "/smartGroupEconomy/smartGroupEconomy/list",
+          delete: "/smartGroupEconomy/smartGroupEconomy/delete",
+          deleteBatch: "/smartGroupEconomy/smartGroupEconomy/deleteBatch",
+          exportXlsUrl: "/smartGroupEconomy/smartGroupEconomy/exportXls",
+          importExcelUrl: "smartGroupEconomy/smartGroupEconomy/importExcel",
           
         },
         dictOptions:{},
@@ -223,15 +191,21 @@
       },
       getSuperFieldList(){
         let fieldList=[];
-        fieldList.push({type:'string',value:'people',text:'人员选择',dictCode:'smart_village_home,home_surname,idnumber'})
-        fieldList.push({type:'string',value:'job',text:'职务',dictCode:''})
-        fieldList.push({type:'string',value:'picture',text:'照片',dictCode:''})
-        fieldList.push({type:'string',value:'createBy',text:'上传人',dictCode:''})
-        fieldList.push({type:'string',value:'title',text:'标题',dictCode:''})
-        fieldList.push({type:'sel_depart',value:'location',text:'所属村'})
-        fieldList.push({type:'string',value:'sysOrgCode',text:'填报部门',dictCode:'sys_depart,depart_name,org_code'})
-        fieldList.push({type:'datetime',value:'createTime',text:'上传时间'})
-        fieldList.push({type:'Text',value:'file',text:'文件',dictCode:''})
+        fieldList.push({type:'string',value:'type',text:'农村集体经济组织类型',dictCode:'group_economy_type'})
+        fieldList.push({type:'string',value:'name',text:'农村集体经济组织名称',dictCode:''})
+        fieldList.push({type:'string',value:'councilBoard',text:'理事长（法定代表人）',dictCode:''})
+        fieldList.push({type:'Text',value:'counilMenber',text:'理事会成员',dictCode:''})
+        fieldList.push({type:'date',value:'termStartTime',text:'任期开始时间'})
+        fieldList.push({type:'date',value:'termEndTime',text:'任期结束时间'})
+        fieldList.push({type:'string',value:'manager',text:'经理人',dictCode:''})
+        fieldList.push({type:'string',value:'credit',text:'授权额度',dictCode:''})
+        fieldList.push({type:'string',value:'supervisor',text:'监事长',dictCode:''})
+        fieldList.push({type:'Text',value:'supervisorMember',text:'监事会成员',dictCode:''})
+        fieldList.push({type:'date',value:'supervisorStartTime',text:'任期开始时间'})
+        fieldList.push({type:'date',value:'supervisorEndTime',text:'任期结束时间'})
+        fieldList.push({type:'string',value:'financialOfficer',text:'财务成员代表',dictCode:''})
+        fieldList.push({type:'Text',value:'financialMember',text:'财务成员',dictCode:''})
+        fieldList.push({type:'string',value:'accountInfo',text:'账户信息',dictCode:''})
         this.superFieldList = fieldList
       }
     }

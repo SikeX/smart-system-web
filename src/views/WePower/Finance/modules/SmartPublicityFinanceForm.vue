@@ -4,33 +4,28 @@
       <a-form-model ref="form" :model="model" :rules="validatorRules" slot="detail">
         <a-row>
           <a-col :span="24">
-            <a-form-model-item label="人员选择" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="people">
-              <j-dict-select-tag type="list" v-model="model.people" dictCode="smart_village_home,home_surname,idnumber" placeholder="请选择人员选择" />
+            <a-form-model-item label="财务信息" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="financeInfo">
+              <a-input v-model="model.financeInfo" placeholder="请输入财务信息"  ></a-input>
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
-            <a-form-model-item label="职务" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="job">
-              <a-input v-model="model.job" placeholder="请输入职务"  ></a-input>
+            <a-form-model-item label="重大事项" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="bigEvent">
+              <a-input v-model="model.bigEvent" placeholder="请输入重大事项"  ></a-input>
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
-            <a-form-model-item label="照片" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="picture">
-              <j-image-upload isMultiple  v-model="model.picture" ></j-image-upload>
+            <a-form-model-item label="财物材料附件" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="materialFile">
+              <j-upload v-model="model.materialFile"   ></j-upload>
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
-            <a-form-model-item label="标题" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="title">
-              <a-input v-model="model.title" placeholder="请输入标题"  ></a-input>
+            <a-form-model-item label="理事长、监事长、会计确认表" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="confirmFile">
+              <j-upload v-model="model.confirmFile"   ></j-upload>
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
-            <a-form-model-item label="所属村" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="location">
-              <j-select-depart v-model="model.location" multi  />
-            </a-form-model-item>
-          </a-col>
-          <a-col :span="24">
-            <a-form-model-item label="文件" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="file">
-              <j-upload v-model="model.file"   ></j-upload>
+            <a-form-model-item label="重大事项表" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="bigEventFile">
+              <j-upload v-model="model.bigEventFile"   ></j-upload>
             </a-form-model-item>
           </a-col>
         </a-row>
@@ -45,7 +40,7 @@
   import { validateDuplicateValue } from '@/utils/util'
 
   export default {
-    name: 'SmartVillageLeadForm',
+    name: 'SmartPublicityFinanceForm',
     components: {
     },
     props: {
@@ -70,14 +65,11 @@
         },
         confirmLoading: false,
         validatorRules: {
-           people: [
-              { required: true, message: '请输入人员选择!'},
-           ],
         },
         url: {
-          add: "/smartVillageLead/smartVillageLead/add",
-          edit: "/smartVillageLead/smartVillageLead/edit",
-          queryById: "/smartVillageLead/smartVillageLead/queryById"
+          add: "/smartPublicityFinance/smartPublicityFinance/add",
+          edit: "/smartPublicityFinance/smartPublicityFinance/edit",
+          queryById: "/smartPublicityFinance/smartPublicityFinance/queryById"
         }
       }
     },
