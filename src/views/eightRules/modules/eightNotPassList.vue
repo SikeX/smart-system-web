@@ -9,8 +9,8 @@
     <!-- 查询区域-END -->
 
     <!-- 操作按钮区域 -->
-<!--    <div class="table-operator">
-      &lt;!&ndash; <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button> &ndash;&gt;
+    <div class="table-operator">
+      <!-- <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button> -->
       <a-button type="primary" icon="download" @click="handleExportXls('审核列表')">导出</a-button>
       <a-upload
         name="file"
@@ -20,30 +20,30 @@
         :action="importExcelUrl"
         @change="handleImportExcel"
       >
-        &lt;!&ndash; <a-button type="primary" icon="import">导入</a-button> &ndash;&gt;
+        <!-- <a-button type="primary" icon="import">导入</a-button> -->
       </a-upload>
-      &lt;!&ndash; 高级查询区域 &ndash;&gt;
-&lt;!&ndash;      <j-super-query
+      <!-- 高级查询区域 -->
+      <j-super-query
         :fieldList="superFieldList"
         ref="superQueryModal"
         @handleSuperQuery="handleSuperQuery"
-      ></j-super-query>&ndash;&gt;
+      ></j-super-query>
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1" @click="batchDel"><a-icon type="delete" />删除</a-menu-item>
         </a-menu>
         <a-button style="margin-left: 8px"> 批量操作 <a-icon type="down" /></a-button>
       </a-dropdown>
-    </div>-->
+    </div>
 
     <!-- table区域-begin -->
     <div>
-<!--      <div class="ant-alert ant-alert-info" style="margin-bottom: 16px">
+      <div class="ant-alert ant-alert-info" style="margin-bottom: 16px">
         <i class="anticon anticon-info-circle ant-alert-icon"></i> 已选择
         <a style="font-weight: 600">{{ selectedRowKeys.length }}</a
         >项
         <a style="margin-left: 24px" @click="onClearSelected">清空</a>
-      </div>-->
+      </div>
 
       <a-table
         ref="table"
@@ -107,12 +107,12 @@
 
 <script>
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import TasksModal from '../../tasks/modules/TasksModal'
+  import TasksModal from './TasksModal'
 //   import SmartPremaritalFilingModal from './modules/SmartPremaritalFilingModal'
   import '@/assets/less/TableExpand.less'
 
   export default {
-    name: "TaskList",
+    name: "eightNotPassList",
     mixins:[JeecgListMixin],
     components: {
       TasksModal
@@ -135,7 +135,7 @@
           {
             title:'任务类型',
             align:"center",
-            dataIndex: 'meetType_dictText'
+            dataIndex: 'taskType'
           },
           {
             title:'填报单位',
@@ -181,8 +181,7 @@
           },
         ],
         url: {
-          list: "/tasks/smartVerifyTask/szydList",
-          importExcelUrl:''
+          list: "/tasks/smartVerifyTask/eightNotPassList",
         },
         dictOptions:{},
         superFieldList:[],
@@ -200,7 +199,6 @@
       getSuperFieldList(){
         let fieldList=[];
         fieldList.push({type:'string',value:'sysOrgCode',text:'所属部门',dictCode:'sys_depart,depart_name,org_code'})
-        fieldList.push({type:'string',value:'meetType',text:'任务类型',dictCode:'meeting_type'})
         this.superFieldList = fieldList
       }
     }
