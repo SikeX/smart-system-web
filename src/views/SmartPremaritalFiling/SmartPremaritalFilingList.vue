@@ -34,7 +34,7 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增婚前报备</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('8项规定婚前报备表')">导出</a-button>
+      <a-button type="primary" icon="download" @click="handleExportXls('8项规定婚前报备表')">导出Excel</a-button>
       <a-upload
         name="file"
         :showUploadList="false"
@@ -57,6 +57,9 @@
         </a-menu>
         <a-button style="margin-left: 8px"> 批量操作 <a-icon type="down" /></a-button>
       </a-dropdown>
+
+      <a-button @click="saveFiles" type="primary" icon="download">导出word</a-button>
+
     </div>
 
     <!-- table区域-begin -->
@@ -128,6 +131,7 @@ import SmartPremaritalFilingModal from './modules/SmartPremaritalFilingModal'
 import SmartPostMarriageReportModal from './module/SmartPostMarriageReportModal'
 import { filterMultiDictText } from '@/components/dict/JDictSelectUtil'
 import '@/assets/less/TableExpand.less'
+import { myDownload } from '@/api/manage'
 
 export default {
   name: 'SmartPremaritalFilingList',
@@ -295,20 +299,50 @@ export default {
           dataIndex: 'marrySpoUnitPos',
         },
         {
-          title: '结婚人配偶父母姓名',
-          align: 'center',
-          dataIndex: 'marrySpoParName',
-        },
-        {
-          title: '结婚人配偶父母单位',
-          align: 'center',
-          dataIndex: 'marrySpoParUnit',
-        },
-        {
-          title: '结婚人配偶父母单位职务',
-          align: 'center',
-          dataIndex: 'marrySpoParUnitPos',
-        },
+            title:'结婚人配偶父亲姓名',
+            align:"center",
+            dataIndex: 'marrySpoMaleName'
+          },
+          {
+            title:'结婚人配偶母亲姓名',
+            align:"center",
+            dataIndex: 'marrySpoFemaleName'
+          },
+          {
+            title:'结婚人配偶父亲单位',
+            align:"center",
+            dataIndex: 'marrySpoMaleUnit'
+          },
+          {
+            title:'结婚人配偶母亲单位',
+            align:"center",
+            dataIndex: 'marrySpoFemaleUnit'
+          },
+          {
+            title:'结婚人配偶父亲职务',
+            align:"center",
+            dataIndex: 'marrySpoMaleUnitPos'
+          },
+          {
+            title:'结婚人配偶母亲职务',
+            align:"center",
+            dataIndex: 'marrySpoFemaleUnitPos'
+          },
+        // {
+        //   title: '结婚人配偶父母姓名',
+        //   align: 'center',
+        //   dataIndex: 'marrySpoParName',
+        // },
+        // {
+        //   title: '结婚人配偶父母单位',
+        //   align: 'center',
+        //   dataIndex: 'marrySpoParUnit',
+        // },
+        // {
+        //   title: '结婚人配偶父母单位职务',
+        //   align: 'center',
+        //   dataIndex: 'marrySpoParUnitPos',
+        // },
         {
           title: '其他需要说明的事情',
           align: 'center',
@@ -398,6 +432,41 @@ export default {
       fieldList.push({ type: 'date', value: 'reportTime', text: '报告时间' })
       fieldList.push({ type: 'string', value: 'contactNumber', text: '联系电话', dictCode: '' })
       this.superFieldList = fieldList
+    },
+    saveFiles() {
+      //记录id
+      console.log(this.selectedRowKeys)
+      let ids = this.selectedRowKeys.join(",")
+
+      if(ids.length == 0){
+        this.$message.error('请选择要导出的数据！')
+        return
+      }
+
+      //下载zip文件
+      myDownload('/smartPremaritalFiling/smartPremaritalFiling/exportWord', ids).then((res) => {
+        if (!res) {
+          return
+        }
+        // 创建文件临时存储地址
+        const url = window.URL.createObjectURL(new Blob([res], { type: 'application/zip' }))
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+          try {
+            window.navigator.msSaveOrOpenBlob(res, '附件.zip')
+          } catch (e) {
+            this.$message.error('下载附件失败')
+          }
+        } else {
+          const link = document.createElement('a')
+          link.style.display = 'none'
+          link.href = url
+          link.download = '附件.zip'
+          document.body.appendChild(link)
+          link.click()
+          URL.revokeObjectURL(link.href)
+          document.body.removeChild(link)
+        }
+      })
     },
   },
 }
