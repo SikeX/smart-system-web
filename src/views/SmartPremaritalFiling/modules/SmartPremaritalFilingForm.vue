@@ -199,7 +199,7 @@
             <a-form-model-item label="附件" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="files">
               <!-- <a-button icon="camera" v-on:click="imgClick()">手机拍照</a-button> -->
               <a-button icon="camera" @click="eloamScan">高拍仪拍照</a-button>
-              <input
+              <!-- <input
                 style="float: left; display: none"
                 type="file"
                 id="uploadFile"
@@ -207,13 +207,13 @@
                 capture="camera"
                 v-on:change="readLocalFile()"
               />
-              <j-upload v-model="model.files" :biz-path="bizPath"  ></j-upload>
+              <j-upload v-model="model.files" :biz-path="bizPath"  ></j-upload> -->
             </a-form-model-item>
           </a-col>
         </a-row>
       </a-form-model>
     </j-form-container>
-      <!-- 子表单区域
+      <!-- 子表单区域 -->
     <a-tabs v-model="activeKey" @change="handleChangeTabs">
       <a-tab-pane tab="8项规定婚前报备表附表" :key="refKeys[0]" :forceRender="true">
         <j-editable-table
@@ -227,8 +227,8 @@
           :rowSelection="true"
           :actionButton="true"/>
       </a-tab-pane>
-    </a-tabs> -->
-    <eloam-modal ref="modalForm" @ok='scanOk'></eloam-modal>
+    </a-tabs>
+    <eloam-modal ref="modalForm" @ok='scanOk' biz-path='eloam-marriedbefore'></eloam-modal>
   </a-spin>
 </template>
 
