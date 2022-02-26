@@ -205,8 +205,8 @@
         if (image) {
           let arr = []
           // 考虑如果存在已经上传的文件，则拼接起来，没有则直接添加
-          if (this.model.files) {
-            arr.push(this.model.files)
+          if (this.model.path) {
+            arr.push(this.model.path)
           }
           arr.push(image)
           // 更新表单中文件url字段, files 为字段名称
