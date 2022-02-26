@@ -115,8 +115,8 @@
 
 <script>
 
-  import { getAction } from '@/api/manage'
-  import { FormTypes,getRefPromise,VALIDATE_NO_PASSED } from '@/utils/JEditableTableUtil'
+  import { httpAction,getAction } from '@/api/manage'
+
   import { JEditableTableModelMixin } from '@/mixins/JEditableTableModelMixin'
   import { validateDuplicateValue } from '@/utils/util'
   import SelectUserByDep from '@/components/jeecgbiz/modal/SelectUserByDep'
@@ -124,7 +124,7 @@
 
   export default {
     name: 'SmartTripleImportanceOneGreatnessForm',
-    mixins: [JEditableTableModelMixin],
+   // mixins: [JEditableTableModelMixin],
     components: {SelectUserByDep,EloamModal
     },
     data() {
@@ -155,6 +155,7 @@
           meetingRecorerName:''
 
         },
+        confirmLoading: false,
         // 新增时子表默认添加几行空数据
         addDefaultRowNum: 1,
         validatorRules: {
