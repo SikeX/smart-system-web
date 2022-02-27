@@ -195,11 +195,17 @@
               <a-input v-model="model.contactNumber" placeholder="请输入联系电话" readOnly unselectable = "on"  ></a-input>
             </a-form-model-item>
           </a-col>
+          <a-col :span="12" >
+            <a-form-model-item label="附件" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
+              <j-upload v-model="model.file"></j-upload>
+              <a-button icon="camera" @click="eloamScan">高拍仪拍照</a-button>
+            </a-form-model-item>
+          </a-col>
         </a-row>
       </a-form-model>
     </j-form-container>
       <!-- 子表单区域 -->
-    <a-tabs v-model="activeKey" @change="handleChangeTabs">
+    <!-- <a-tabs v-model="activeKey" @change="handleChangeTabs">
       <a-tab-pane tab="8项规定婚前报备表附表" :key="refKeys[0]" :forceRender="true">
         <j-editable-table
           :ref="refKeys[0]"
@@ -212,22 +218,24 @@
           :rowSelection="true"
           :actionButton="true"/>
       </a-tab-pane>
-    </a-tabs>
+    </a-tabs> -->
+    <eloam-modal ref="modalForm" @ok='scanOk' biz-path='eloam-marriedbefore'></eloam-modal>
   </a-spin>
 </template>
 
 <script>
-import { getAction } from '@/api/manage'
+import { httpAction,getAction } from '@/api/manage'
 import { FormTypes, getRefPromise, VALIDATE_NO_PASSED } from '@/utils/JEditableTableUtil'
 import { JEditableTableModelMixin } from '@/mixins/JEditableTableModelMixin'
 import { validateDuplicateValue } from '@/utils/util'
 import JSelectUserByDep from '../../../components/jeecgbiz/JSelectUserByDep.vue'
 import SelectUserByDep from '../../../components/jeecgbiz/modal/SelectUserByDep'
+import EloamModal from '@views/eloam/modules/EloamModal'
 
 export default {
   name: 'SmartPremaritalFilingForm',
-  mixins: [JEditableTableModelMixin],
-  components: {SelectUserByDep},
+  //mixins: [JEditableTableModelMixin],
+  components: {SelectUserByDep,EloamModal},
   data() {
     return {
       model:{
@@ -239,6 +247,7 @@ export default {
         post:'',
       },
       value: 1,
+      rootUrl:'/smartPremaritalFiling/smartPremaritalFiling/',
       labelCol: {
         xs: { span: 24 },
         sm: { span: 6 },
@@ -256,6 +265,7 @@ export default {
         sm: { span: 20 },
       },
       model: {},
+      confirmLoading: false,
       // 新增时子表默认添加几行空数据
       addDefaultRowNum: 1,
       validatorRules: {
@@ -290,57 +300,57 @@ export default {
       tableKeys: ['smartPremaritalFilingApp'],
       activeKey: 'smartPremaritalFilingApp',
       // 8项规定婚前报备表附表
-      smartPremaritalFilingAppTable: {
-        loading: false,
-        dataSource: [],
-        columns: [
-          {
-            title: '附件说明',
-            key: 'appExplain',
-            type: FormTypes.input,
-            width: '200px',
-            placeholder: '请输入${title}',
-            defaultValue: '',
-            validateRules: [{ required: true, message: '${title}不能为空' }],
-          },
-          {
-            title: '附件文件路径',
-            key: 'appFilePath',
-            type: FormTypes.file,
-            token: true,
-            responseName: 'message',
-            width: '200px',
-            placeholder: '请选择文件',
-            defaultValue: '',
-            validateRules: [{ required: true, message: '${title}不能为空' }],
-          },
-          {
-            title: '上传时间',
-            key: 'uploadTime',
-            type: FormTypes.date,
-            width: '200px',
-            placeholder: '请输入${title}',
-            defaultValue: '',
-            validateRules: [{ required: true, message: '${title}不能为空' }],
-          },
-          {
-            title: '下载次数',
-            key: 'downloadCount',
-            type: FormTypes.inputNumber,
-            disabled: true,
-            width: '200px',
-            placeholder: '请输入${title}',
-            defaultValue: '',
-          },
-        ],
-      },
+      // smartPremaritalFilingAppTable: {
+      //   loading: false,
+      //   dataSource: [],
+      //   columns: [
+      //     {
+      //       title: '附件说明',
+      //       key: 'appExplain',
+      //       type: FormTypes.input,
+      //       width: '200px',
+      //       placeholder: '请输入${title}',
+      //       defaultValue: '',
+      //       validateRules: [{ required: true, message: '${title}不能为空' }],
+      //     },
+      //     {
+      //       title: '附件文件路径',
+      //       key: 'appFilePath',
+      //       type: FormTypes.file,
+      //       token: true,
+      //       responseName: 'message',
+      //       width: '200px',
+      //       placeholder: '请选择文件',
+      //       defaultValue: '',
+      //       validateRules: [{ required: true, message: '${title}不能为空' }],
+      //     },
+      //     {
+      //       title: '上传时间',
+      //       key: 'uploadTime',
+      //       type: FormTypes.date,
+      //       width: '200px',
+      //       placeholder: '请输入${title}',
+      //       defaultValue: '',
+      //       validateRules: [{ required: true, message: '${title}不能为空' }],
+      //     },
+      //     {
+      //       title: '下载次数',
+      //       key: 'downloadCount',
+      //       type: FormTypes.inputNumber,
+      //       disabled: true,
+      //       width: '200px',
+      //       placeholder: '请输入${title}',
+      //       defaultValue: '',
+      //     },
+      //   ],
+      // },
       url: {
         add: '/smartPremaritalFiling/smartPremaritalFiling/add',
         edit: '/smartPremaritalFiling/smartPremaritalFiling/edit',
         queryById: '/smartPremaritalFiling/smartPremaritalFiling/queryById',
-        smartPremaritalFilingApp: {
-          list: '/smartPremaritalFiling/smartPremaritalFiling/querySmartPremaritalFilingAppByMainId',
-        },
+        // smartPremaritalFilingApp: {
+        //   list: '/smartPremaritalFiling/smartPremaritalFiling/querySmartPremaritalFilingAppByMainId',
+        // },
       },
     }
   },
@@ -357,7 +367,9 @@ export default {
       return this.disabled
     },
   },
-  created() {},
+  created() { //备份model原始值
+    this.modelDefault = JSON.parse(JSON.stringify(this.model))
+  },
   methods: {
     //人员注释
     getUser(back){
@@ -369,45 +381,91 @@ export default {
        that.model.politicCou = back[0].politicalStatus_dictText
        that.model.postRank = back[0].positionRank_dictText
        that.model.post = back[0].post_dictText
-
-
-
     },
 
-    onChange(e) {
-      console.log('radio checked', e.target.value)
+    // onChange(e) {
+    //   console.log('radio checked', e.target.value)
+    // },
+    // addBefore() {
+    //   this.smartPremaritalFilingAppTable.dataSource = []
+    // },
+    // getAllTable() {
+    //   let values = this.tableKeys.map((key) => getRefPromise(this, key))
+    //   return Promise.all(values)
+    // },
+    // /** 调用完edit()方法之后会自动调用此方法 */
+    // editAfter() {
+    //   this.$nextTick(() => {})
+    //   // 加载子表数据
+    //   if (this.model.id) {
+    //     let params = { id: this.model.id }
+    //     this.requestSubTableData(this.url.smartPremaritalFilingApp.list, params, this.smartPremaritalFilingAppTable)
+    //   }
+    // },
+    // //校验所有一对一子表表单
+    // validateSubForm(allValues) {
+    //   return new Promise((resolve, reject) => {
+    //     Promise.all([])
+    //       .then(() => {
+    //         resolve(allValues)
+    //       })
+    //       .catch((e) => {
+    //         if (e.error === VALIDATE_NO_PASSED) {
+    //           // 如果有未通过表单验证的子表，就自动跳转到它所在的tab
+    //           this.activeKey = e.index == null ? this.activeKey : this.refKeys[e.index]
+    //         } else {
+    //           console.error(e)
+    //         }
+    //       })
+    //   })
+    // },
+    // /** 整理成formData */
+    // classifyIntoFormData(allValues) {
+    //   let main = Object.assign(this.model, allValues.formValue)
+    //   return {
+    //     ...main, // 展开
+    //     smartPremaritalFilingAppList: allValues.tablesValue[0].values,
+    //   }
+    // },
+    // validateError(msg) {
+    //   this.$message.error(msg)
+    // },
+
+    add() {
+      this.edit(this.modelDefault)
     },
-    addBefore() {
-      this.smartPremaritalFilingAppTable.dataSource = []
+    edit(record) {
+      this.model = Object.assign({}, record)
+      this.visible = true
     },
-    getAllTable() {
-      let values = this.tableKeys.map((key) => getRefPromise(this, key))
-      return Promise.all(values)
-    },
-    /** 调用完edit()方法之后会自动调用此方法 */
-    editAfter() {
-      this.$nextTick(() => {})
-      // 加载子表数据
-      if (this.model.id) {
-        let params = { id: this.model.id }
-        this.requestSubTableData(this.url.smartPremaritalFilingApp.list, params, this.smartPremaritalFilingAppTable)
-      }
-    },
-    //校验所有一对一子表表单
-    validateSubForm(allValues) {
-      return new Promise((resolve, reject) => {
-        Promise.all([])
-          .then(() => {
-            resolve(allValues)
-          })
-          .catch((e) => {
-            if (e.error === VALIDATE_NO_PASSED) {
-              // 如果有未通过表单验证的子表，就自动跳转到它所在的tab
-              this.activeKey = e.index == null ? this.activeKey : this.refKeys[e.index]
-            } else {
-              console.error(e)
-            }
-          })
+    submitForm() {
+      const that = this
+      // 触发表单验证
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          that.confirmLoading = true
+          let httpurl = ''
+          let method = ''
+          if (!this.model.id) {
+            httpurl += this.url.add
+            method = 'post'
+          } else {
+            httpurl += this.url.edit
+            method = 'put'
+          }
+          httpAction(httpurl, this.model, method)
+            .then((res) => {
+              if (res.success) {
+                that.$message.success(res.message)
+                that.$emit('ok')
+              } else {
+                that.$message.warning(res.message)
+              }
+            })
+            .finally(() => {
+              that.confirmLoading = false
+            })
+        }
       })
     },
     /** 整理成formData */
@@ -421,6 +479,22 @@ export default {
     validateError(msg) {
       this.$message.error(msg)
     },
+    //高拍仪
+    eloamScan() {
+        this.$refs.modalForm.open()
+      },
+      scanOk(url) {
+        let image = url
+        if (image) {
+          let arr = []
+          if (this.model.files) {
+            arr.push(this.model.files)
+          }
+          arr.push(image)
+          // 更新表单中文件url字段, files 为字段名称
+          this.$set(this.model, 'files', arr.join())
+        }
+      },
   },
 }
 </script>
