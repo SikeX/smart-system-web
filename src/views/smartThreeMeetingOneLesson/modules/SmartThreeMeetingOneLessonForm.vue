@@ -128,12 +128,13 @@
   import { JEditableTableModelMixin } from '@/mixins/JEditableTableModelMixin'
   import { validateDuplicateValue } from '@/utils/util'
   import SelectUserByDep from '@/components/jeecgbiz/modal/SelectUserByDep'
+  import EloamModal from '@views/eloam/modules/EloamModal'
 
   export default {
     name: 'SmartThreeMeetingOneLessonForm',
     mixins: [JEditableTableModelMixin],
     components: {
-      SelectUserByDep
+      SelectUserByDep,EloamModal
     },
     data() {
       return {
@@ -395,11 +396,26 @@
         if (this.model[filed]) {
           arr.push(this.model[filed])
         }
-        arr.push(image)
-        // 更新表单中文件url字段, files 为字段名称
-        this.$set(this.model, filed, arr.join())
-      }
-    },
+      },
+      validateError(msg){
+        this.$message.error(msg)
+      },
+      eloamScan() {
+        this.$refs.modalForm.open()
+      },
+      scanOk(url) {
+        let image = url
+        if (image) {
+          let arr = []
+          // 考虑如果存在已经上传的文件，则拼接起来，没有则直接添加
+          if (this.model.files) {
+            arr.push(this.model.files)
+          }
+          arr.push(image)
+          // 更新表单中文件url字段, files 为字段名称
+          this.$set(this.model, 'files', arr.join())
+        }
+      },
 
   }
 }
