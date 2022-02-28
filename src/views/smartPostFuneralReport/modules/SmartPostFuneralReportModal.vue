@@ -3,49 +3,48 @@
     :title="title"
     :width="1200"
     :visible="visible"
-    :maskClosable="false"
     switchFullscreen
     @ok="handleOk"
     :okButtonProps="{ class:{'jee-hidden': disableSubmit} }"
-    @cancel="handleCancel">
+    @cancel="handleCancel"
+    cancelText="关闭">
     <a-row type="flex" justify="center">
       <a-col :span="22">
         <a-card style="width: 100%; margin: 1rem 0">
           <a-card-meta title="填表说明" :description="typeDesc">
-          </a-card-meta> </a-card>
+          </a-card-meta>
+        </a-card>
       </a-col>
     </a-row>
-    <smart-triple-importance-one-greatness-form ref="realForm" @ok="submitCallback" :disabled="disableSubmit"/>
+    <smart-post-funeral-report-form ref="realForm" @ok="submitCallback" :disabled="disableSubmit"></smart-post-funeral-report-form>
   </j-modal>
 </template>
 
 <script>
 
-  import SmartTripleImportanceOneGreatnessForm from './SmartTripleImportanceOneGreatnessForm'
+  import SmartPostFuneralReportForm from './SmartPostFuneralReportForm'
   import { getAction } from '../../../api/manage'
-
   export default {
-    name: 'SmartTripleImportanceOneGreatnessModal',
+    name: 'SmartPostFuneralReportModal',
     components: {
-      SmartTripleImportanceOneGreatnessForm
+      SmartPostFuneralReportForm
     },
-    data() {
+    data () {
       return {
         title:'',
-        width:800,
+        width:896,
         visible: false,
         disableSubmit: false,
-        typeDesc:'',
-        typeName:'三重一大'
+        typeDesc: '',
+        typeName: '丧事事后报备'
       }
     },
-    methods:{
+    methods: {
       add () {
         this.visible=true
-        getAction('/taskType/smartVerifyType/queryByTypeName',
-          {typeName:this.typeName}).then((res)=>{
-          if(res.success){
-            this.typeDesc=res.result
+        getAction('/taskType/smartVerifyType/queryByTypeName',{typeName: this.typeName}).then((res) => {
+          if(res.success) {
+            this.typeDesc = res.result
           }
         })
         this.$nextTick(()=>{
@@ -63,7 +62,7 @@
         this.visible = false;
       },
       handleOk () {
-        this.$refs.realForm.handleOk();
+        this.$refs.realForm.submitForm();
       },
       submitCallback(){
         this.$emit('ok');
@@ -71,10 +70,20 @@
       },
       handleCancel () {
         this.close()
+      },
+      postAdd(record) {
+        this.visible = true
+        getAction('/taskType/smartVerifyType/queryByTypeName',
+          {typeName:this.typeName}).then((res)=>{
+          if(res.success){
+            this.typeDesc=res.result
+          }
+        })
+        this.$nextTick(() => {
+          this.$refs.realForm.model.preId = record.id
+          this.$refs.realForm.add()
+        })
       }
     }
   }
 </script>
-
-<style scoped>
-</style>
