@@ -41,7 +41,7 @@
 <!--                capture="camera"-->
 <!--                v-on:change="readLocalFile()"-->
 <!--              />-->
-<!--              <j-upload v-model="model.files" :biz-path="bizPath"  ></j-upload>-->
+              <j-upload v-model="model.files" :biz-path="bizPath"  ></j-upload>
             </a-form-model-item>
           </a-col>
         </a-row>
