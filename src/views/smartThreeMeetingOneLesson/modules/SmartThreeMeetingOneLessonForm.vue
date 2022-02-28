@@ -405,15 +405,16 @@
       },
       scanOk(url) {
         let image = url
+        let filed = 'files'
         if (image) {
-          let arr = []
-          // 考虑如果存在已经上传的文件，则拼接起来，没有则直接添加
-          if (this.model.files) {
-            arr.push(this.model.files)
-          }
-          arr.push(image)
-          // 更新表单中文件url字段, files 为字段名称
-          this.$set(this.model, 'files', arr.join())
+            let arr = []
+            // 考虑如果存在已经上传的文件，则拼接起来，没有则直接添加
+            if (this.model[filed]) {
+                arr.push(this.model[filed])
+            }
+            arr.push(image)
+            // 更新表单中文件url字段, files 为字段名称
+            this.$set(this.model, filed, arr.join())
         }
       },
 
