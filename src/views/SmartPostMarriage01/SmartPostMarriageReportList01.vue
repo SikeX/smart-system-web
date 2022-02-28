@@ -1,4 +1,5 @@
 <template>
+
   <a-card :bordered="false">
     <!-- 查询区域 -->
     <div class="table-page-search-wrapper">
@@ -33,8 +34,8 @@
 
     <!-- 操作按钮区域 -->
     <div class="table-operator">
-      <a-button @click="handleAdd" type="primary" icon="plus">新增婚前报备</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('8项规定婚前报备表')">导出Excel</a-button>
+      <!-- <a-button @click="handleAdd" type="primary" icon="plus">新增婚前报备</a-button> -->
+      <a-button type="primary" icon="download" @click="handleExportXls('8项规定婚后报备表')">导出婚后报备Excel</a-button>
       <a-upload
         name="file"
         :showUploadList="false"
@@ -58,19 +59,21 @@
         <a-button style="margin-left: 8px"> 批量操作 <a-icon type="down" /></a-button>
       </a-dropdown>
 
-      <a-button @click="saveFiles" type="primary" icon="download">导出word</a-button>
+      <a-button @click="saveFiles" type="primary" icon="download">导出婚后报备word</a-button>
 
     </div>
 
     <!-- table区域-begin -->
-    <div>
+    <div >
       <div class="ant-alert ant-alert-info" style="margin-bottom: 16px">
         <i class="anticon anticon-info-circle ant-alert-icon"></i> 已选择
         <a style="font-weight: 600">{{ selectedRowKeys.length }}</a
         >项
         <a style="margin-left: 24px" @click="onClearSelected">清空</a>
       </div>
+      
 
+      
       <a-table
         ref="table"
         size="middle"
@@ -84,9 +87,11 @@
         :loading="loading"
         :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         @change="handleTableChange"
+        
       >
         <template slot="htmlSlot" slot-scope="text">
-          <div v-html="text"></div>
+          <div v-html="text">
+          </div>
         </template>
         <template slot="imgSlot" slot-scope="text">
           <span v-if="!text" style="font-size: 12px; font-style: italic">无图片</span>
@@ -106,38 +111,41 @@
         </template>
 
         <span slot="action" slot-scope="text, record">
-          <!-- <a-divider type="vertical"/>
-           <a @click="postAdd(record)">婚后报备</a>
-           <a-divider type="vertical" />  -->
-           <a v-show="record.verifyStatus == '3'" @click="handleEdit(record)">编辑</a>         
+          <a-divider type="vertical"/>
+           <a v-show="record.isReport == '0'" @click="postAdd(record)">婚后报备</a>
+          <a v-show="record.isReport == '1' || record.isReport == '15'" @click="postAdd(record)">已婚后报备</a>
+           <a-divider type="vertical" /> 
+           <a v-show="record.verifyStatus == '3'" @click="postEdit(record.id)">编辑</a>         
            <a-divider type="vertical"/>
-           <a @click="handleDetail(record)">详情</a>        
+           <a @click="postDetail(record.id)">详情</a>        
            <a-divider type="vertical" />        
-           <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
+           <a-popconfirm title="确定删除吗?" @confirm="() => postDelete(record)">
            <a v-show="record.verifyStatus == '3'">删除</a>     
            </a-popconfirm>
         </span>
       </a-table>
     </div>
     
-    <smart-post-marriage-report-modal ref="postForm"></smart-post-marriage-report-modal>
-    <smart-premarital-filing-modal ref="modalForm" @ok="modalFormOk" />
+    <smart-post-marriage-report-modal ref="modalForm"></smart-post-marriage-report-modal>
+    <!-- <smart-premarital-filing-modal ref="modalForm" @ok="modalFormOk" /> -->
   </a-card>
 </template>
 
 <script>
 import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-import SmartPremaritalFilingModal from './modules/SmartPremaritalFilingModal'
+// import SmartPremaritalFilingModal from './modules/SmartPremaritalFilingModal'
 import SmartPostMarriageReportModal from './module/SmartPostMarriageReportModal'
 import { filterMultiDictText } from '@/components/dict/JDictSelectUtil'
 import '@/assets/less/TableExpand.less'
 import { myDownload } from '@/api/manage'
 
+import { getAction } from '../../api/manage'
+
 export default {
-  name: 'SmartPremaritalFilingList',
+  name: 'SmartPostMarriageReportList01',
   mixins: [JeecgListMixin],
   components: {
-    SmartPremaritalFilingModal,
+    // SmartPremaritalFilingModal,
     SmartPostMarriageReportModal,
   },
   data() {
@@ -362,7 +370,7 @@ export default {
           dataIndex: 'contactNumber',
         },
         {
-          title: '操作',
+          title: '婚后报备操作',
           dataIndex: 'action',
           align: 'center',
           fixed: 'right',
@@ -372,10 +380,10 @@ export default {
       ],
       url: {
         list: '/smartPremaritalFiling/smartPremaritalFiling/list',
-        delete: '/smartPremaritalFiling/smartPremaritalFiling/delete',
-        deleteBatch: '/smartPremaritalFiling/smartPremaritalFiling/deleteBatch',
-        exportXlsUrl: '/smartPremaritalFiling/smartPremaritalFiling/exportXls',
-        importExcelUrl: 'smartPremaritalFiling/smartPremaritalFiling/importExcel',
+        delete: '/smartPostMarriage/smartPostMarriageReport/delete',
+        deleteBatch: '/smartPostMarriage/smartPostMarriageReport/deleteBatch',
+        exportXlsUrl: '/smartPostMarriage/smartPostMarriageReport/exportXls',
+        importExcelUrl: '/smartPostMarriage/smartPostMarriageReport/importExcel',
       },
       dictOptions: {},
       superFieldList: [],
@@ -390,12 +398,77 @@ export default {
     },
   },
   methods: {
+    //婚后添加
     postAdd(record){
       console.log(record)
+      if(record.isReport == '1' || record.isReport == '15'){
+        this.$message.error('该条记录已婚后报备！')
+        return
+      }
       
-      this.$refs.postForm.postAdd(record)
+      this.$refs.modalForm.postAdd(record);
+      this.$refs.modalForm.title="添加";
+      this.$refs.modalForm.disableSubmit = false;
 
     },
+    //婚后编辑
+    postEdit(preId){
+      console.log(preId)
+      getAction('/smartPostMarriage/smartPostMarriageReport/queryByPreId', { id: preId,preId:preId }).then((record) => {
+        if (record.success) {
+          //传到编辑
+          console.log(record)
+          this.$nextTick(() => {
+            this.$refs.modalForm.edit(record.result)
+            this.$refs.modalForm.title="编辑";
+            this.$refs.modalForm.disableSubmit = false;
+          })
+        }else{
+          this.$message.error('未找到对应的婚后报备记录！')
+          return
+        }
+      })
+    },
+    //婚后详情
+    postDetail(preId){
+      console.log(preId)
+
+      getAction('/smartPostMarriage/smartPostMarriageReport/queryByPreId', { id: preId,preId:preId }).then((record) => {
+        if (record.success) {
+          //传到编辑
+          console.log(record)
+          this.$nextTick(() => {
+            this.$refs.modalForm.edit(record.result)
+            this.$refs.modalForm.title="详情";
+            this.$refs.modalForm.disableSubmit = true;
+          })
+        }else{
+          this.$message.error('未找到对应的婚后报备记录！')
+          return
+        }
+      })
+    },
+
+    //婚后删除
+    postDelete(record){
+      console.log(record)
+      
+      getAction('/smartPostMarriage/smartPostMarriageReport/queryByPreId', { id: record.id,preId:record.id }).then((res) => {
+        if (res.success) {
+          //传到删除
+          console.log(res)
+          this.$nextTick(() => {
+            this.handleDelete(res.result.id)
+          })
+        }else{
+          this.$message.error('未找到对应的婚后报备记录！')
+          return
+        }
+      })
+
+    },
+
+    
     initDictConfig() {},
     getSuperFieldList() {
       let fieldList = []
@@ -436,6 +509,7 @@ export default {
     saveFiles() {
       //记录id
       console.log(this.selectedRowKeys)
+      console.log(this.sele)
       let ids = this.selectedRowKeys.join(",")
 
       if(ids.length == 0){
@@ -444,7 +518,7 @@ export default {
       }
 
       //下载zip文件
-      myDownload('/smartPremaritalFiling/smartPremaritalFiling/exportWord', ids).then((res) => {
+      myDownload('/smartPostMarriage/smartPostMarriageReport/exportWord', ids).then((res) => {
         if (!res) {
           return
         }
