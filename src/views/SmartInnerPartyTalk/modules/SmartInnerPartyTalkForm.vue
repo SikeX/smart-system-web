@@ -97,7 +97,7 @@
           :rowSelection="true"
           :actionButton="true"/>
       </a-tab-pane>
-      <a-tab-pane tab="党内谈话附件表" :key="refKeys[1]" :forceRender="true">
+<!--      <a-tab-pane tab="党内谈话附件表" :key="refKeys[1]" :forceRender="true">
         <j-editable-table
           :ref="refKeys[1]"
           :loading="smartInnerPartyAnnexTable.loading"
@@ -109,7 +109,7 @@
           :rowSelection="true"
           :actionButton="true"
           :rootUrl="rootUrl"/>
-      </a-tab-pane>
+      </a-tab-pane>-->
     </a-tabs>
     <eloam-modal ref="modalForm" @ok='scanOk'></eloam-modal>
   </a-spin>
