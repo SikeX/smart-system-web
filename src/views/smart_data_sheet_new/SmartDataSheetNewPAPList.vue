@@ -91,8 +91,8 @@
           </a-button>
         </template>
 
-        <span slot="name" slot-scope="text, record">
-          <a @click="handlePreview(record)">{{record.name}}</a>
+        <span slot="action" slot-scope="text, record">
+          <a @click="handlePreview(record)">预览</a>
         </span>
 
       </a-table>
@@ -133,7 +133,7 @@ export default {
         // //   }
         // },
         {
-         // title: '文件主题',
+          title: '文件主题',
           align: "left",
           dataIndex: 'name',
           scopedSlots: {customRender: 'name'}

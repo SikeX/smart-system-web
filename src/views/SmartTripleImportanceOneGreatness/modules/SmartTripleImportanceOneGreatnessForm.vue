@@ -61,7 +61,7 @@
               <a-textarea v-model="model.meetingRemarks" rows="4" placeholder="请输入备注" />
             </a-form-model-item>
           </a-col>
-          <a-col :span="24" >
+<!--          <a-col :span="24" >
             <a-form-model-item label="创建人" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="createBy">
               <a-input v-model="model.createBy" placeholder="请输入创建人" ></a-input>
             </a-form-model-item>
@@ -70,12 +70,19 @@
             <a-form-model-item label="创建时间" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="createTime">
               <j-date placeholder="请选择创建时间" v-model="model.createTime" :show-time="true" date-format="YYYY-MM-DD HH:mm:ss" style="width: 100%" />
             </a-form-model-item>
+          </a-col>-->
+          <a-col :span="24" >
+            <a-form-model-item label="附件" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="files">
+              <j-upload v-model="model.files"></j-upload>
+              <a-button icon="camera" @click="eloamScan">高拍仪拍照</a-button>
+            </a-form-model-item>
           </a-col>
         </a-row>
       </a-form-model>
+      <eloam-modal ref="modalForm" @ok='scanOk' biz-path='eloam'></eloam-modal>
     </j-form-container>
-      <!-- 子表单区域 -->
-    <a-tabs v-model="activeKey" @change="handleChangeTabs">
+  <!--子表单区域-->
+   <a-tabs v-model="activeKey" @change="handleChangeTabs">
       <a-tab-pane tab="三重一大参会人员表" :key="refKeys[0]" :forceRender="true">
         <j-editable-table
           :ref="refKeys[0]"
@@ -88,7 +95,7 @@
           :rowSelection="true"
           :actionButton="true"/>
       </a-tab-pane>
-      <a-tab-pane tab="三重一大附件表" :key="refKeys[1]" :forceRender="true">
+<!--      <a-tab-pane tab="三重一大附件表" :key="refKeys[1]" :forceRender="true">
         <j-editable-table
           :ref="refKeys[1]"
           :loading="smartTripleImportanceOneGreatnessDescriptionTable.loading"
@@ -100,8 +107,9 @@
           :rowSelection="true"
           :actionButton="true"
           :rootUrl="rootUrl"/>
-      </a-tab-pane>
+      </a-tab-pane>-->
     </a-tabs>
+
   </a-spin>
 </template>
 
@@ -112,11 +120,12 @@
   import { JEditableTableModelMixin } from '@/mixins/JEditableTableModelMixin'
   import { validateDuplicateValue } from '@/utils/util'
   import SelectUserByDep from '@/components/jeecgbiz/modal/SelectUserByDep'
+  import EloamModal from '@views/eloam/modules/EloamModal'
 
   export default {
     name: 'SmartTripleImportanceOneGreatnessForm',
     mixins: [JEditableTableModelMixin],
-    components: {SelectUserByDep
+    components: {SelectUserByDep,EloamModal
     },
     data() {
       return {
@@ -146,6 +155,7 @@
           meetingRecorerName:''
 
         },
+        confirmLoading: false,
         // 新增时子表默认添加几行空数据
         addDefaultRowNum: 1,
         validatorRules: {
@@ -162,8 +172,8 @@
               { required: true, message: '请输入创建时间!'},
            ],
         },
-        refKeys: ['smartTripleImportanceOneGreatnessPacca', 'smartTripleImportanceOneGreatnessDescription', ],
-        tableKeys:['smartTripleImportanceOneGreatnessPacca', 'smartTripleImportanceOneGreatnessDescription', ],
+        refKeys: ['smartTripleImportanceOneGreatnessPacca'],
+        tableKeys:['smartTripleImportanceOneGreatnessPacca'],
         activeKey: 'smartTripleImportanceOneGreatnessPacca',
         // 三重一大参会人员表
         smartTripleImportanceOneGreatnessPaccaTable: {
@@ -182,7 +192,7 @@
             },
           ]
         },
-        // 三重一大附件表
+        /*// 三重一大附件表
         smartTripleImportanceOneGreatnessDescriptionTable: {
           loading: false,
           dataSource: [],
@@ -224,7 +234,7 @@
               defaultValue:'',
             },
           ]
-        },
+        },*/
         url: {
           add: "/smartTripleImportanceOneGreatness/smartTripleImportanceOneGreatness/add",
           edit: "/smartTripleImportanceOneGreatness/smartTripleImportanceOneGreatness/edit",
@@ -232,9 +242,9 @@
           smartTripleImportanceOneGreatnessPacca: {
             list: '/smartTripleImportanceOneGreatness/smartTripleImportanceOneGreatness/querySmartTripleImportanceOneGreatnessPaccaByMainId'
           },
-          smartTripleImportanceOneGreatnessDescription: {
+          /*smartTripleImportanceOneGreatnessDescription: {
             list: '/smartTripleImportanceOneGreatness/smartTripleImportanceOneGreatness/querySmartTripleImportanceOneGreatnessDescriptionByMainId'
-          },
+          },*/
         }
       }
     },
@@ -252,11 +262,13 @@
       },
     },
     created () {
+      //备份model原始值
+      this.modelDefault = JSON.parse(JSON.stringify(this.model))
     },
     methods: {
       addBefore(){
         this.smartTripleImportanceOneGreatnessPaccaTable.dataSource=[]
-        this.smartTripleImportanceOneGreatnessDescriptionTable.dataSource=[]
+
       },
       getAllTable() {
         let values = this.tableKeys.map(key => getRefPromise(this, key))
@@ -271,31 +283,31 @@
           console.log(this.model)
           let params = { id: this.model.id }
           getAction(this.url.queryById,params).then(res=>{
-            if(res.success){
-              this.model=res.result
+              if(res.success){
+                this.model=res.result
+              }
             }
-          }
 
-        )
+          )
           this.requestSubTableData(this.url.smartTripleImportanceOneGreatnessPacca.list, params, this.smartTripleImportanceOneGreatnessPaccaTable)
-          this.requestSubTableData(this.url.smartTripleImportanceOneGreatnessDescription.list, params, this.smartTripleImportanceOneGreatnessDescriptionTable)
+
         }
       },
       //校验所有一对一子表表单
       validateSubForm(allValues){
-          return new Promise((resolve,reject)=>{
-            Promise.all([
-            ]).then(() => {
-              resolve(allValues)
-            }).catch(e => {
-              if (e.error === VALIDATE_NO_PASSED) {
-                // 如果有未通过表单验证的子表，就自动跳转到它所在的tab
-                this.activeKey = e.index == null ? this.activeKey : this.refKeys[e.index]
-              } else {
-                console.error(e)
-              }
-            })
+        return new Promise((resolve,reject)=>{
+          Promise.all([
+          ]).then(() => {
+            resolve(allValues)
+          }).catch(e => {
+            if (e.error === VALIDATE_NO_PASSED) {
+              // 如果有未通过表单验证的子表，就自动跳转到它所在的tab
+              this.activeKey = e.index == null ? this.activeKey : this.refKeys[e.index]
+            } else {
+              console.error(e)
+            }
           })
+        })
       },
       /** 整理成formData */
       classifyIntoFormData(allValues) {
@@ -303,18 +315,18 @@
         return {
           ...main, // 展开
           smartTripleImportanceOneGreatnessPaccaList: allValues.tablesValue[0].values,
-          smartTripleImportanceOneGreatnessDescriptionList: allValues.tablesValue[1].values,
+
         }
       },
       validateError(msg){
         this.$message.error(msg)
       },
-      getMeetingPeople(back){
+      /*getMeetingPeople(back){
         let that=this
         console.log(back)
         that.model.meetingPeople=back[0].id
         that.model.meetingPeopleName=back[0].realname
-      },
+      },*/
       getMeetingHoster(back){
         let that=this
         console.log(back)
@@ -326,6 +338,22 @@
         console.log(back)
         that.model.meetingRecorer=back[0].id
         that.model.meetingRecorerName=back[0].realname
+      },
+      eloamScan() {
+        this.$refs.modalForm.open()
+      },
+      scanOk(url) {
+        let image = url
+        if (image) {
+          let arr = []
+          // 考虑如果存在已经上传的文件，则拼接起来，没有则直接添加
+          if (this.model.files) {
+            arr.push(this.model.files)
+          }
+          arr.push(image)
+          // 更新表单中文件url字段, files 为字段名称
+          this.$set(this.model, 'files', arr.join())
+        }
       },
 
     }
