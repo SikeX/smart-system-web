@@ -106,9 +106,9 @@
         </template>
 
         <span slot="action" slot-scope="text, record">
-          <a-divider type="vertical"/>
+          <!-- <a-divider type="vertical"/>
            <a @click="postAdd(record)">婚后报备</a>
-           <a-divider type="vertical" /> 
+           <a-divider type="vertical" />  -->
            <a v-show="record.verifyStatus == '3'" @click="handleEdit(record)">编辑</a>         
            <a-divider type="vertical"/>
            <a @click="handleDetail(record)">详情</a>        
