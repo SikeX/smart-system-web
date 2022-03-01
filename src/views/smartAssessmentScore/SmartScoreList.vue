@@ -64,8 +64,6 @@
         <smart-answer-page :main-id='selectedMainId'></smart-answer-page>
       </a-row>
     </div>
-
-    <SmartScoreInfoModal ref='modalForm' @ok='modalFormOk'></SmartScoreInfoModal>
   </a-card>
 </template>
 
@@ -76,7 +74,7 @@ import { getAction, postAction, putAction } from '@/api/manage'
 import SmartAssessmentContentList from '@views/smartAssessmentContent/SmartAssessmentContentList'
 import '@/assets/less/TableExpand.less'
 import SmartAnswerPage from '@views/smartAssessmentScore/modules/SmartAnswerPage'
-import SmartScoreInfoModal from '@views/smartAssessmentScore/modules/SmartScoreInfoModal__Style#Drawer'
+import SmartScoreInfoModal from '@views/smartAssessmentScore/modules/SmartScoreInfoModal'
 
 export default {
   name: "SmartScoreList",
@@ -120,14 +118,6 @@ export default {
           title:'考核要点总数',
           align:"center",
           dataIndex: 'keyPointsAmount'
-        },
-        {
-          title: '操作',
-          dataIndex: 'action',
-          align:"center",
-          fixed:"right",
-          width:147,
-          scopedSlots: { customRender: 'action' },
         }
       ],
       url: {

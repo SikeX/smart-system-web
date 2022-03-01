@@ -32,11 +32,12 @@
         <a-form-model-item v-if='model.isKey === 1' label='分值' :labelCol='labelCol' :wrapperCol='wrapperCol' prop='point'>
           <a-input-number v-model='model.point' placeholder='请输入分值' style='width: 100%' />
         </a-form-model-item>
-        <a-form-model-item v-if='model.isKey === 1' label='评分考核单位' :labelCol='labelCol' :wrapperCol='wrapperCol' prop='assDepartUser'>
+        <a-form-model-item v-if='model.isKey === 1' label='评分考核单位' :labelCol='labelCol' :wrapperCol='wrapperCol' prop='assDepart'>
 <!--          <j-select-user-by-dep v-model='model.assDepartUser' />-->
           <a-select
             placeholder="请选择"
             showSearch
+            @change="handleChange"
             v-model="model.assDepart"
             :filterOption="filterOption"
             allowClear>
@@ -110,8 +111,8 @@ export default {
         point: [
           { required: true, message: '请输入考核要点分值!'},
         ],
-        assDepartUser: [
-          { required: true, message: '请选择负责该要点评分的考核单位评分人员!'},
+        assDepart: [
+          { required: true, message: '请选择负责该要点评分的考核单位!'},
         ],
         assTeam: [
           { required: true, message: '请选择负责该要点评分的考核组!'},
@@ -150,6 +151,9 @@ export default {
       }).finally(res =>{
         this.loading=false
       })
+    },
+    handleChange (selectedValue) {
+      this.model.assDepart = selectedValue
     },
     filterOption(input, option) {
       return option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0

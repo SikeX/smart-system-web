@@ -10,40 +10,38 @@
     @cancel='handleCancel'
     cancelText='关闭'>
     <a-spin :spinning='confirmLoading'>
-      <j-form-container :disabled='disableSubmit'>
-        <a-form-model ref='form' :model='model' :rules='validatorRules'>
-          <a-row>
-            <a-col :span='24'>
-              <a-form-model-item label='附件说明' :labelCol='labelCol' :wrapperCol='wrapperCol'
-                                 prop='attachmentDescription'>
-                <a-textarea v-model='model.attachmentDescription' rows='4' placeholder='请输入附件说明' />
-              </a-form-model-item>
-            </a-col>
-            <a-col :span='24'>
-              <a-form-model-item label='工作开始时间' :labelCol='labelCol' :wrapperCol='wrapperCol' prop='workTime'>
-                <j-date placeholder='请选择工作开始时间' v-model='model.workTime' :show-time='true'
-                        date-format='YYYY-MM-DD HH:mm:ss' style='width: 100%' />
-              </a-form-model-item>
-            </a-col>
-            <a-col :span='24'>
-              <a-form-model-item label='附件' :labelCol='labelCol' :wrapperCol='wrapperCol' prop='attachment'>
-                <j-upload v-model='model.attachment'></j-upload>
-              </a-form-model-item>
-            </a-col>
-            <a-col :span='24'>
-              <a-form-model-item label='上报人' :labelCol='labelCol' :wrapperCol='wrapperCol' prop='uploadUser'>
-                <j-select-user-by-dep v-model='model.uploadUser' placeholder='请输入上报人' disabled></j-select-user-by-dep>
-              </a-form-model-item>
-            </a-col>
-            <a-col :span='24'>
-              <a-form-model-item label='上传时间' :labelCol='labelCol' :wrapperCol='wrapperCol' prop='createTime'>
-                <j-date placeholder='请选择上传时间' v-model='model.createTime' :show-time='true'
-                        date-format='YYYY-MM-DD HH:mm:ss' style='width: 100%' disabled />
-              </a-form-model-item>
-            </a-col>
-          </a-row>
-        </a-form-model>
-      </j-form-container>
+      <a-form-model ref='form' :model='model' :rules='validatorRules'>
+        <a-row>
+          <a-col :span='24'>
+            <a-form-model-item label='附件说明' :labelCol='labelCol' :wrapperCol='wrapperCol'
+                               prop='attachmentDescription'>
+              <a-textarea v-model='model.attachmentDescription' rows='4' placeholder='请输入附件说明' :disabled='disableSubmit' />
+            </a-form-model-item>
+          </a-col>
+          <a-col :span='24'>
+            <a-form-model-item label='工作开始时间' :labelCol='labelCol' :wrapperCol='wrapperCol' prop='workTime'>
+              <j-date placeholder='请选择工作开始时间' v-model='model.workTime' :show-time='true'
+                      date-format='YYYY-MM-DD HH:mm:ss' style='width: 100%' :disabled='disableSubmit' />
+            </a-form-model-item>
+          </a-col>
+          <a-col :span='24'>
+            <a-form-model-item label='附件' :labelCol='labelCol' :wrapperCol='wrapperCol' prop='attachment'>
+              <j-upload v-model='model.attachment' :disabled='disableSubmit'></j-upload>
+            </a-form-model-item>
+          </a-col>
+          <a-col :span='24'>
+            <a-form-model-item label='上报人' :labelCol='labelCol' :wrapperCol='wrapperCol' prop='uploadUser'>
+              <j-select-user-by-dep v-model='model.uploadUser' placeholder='请输入上报人' disabled></j-select-user-by-dep>
+            </a-form-model-item>
+          </a-col>
+          <a-col :span='24'>
+            <a-form-model-item label='上传时间' :labelCol='labelCol' :wrapperCol='wrapperCol' prop='createTime'>
+              <j-date placeholder='请选择上传时间' v-model='model.createTime' :show-time='true'
+                      date-format='YYYY-MM-DD HH:mm:ss' style='width: 100%' disabled />
+            </a-form-model-item>
+          </a-col>
+        </a-row>
+      </a-form-model>
     </a-spin>
   </j-modal>
 </template>
