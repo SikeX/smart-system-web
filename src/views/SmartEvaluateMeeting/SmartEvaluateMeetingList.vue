@@ -222,6 +222,9 @@
     },
     methods: {
       ...mapGetters(["userInfo"]),
+      postAdd(record){
+        this.$refs.postForm.postAdd(record)
+      },
       initDictConfig(){
       },
       getSuperFieldList(){
