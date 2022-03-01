@@ -74,6 +74,12 @@
                 <a-input v-model="model.recorderName" />
               </a-form-model-item>
             </a-col>
+          <a-col :span="24" >
+            <a-form-model-item label="附件" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="files">
+              <a-button icon="camera" @click="eloamScan">高拍仪拍照</a-button>
+<!--              <j-upload v-model="model.files" ></j-upload>-->
+            </a-form-model-item>
+          </a-col>
         </a-row>
       </a-form-model>
     </j-form-container>
@@ -91,7 +97,7 @@
           :rowSelection="true"
           :actionButton="true"/>
       </a-tab-pane>
-      <a-tab-pane tab="党内谈话附件表" :key="refKeys[1]" :forceRender="true">
+<!--      <a-tab-pane tab="党内谈话附件表" :key="refKeys[1]" :forceRender="true">
         <j-editable-table
           :ref="refKeys[1]"
           :loading="smartInnerPartyAnnexTable.loading"
@@ -103,8 +109,9 @@
           :rowSelection="true"
           :actionButton="true"
           :rootUrl="rootUrl"/>
-      </a-tab-pane>
+      </a-tab-pane>-->
     </a-tabs>
+    <eloam-modal ref="modalForm" @ok='scanOk'></eloam-modal>
   </a-spin>
 </template>
 
@@ -115,11 +122,12 @@
   import { JEditableTableModelMixin } from '@/mixins/JEditableTableModelMixin'
   import { validateDuplicateValue } from '@/utils/util'
   import SelectUserByDep from '@/components/jeecgbiz/modal/SelectUserByDep'
+  import EloamModal from '@views/eloam/modules/EloamModal'
 
   export default {
     name: 'SmartInnerPartyTalkForm',
     mixins: [JEditableTableModelMixin],
-    components: {SelectUserByDep},
+    components: {SelectUserByDep,EloamModal},
     data() {
       return {
         model:{
@@ -156,8 +164,10 @@
         addDefaultRowNum: 1,
         validatorRules: {
         },
-        refKeys: ['smartInnerPartyPacpa', 'smartInnerPartyAnnex', ],
-        tableKeys:['smartInnerPartyPacpa', 'smartInnerPartyAnnex', ],
+        //refKeys: ['smartInnerPartyPacpa', 'smartInnerPartyAnnex', ],
+        //tableKeys:['smartInnerPartyPacpa', 'smartInnerPartyAnnex', ],
+        refKeys: ['smartInnerPartyPacpa' ],
+        tableKeys:['smartInnerPartyPacpa' ],
         activeKey: 'smartInnerPartyPacpa',
         // 党内谈话参与人表
         smartInnerPartyPacpaTable: {
@@ -168,7 +178,7 @@
               title: '参会人员',
               key: 'papcId',
               //type: FormTypes.sel_user,
-              type: FormTypes.input,
+              type: FormTypes.sel_user,
               width:"200px",
               placeholder: '请输入${title}',
               defaultValue:'',
@@ -176,48 +186,48 @@
           ]
         },
         // 党内谈话附件表
-        smartInnerPartyAnnexTable: {
-          loading: false,
-          dataSource: [],
-          columns: [
-            {
-              title: '上传时间',
-              key: 'createTime',
-              type: FormTypes.datetime,
-              disabled:true,
-              width:"200px",
-              placeholder: '${title}',
-              defaultValue:'',
-            },
-            {
-              title: '附件说明',
-              key: 'supplement',
-              type: FormTypes.input,
-              width:"200px",
-              placeholder: '请输入${title}',
-              defaultValue:'',
-            },
-            {
-              title: '附件文件路径',
-              key: 'annex',
-              type: FormTypes.file,
-              token:true,
-              responseName:"message",
-              width:"200px",
-              placeholder: '请选择文件',
-              defaultValue:'',
-            },
-            {
-              title: '下载次数',
-              key: 'downloadCount',
-              type: FormTypes.inputNumber,
-              disabled:true,
-              width:"200px",
-              placeholder: '${title}',
-              defaultValue:'',
-            },
-          ]
-        },
+        // smartInnerPartyAnnexTable: {
+        //   loading: false,
+        //   dataSource: [],
+        //   columns: [
+        //     {
+        //       title: '上传时间',
+        //       key: 'createTime',
+        //       type: FormTypes.datetime,
+        //       disabled:true,
+        //       width:"200px",
+        //       placeholder: '${title}',
+        //       defaultValue:'',
+        //     },
+        //     {
+        //       title: '附件说明',
+        //       key: 'supplement',
+        //       type: FormTypes.input,
+        //       width:"200px",
+        //       placeholder: '请输入${title}',
+        //       defaultValue:'',
+        //     },
+        //     {
+        //       title: '附件文件路径',
+        //       key: 'annex',
+        //       type: FormTypes.file,
+        //       token:true,
+        //       responseName:"message",
+        //       width:"200px",
+        //       placeholder: '请选择文件',
+        //       defaultValue:'',
+        //     },
+        //     /*{
+        //       title: '下载次数',
+        //       key: 'downloadCount',
+        //       type: FormTypes.inputNumber,
+        //       disabled:true,
+        //       width:"200px",
+        //       placeholder: '${title}',
+        //       defaultValue:'',
+        //     },*/
+        //   ]
+        // },
         url: {
           add: "/SmartInnerPartyTalk/smartInnerPartyTalk/add",
           edit: "/SmartInnerPartyTalk/smartInnerPartyTalk/edit",
@@ -225,9 +235,9 @@
           smartInnerPartyPacpa: {
             list: '/SmartInnerPartyTalk/smartInnerPartyTalk/querySmartInnerPartyPacpaByMainId'
           },
-          smartInnerPartyAnnex: {
-            list: '/SmartInnerPartyTalk/smartInnerPartyTalk/querySmartInnerPartyAnnexByMainId'
-          },
+          // smartInnerPartyAnnex: {
+          //   list: '/SmartInnerPartyTalk/smartInnerPartyTalk/querySmartInnerPartyAnnexByMainId'
+          // },
         }
       }
     },
@@ -247,9 +257,26 @@
     created () {
     },
     methods: {
+      eloamScan() {
+        this.$refs.modalForm.open()
+      },
+      scanOk(url) {
+        let image = url
+        // 请根据自己表单中的字段名称修改 field 变量的值
+        let field = 'files'
+        if (image) {
+          let arr = []
+          // 考虑如果存在已经上传的文件，则拼接起来，没有则直接添加
+          if (this.model[field]) {
+            arr.push(this.model[field])
+          }
+          arr.push(image)
+          this.$set(this.model, field, arr.join())
+        }
+      },
       addBefore(){
         this.smartInnerPartyPacpaTable.dataSource=[]
-        this.smartInnerPartyAnnexTable.dataSource=[]
+        //this.smartInnerPartyAnnexTable.dataSource=[]
       },
       getAllTable() {
         let values = this.tableKeys.map(key => getRefPromise(this, key))
@@ -276,7 +303,7 @@
             }
           })
           this.requestSubTableData(this.url.smartInnerPartyPacpa.list, params, this.smartInnerPartyPacpaTable)
-          this.requestSubTableData(this.url.smartInnerPartyAnnex.list, params, this.smartInnerPartyAnnexTable)
+          //this.requestSubTableData(this.url.smartInnerPartyAnnex.list, params, this.smartInnerPartyAnnexTable)
         }
       },
       //校验所有一对一子表表单
@@ -301,7 +328,7 @@
         return {
           ...main, // 展开
           smartInnerPartyPacpaList: allValues.tablesValue[0].values,
-          smartInnerPartyAnnexList: allValues.tablesValue[1].values,
+          //smartInnerPartyAnnexList: allValues.tablesValue[1].values,
         }
       },
       validateError(msg){
