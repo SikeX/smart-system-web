@@ -413,7 +413,7 @@
                 arr.push(this.model[filed])
             }
             arr.push(image)
-            // 更新表单中文件url字段, files 为字段名称
+            // 更新表单中文件url字段, filed 为字段名称
             this.$set(this.model, filed, arr.join())
         }
       },
