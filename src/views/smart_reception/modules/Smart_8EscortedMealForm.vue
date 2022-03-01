@@ -4,33 +4,18 @@
       <a-form-model ref="form" :model="model" :rules="validatorRules" slot="detail">
         <a-row>
           <a-col :span="24">
-            <a-form-model-item label="单位名称" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="name">
-              <a-input v-model="model.name" placeholder="请输入单位名称"  ></a-input>
+            <a-form-model-item label="姓名" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="name">
+              <j-select-user-by-dep v-model="model.name" />
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
-            <a-form-model-item label="主管单位" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="pid">
-              <j-select-depart v-model="model.pid" multi  />
+            <a-form-model-item label="职务" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="jobTitle">
+              <a-input v-model="model.jobTitle" placeholder="请输入职务"  ></a-input>
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
-            <a-form-model-item label="负责人" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="principal">
-              <select-user-by-dep :multi="false" v-model="model.principal" @info = "getHostUser"/>
-            </a-form-model-item>
-          </a-col>
-          <a-col :span="24">
-            <a-form-model-item label="负责人姓名" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="principalName" v-show="false">
-              <a-input v-model="model.principalName" />
-            </a-form-model-item>
-          </a-col>
-          <a-col :span="24">
-            <a-form-model-item label="联系电话" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="phone">
-              <a-input v-model="model.phone" placeholder="请输入联系电话" ></a-input>
-            </a-form-model-item>
-          </a-col>
-          <a-col :span="24">
-            <a-form-model-item label="二维码" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="qrcode">
-              <j-image-upload isMultiple  v-model="model.qrcode" disabled></j-image-upload>
+            <a-form-model-item label="单位" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="department">
+              <j-select-depart v-model="model.department" multi  />
             </a-form-model-item>
           </a-col>
         </a-row>
@@ -43,12 +28,10 @@
 
   import { httpAction, getAction } from '@/api/manage'
   import { validateDuplicateValue } from '@/utils/util'
-  import SelectUserByDep from "../../../components/jeecgbiz/modal/SelectUserByDep";
 
   export default {
-    name: 'SmartWindowUnitForm',
+    name: 'Smart_8EscortedMealForm',
     components: {
-      SelectUserByDep
     },
     props: {
       //表单禁用
@@ -61,8 +44,6 @@
     data () {
       return {
         model:{
-          principalName:'',
-          phone:'',
          },
         labelCol: {
           xs: { span: 24 },
@@ -75,23 +56,19 @@
         confirmLoading: false,
         validatorRules: {
            name: [
-              { required: true, message: '请输入单位名称!'},
+              { required: true, message: '请输入姓名!'},
            ],
-           pid: [
-              { required: true, message: '请输入主管单位!'},
+           jobTitle: [
+              { required: true, message: '请输入职务!'},
            ],
-           principal: [
-              { required: true, message: '请输入负责人!'},
-           ],
-           phone: [
-              { required: true, message: '请输入联系电话!'},
-              { pattern: /^1[3456789]\d{9}$/, message: '请输入正确的手机号码!'},
+           department: [
+              { required: true, message: '请输入单位!'},
            ],
         },
         url: {
-          add: "/smart_window_unit/smartWindowUnit/add",
-          edit: "/smart_window_unit/smartWindowUnit/edit",
-          queryById: "/smart_window_unit/smartWindowUnit/queryById"
+          add: "/smart_8_escorted_meal/smart_8EscortedMeal/add",
+          edit: "/smart_8_escorted_meal/smart_8EscortedMeal/edit",
+          queryById: "/smart_8_escorted_meal/smart_8EscortedMeal/queryById"
         }
       }
     },
@@ -105,14 +82,6 @@
       this.modelDefault = JSON.parse(JSON.stringify(this.model));
     },
     methods: {
-      getHostUser(back){
-        let that = this
-        console.log(back)
-        that.model.principal = back[0].id
-        that.model.principalName = back[0].realname
-        that.model.phone = back[0].phone
-      },
-
       add () {
         this.edit(this.modelDefault);
       },
@@ -152,4 +121,3 @@
     }
   }
 </script>
-

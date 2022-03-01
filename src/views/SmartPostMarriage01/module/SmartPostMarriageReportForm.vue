@@ -123,7 +123,7 @@
           </a-col>
           <a-col :span="12">
             <a-form-model-item
-              label="不符合规定收受礼金(元)"
+              label="不符合规定收受礼金"
               :labelCol="labelCol"
               :wrapperCol="wrapperCol"
               prop="illegalMoney"
@@ -137,7 +137,7 @@
           </a-col>
           <a-col :span="12">
             <a-form-model-item
-              label="不符合规定收受礼品件数(件)"
+              label="不符合规定收受礼品"
               :labelCol="labelCol"
               :wrapperCol="wrapperCol"
               prop="illegalGiftNumber"
@@ -216,6 +216,7 @@ import { JEditableTableModelMixin } from '@/mixins/JEditableTableModelMixin'
 import { validateDuplicateValue } from '@/utils/util'
 import SelectUserByDep from '@/components/jeecgbiz/modal/SelectUserByDep'
 
+// import { loadData } from '@/mixins/JeecgListMixin'
 import EloamModal from '@views/eloam/modules/EloamModal'
 
 export default {
@@ -225,6 +226,7 @@ export default {
   data() {
     return {
       preId:'',
+      title:'',
       rootUrl: '/smartPostMarriage/smartPostMarriageReport',
       labelCol: {
         xs: { span: 24 },
@@ -379,9 +381,11 @@ export default {
   },
   methods: {
     add(){
+      console.log(this.preId + "realform")
         this.edit(this.modelDefault)
       },
-      edit(){
+      edit(record){
+        console.log(record + "婚后报备")
         this.model = Object.assign({}, record)
         this.visible = true
       },
@@ -514,6 +518,7 @@ export default {
               if (res.success) {
                 that.$message.success(res.message)
                 that.$emit('ok')
+                // that.loadData()
               } else {
                 that.$message.warning(res.message)
               }

@@ -4,21 +4,6 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
-          <a-col :xl="6" :lg="7" :md="8" :sm="24">
-            <a-form-item label="文件主题">
-              <a-input placeholder="请输入文件主题" v-model="queryParam.name"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :xl="6" :lg="7" :md="8" :sm="24">
-            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
-              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
-              <a @click="handleToggleSearch" style="margin-left: 8px">
-                {{ toggleSearchStatus ? '收起' : '展开' }}
-                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-              </a>
-            </span>
-          </a-col>
         </a-row>
       </a-form>
     </div>
@@ -27,7 +12,7 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('资料库')">导出</a-button>
+      <a-button type="primary" icon="download" @click="handleExportXls('陪同用餐人员表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
@@ -69,7 +54,7 @@
           <span v-if="!text" style="font-size: 12px;font-style: italic;">无图片</span>
           <img v-else :src="getImgView(text)" height="25px" alt="" style="max-width:80px;font-size: 12px;font-style: italic;"/>
         </template>
-        <template slot="fileSlot" slot-scope="text, record">
+        <template slot="fileSlot" slot-scope="text">
           <span v-if="!text" style="font-size: 12px;font-style: italic;">无文件</span>
           <a-button
             v-else
@@ -77,7 +62,7 @@
             type="primary"
             icon="download"
             size="small"
-            @click="handleDownloadFile(text, record)">
+            @click="downloadFile(text)">
             下载
           </a-button>
         </template>
@@ -104,7 +89,7 @@
       </a-table>
     </div>
 
-    <smart-data-sheet-new-modal ref="modalForm" @ok="modalFormOk"></smart-data-sheet-new-modal>
+    <smart_8-escorted-meal-modal ref="modalForm" @ok="modalFormOk"></smart_8-escorted-meal-modal>
   </a-card>
 </template>
 
@@ -113,19 +98,17 @@
   import '@/assets/less/TableExpand.less'
   import { mixinDevice } from '@/utils/mixin'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import SmartDataSheetNewModal from './modules/SmartDataSheetNewModal'
-  import {filterMultiDictText} from '@/components/dict/JDictSelectUtil'
-  import {putAction} from "../../api/manage";
+  import Smart_8EscortedMealModal from './Smart_8EscortedMealModal'
 
   export default {
-    name: 'SmartDataSheetNewList',
+    name: 'Smart_8EscortedMealList',
     mixins:[JeecgListMixin, mixinDevice],
     components: {
-      SmartDataSheetNewModal
+      Smart_8EscortedMealModal
     },
     data () {
       return {
-        description: '资料库管理页面',
+        description: '陪同用餐人员表管理页面',
         // 表头
         columns: [
           {
@@ -139,46 +122,19 @@
             }
           },
           {
-            title:'文件主题',
+            title:'姓名',
             align:"center",
-            dataIndex: 'name'
+            dataIndex: 'name_dictText'
           },
           {
-            title:'文件类型',
+            title:'职务',
             align:"center",
-            dataIndex: 'type_dictText'
+            dataIndex: 'jobTitle'
           },
           {
-            title:'发布单位',
+            title:'单位',
             align:"center",
-            dataIndex: 'departmentid'
-          },
-          {
-            title:'发布人',
-            align:"center",
-            dataIndex: 'createBy_dictText'
-          },
-          {
-            title:'文件描述',
-            align:"center",
-            dataIndex: 'describeA',
-            scopedSlots: {customRender: 'htmlSlot'}
-          },
-          {
-            title:'创建日期',
-            align:"center",
-            dataIndex: 'createTime'
-          },
-          {
-            title:'文件下载',
-            align:"center",
-            dataIndex: 'file',
-            scopedSlots: {customRender: 'fileSlot'}
-          },
-          {
-            title:'下载次数',
-            align:"center",
-            dataIndex: 'times'
+            dataIndex: 'department_dictText'
           },
           {
             title: '操作',
@@ -189,13 +145,12 @@
             scopedSlots: { customRender: 'action' }
           }
         ],
-        rootUrl: '/smart_data_sheet_new/smartDataSheetNew',
         url: {
-          list: "/smart_data_sheet_new/smartDataSheetNew/list",
-          delete: "/smart_data_sheet_new/smartDataSheetNew/delete",
-          deleteBatch: "/smart_data_sheet_new/smartDataSheetNew/deleteBatch",
-          exportXlsUrl: "/smart_data_sheet_new/smartDataSheetNew/exportXls",
-          importExcelUrl: "smart_data_sheet_new/smartDataSheetNew/importExcel",
+          list: "/smart_8_escorted_meal/smart_8EscortedMeal/list",
+          delete: "/smart_8_escorted_meal/smart_8EscortedMeal/delete",
+          deleteBatch: "/smart_8_escorted_meal/smart_8EscortedMeal/deleteBatch",
+          exportXlsUrl: "/smart_8_escorted_meal/smart_8EscortedMeal/exportXls",
+          importExcelUrl: "smart_8_escorted_meal/smart_8EscortedMeal/importExcel",
           
         },
         dictOptions:{},
@@ -215,25 +170,10 @@
       },
       getSuperFieldList(){
         let fieldList=[];
-        fieldList.push({type:'string',value:'name',text:'文件主题',dictCode:''})
-        fieldList.push({type:'int',value:'type',text:'文件类型',dictCode:'type_data'})
-        fieldList.push({type:'string',value:'departmentid',text:'发布单位',dictCode:''})
-        fieldList.push({type:'sel_user',value:'publisher',text:'发布人'})
-        fieldList.push({type:'Text',value:'describe1',text:'文件描述',dictCode:''})
-        fieldList.push({type:'datetime',value:'createTime',text:'创建日期'})
-        fieldList.push({type:'string',value:'file',text:'上传文件',dictCode:''})
-        fieldList.push({type:'int',value:'times',text:'下载次数',dictCode:''})
+        fieldList.push({type:'sel_user',value:'name',text:'姓名'})
+        fieldList.push({type:'string',value:'jobTitle',text:'职务',dictCode:''})
+        fieldList.push({type:'sel_depart',value:'department',text:'单位'})
         this.superFieldList = fieldList
-      },
-      handleDownloadFile(text, record) {
-        this.downloadFile(text)
-        const rootUrl = this.rootUrl + '/downloadCount'
-        const params = {
-          id: record.id,
-          downloadTimes: 1
-        }
-        putAction(rootUrl, params)
-
       }
     }
   }
