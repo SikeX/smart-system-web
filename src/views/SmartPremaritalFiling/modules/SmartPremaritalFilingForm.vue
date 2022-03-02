@@ -294,7 +294,7 @@
           </a-col>
           <a-col :span="12">
             <a-form-model-item label="附件" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
-              <j-upload v-model="model.file"></j-upload>
+              <j-upload v-model="model.files"></j-upload>
               <a-button icon="camera" @click="eloamScan">高拍仪拍照</a-button>
             </a-form-model-item>
           </a-col>
