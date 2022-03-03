@@ -197,59 +197,59 @@
             },
           ]
         },
-        // 三会一课附件表
-        smartThreeMeetingOneLessonAnnexTable: {
-          loading: false,
-          dataSource: [],
-          columns: [
-            {
-              title: '附件说明',
-              key: 'fileDescription',
-              type: FormTypes.input,
-              width:"200px",
-              placeholder: '请输入${title}',
-              defaultValue:'',
-            },
-            {
-              title: '附件文件路径',
-              key: 'fileLocation',
-              type: FormTypes.file,
-              token:true,
-              responseName:"message",
-              width:"200px",
-              placeholder: '请选择文件',
-              defaultValue:'',
-              validateRules: [{ required: true, message: '${title}不能为空' }],
-            },
-            {
-              title: '上传时间',
-              key: 'uploadTime',
-              type: FormTypes.date,
-              width:"200px",
-              placeholder: '请输入${title}',
-              defaultValue:'',
-              validateRules: [{ required: true, message: '${title}不能为空' }],
-            },
-            {
-              title: '下载次数',
-              key: 'downloadTimes',
-              type: FormTypes.inputNumber,
-              disabled:true,
-              width:"200px",
-              placeholder: '请输入${title}',
-              defaultValue:'',
-            },
-          ]
-        },
-        url: {
-          add: "/smartThreeMeetingOneLesson/smartThreeMeetingOneLesson/add",
-          edit: "/smartThreeMeetingOneLesson/smartThreeMeetingOneLesson/edit",
-          queryById: "/smartThreeMeetingOneLesson/smartThreeMeetingOneLesson/queryById",
-          smartThreeMeetingOneLessonParticipants: {
-            list: '/smartThreeMeetingOneLesson/smartThreeMeetingOneLesson/querySmartThreeMeetingOneLessonParticipantsByMainId'
-          },
-        ]
-      },
+      //   // 三会一课附件表
+      //   smartThreeMeetingOneLessonAnnexTable: {
+      //     loading: false,
+      //     dataSource: [],
+      //     columns: [
+      //       {
+      //         title: '附件说明',
+      //         key: 'fileDescription',
+      //         type: FormTypes.input,
+      //         width:"200px",
+      //         placeholder: '请输入${title}',
+      //         defaultValue:'',
+      //       },
+      //       {
+      //         title: '附件文件路径',
+      //         key: 'fileLocation',
+      //         type: FormTypes.file,
+      //         token:true,
+      //         responseName:"message",
+      //         width:"200px",
+      //         placeholder: '请选择文件',
+      //         defaultValue:'',
+      //         validateRules: [{ required: true, message: '${title}不能为空' }],
+      //       },
+      //       {
+      //         title: '上传时间',
+      //         key: 'uploadTime',
+      //         type: FormTypes.date,
+      //         width:"200px",
+      //         placeholder: '请输入${title}',
+      //         defaultValue:'',
+      //         validateRules: [{ required: true, message: '${title}不能为空' }],
+      //       },
+      //       {
+      //         title: '下载次数',
+      //         key: 'downloadTimes',
+      //         type: FormTypes.inputNumber,
+      //         disabled:true,
+      //         width:"200px",
+      //         placeholder: '请输入${title}',
+      //         defaultValue:'',
+      //       },
+      //     ]
+      //   },
+      //   url: {
+      //     add: "/smartThreeMeetingOneLesson/smartThreeMeetingOneLesson/add",
+      //     edit: "/smartThreeMeetingOneLesson/smartThreeMeetingOneLesson/edit",
+      //     queryById: "/smartThreeMeetingOneLesson/smartThreeMeetingOneLesson/queryById",
+      //     smartThreeMeetingOneLessonParticipants: {
+      //       list: '/smartThreeMeetingOneLesson/smartThreeMeetingOneLesson/querySmartThreeMeetingOneLessonParticipantsByMainId'
+      //     },
+      //   ]
+      // },
       // 三会一课附件表
       smartThreeMeetingOneLessonAnnexTable: {
         loading: false,
@@ -345,34 +345,34 @@
       let values = this.tableKeys.map(key => getRefPromise(this, key))
       return Promise.all(values)
     },
-    methods: {
-      getHostUser(back){
-        let that = this
-        console.log(back);
-        that.model.hostId = back[0].id
-        that.model.hostName = back[0].realname
-      },
+    // methods: {
+    //   getHostUser(back){
+    //     let that = this
+    //     console.log(back);
+    //     that.model.hostId = back[0].id
+    //     that.model.hostName = back[0].realname
+    //   },
 
-      getRecorderUser(back){
-        let that = this
-        console.log(back);
-        that.model.recorderId = back[0].id
-        that.model.recorderName = back[0].realname
-      },
+    //   getRecorderUser(back){
+    //     let that = this
+    //     console.log(back);
+    //     that.model.recorderId = back[0].id
+    //     that.model.recorderName = back[0].realname
+    //   },
 
-      addBefore(){
-        this.smartThreeMeetingOneLessonParticipantsTable.dataSource=[]
-        this.smartThreeMeetingOneLessonAnnexTable.dataSource=[]
-      },
-      getAllTable() {
-        let values = this.tableKeys.map(key => getRefPromise(this, key))
-        return Promise.all(values)
-      },
+    //   addBefore(){
+    //     this.smartThreeMeetingOneLessonParticipantsTable.dataSource=[]
+    //     this.smartThreeMeetingOneLessonAnnexTable.dataSource=[]
+    //   },
+    //   getAllTable() {
+    //     let values = this.tableKeys.map(key => getRefPromise(this, key))
+    //     return Promise.all(values)
+    //   },
       /** 调用完edit()方法之后会自动调用此方法 */
       editAfter() {
         this.$nextTick(() => {
         })
-      })
+      // })
     },
     /** 整理成formData */
     classifyIntoFormData(allValues) {
@@ -390,22 +390,6 @@
       this.$refs.modalForm.open()
     },
     scanOk(url) {
-      let image = url
-      let filed = 'files'
-      if (image) {
-        let arr = []
-        // 考虑如果存在已经上传的文件，则拼接起来，没有则直接添加
-        if (this.model[filed]) {
-          arr.push(this.model[filed])
-        }
-      },
-      validateError(msg){
-        this.$message.error(msg)
-      },
-      eloamScan() {
-        this.$refs.modalForm.open()
-      },
-      scanOk(url) {
         let image = url
         // 请根据自己表单中的字段名称修改 field 变量的值
         let field = 'files'
@@ -418,7 +402,27 @@
             arr.push(image)
             this.$set(this.model, field, arr.join())
         }
-      },
+    },
+      // validateError(msg){
+      //   this.$message.error(msg)
+      // },
+      // eloamScan() {
+      //   this.$refs.modalForm.open()
+      // },
+      // scanOk(url) {
+      //   let image = url
+      //   // 请根据自己表单中的字段名称修改 field 变量的值
+      //   let field = 'files'
+      //   if (image) {
+      //       let arr = []
+      //       // 考虑如果存在已经上传的文件，则拼接起来，没有则直接添加
+      //       if (this.model[field]) {
+      //         arr.push(this.model[field])
+      //       }
+      //       arr.push(image)
+      //       this.$set(this.model, field, arr.join())
+      //   }
+      // },
 
   }
 }
