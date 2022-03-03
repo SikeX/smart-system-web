@@ -83,13 +83,13 @@
           </a-col> -->
           <a-col :span="24" >
             <a-form-model-item label="附件" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="files">
-              <j-upload v-model="model.files"></j-upload>
               <a-button icon="camera" @click="eloamScan">高拍仪拍照</a-button>
+              <eloam-modal ref="modalForm" @ok="scanOk"></eloam-modal>
+              <j-upload v-model="model.files"></j-upload>
             </a-form-model-item>
           </a-col>
         </a-row>
       </a-form-model>
-      <eloam-modal ref="modalForm" @ok='scanOk' biz-path='eloam'></eloam-modal>
     </j-form-container>
     <!-- 子表单区域 -->
     <a-tabs v-model="activeKey" @change="handleChangeTabs">
@@ -118,6 +118,8 @@
           :actionButton="true"/>
       </a-tab-pane>
     </a-tabs>
+    <!-- <eloam-modal ref="modalForm" @ok='scanOk'></eloam-modal> -->
+    <!-- <eloam-modal ref="modalForm" @ok="scanOk" biz-path="eloam"></eloam-modal> -->
   </a-spin>
 </template>
 
@@ -405,16 +407,16 @@
       },
       scanOk(url) {
         let image = url
-        let filed = 'files'
+        // 请根据自己表单中的字段名称修改 field 变量的值
+        let field = 'files'
         if (image) {
             let arr = []
             // 考虑如果存在已经上传的文件，则拼接起来，没有则直接添加
-            if (this.model[filed]) {
-                arr.push(this.model[filed])
+            if (this.model[field]) {
+              arr.push(this.model[field])
             }
             arr.push(image)
-            // 更新表单中文件url字段, filed 为字段名称
-            this.$set(this.model, filed, arr.join())
+            this.$set(this.model, field, arr.join())
         }
       },
 
