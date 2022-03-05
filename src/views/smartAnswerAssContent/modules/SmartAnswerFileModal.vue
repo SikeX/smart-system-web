@@ -26,7 +26,7 @@
           </a-col>
           <a-col :span='24'>
             <a-form-model-item label='附件' :labelCol='labelCol' :wrapperCol='wrapperCol' prop='attachment'>
-              <j-upload v-model='model.attachment' :disabled='disableSubmit'></j-upload>
+              <j-upload v-model='model.attachment' :disabled='disableSubmit' :buttonVisible="!disableSubmit"></j-upload>
             </a-form-model-item>
           </a-col>
           <a-col :span='24'>
