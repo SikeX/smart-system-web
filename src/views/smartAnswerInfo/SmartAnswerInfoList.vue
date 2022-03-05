@@ -17,6 +17,14 @@
         class='j-table-force-nowrap'
         @change='handleTableChange'>
 
+        <template slot="countDown" slot-scope="text">
+          <a-statistic-countdown
+            format="D 天 H 时 m 分 s 秒"
+            :value="text"
+            valueStyle="font-size: 14px"
+          />
+        </template>
+
         <template slot='htmlSlot' slot-scope='text'>
           <div v-html='text'></div>
         </template>
@@ -78,7 +86,7 @@ import SmartAnswerInfoModal from './modules/SmartAnswerInfoModal'
 import SmartAssessmentContentModal from '@views/smartAssessmentContent/modules/SmartAssessmentContentModal'
 import { getAction, putAction } from '@api/manage'
 import SmartAssessmentContentForm from '@views/smartAnswerInfo/modules/SmartAssessmentContentForm'
-import SmartAnswerPage from '@views/smartAnswerInfo/modules/SmartAnswerPage'
+import SmartAnswerPage from "./modules/SmartAnswerPage";
 
 export default {
   name: 'SmartAnswerInfoList',
@@ -123,6 +131,12 @@ export default {
           title:'截止时间',
           align:"center",
           dataIndex: 'endTime'
+        },
+        {
+          title: '距离截止时间倒计时',
+          align: 'center',
+          dataIndex: 'endTime',
+          scopedSlots: { customRender: 'countDown' }
         },
         {
           title: '完成要点个数',
