@@ -132,11 +132,6 @@
             dataIndex: 'departUser_dictText'
           },
           {
-            title:'负责单位',
-            align:"center",
-            dataIndex: 'responsibleDepart_dictText'
-          },
-          {
             title:'负责单位数量',
             align:"center",
             dataIndex: 'responsibleAmount'
