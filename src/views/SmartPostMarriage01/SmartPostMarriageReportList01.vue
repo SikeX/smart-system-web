@@ -400,7 +400,6 @@ export default {
   methods: {
     //婚后添加
     postAdd(record){
-      console.log(record)
       if(record.isReport == '1' || record.isReport == '15'){
         this.$message.error('该条记录已婚后报备！')
         return
