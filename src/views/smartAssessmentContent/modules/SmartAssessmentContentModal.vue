@@ -30,7 +30,7 @@
           <a-textarea v-model='model.instructions' rows='4' placeholder='请输入填报说明' />
         </a-form-model-item>
         <a-form-model-item v-if='model.isKey === 1' label='分值' :labelCol='labelCol' :wrapperCol='wrapperCol' prop='point'>
-          <a-input-number v-model='model.point' placeholder='请输入分值' style='width: 100%' />
+          <a-input-number v-model='model.point' placeholder='请输入分值' style='width: 100%' :min="0" />
         </a-form-model-item>
         <a-form-model-item v-if='model.isKey === 1' label='评分考核单位' :labelCol='labelCol' :wrapperCol='wrapperCol' prop='assDepart'>
 <!--          <j-select-user-by-dep v-model='model.assDepartUser' />-->
