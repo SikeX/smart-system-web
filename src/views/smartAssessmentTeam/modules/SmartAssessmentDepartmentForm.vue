@@ -8,9 +8,9 @@
               <j-select-depart v-model="model.departId"  />
             </a-form-model-item>
           </a-col>
-          <a-col :span="24">
+          <a-col :span="24" v-if="model.departId">
             <a-form-model-item label="评分人员" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="departUser">
-              <j-select-user-by-dep v-model="model.departUser" :multi='false' store='id' text='realname'/>
+              <my-select-user-by-dep v-model="model.departUser" :multi="false" :depart-id="model.departId" store="id" text="realname"/>
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
@@ -38,10 +38,12 @@
 
   import { httpAction, getAction } from '@/api/manage'
   import { validateDuplicateValue } from '@/utils/util'
+  import MySelectUserByDep from "@views/smartAssessmentMission/modules/MySelectUserByDep";
 
   export default {
     name: 'SmartAssessmentDepartmentForm',
     components: {
+      MySelectUserByDep
     },
     props: {
       //表单禁用

@@ -4,7 +4,7 @@
           <span>{{ menuInfo.assContentId_dictText }}</span>
         </span>
     <template v-for="item in menuInfo.children">
-      <a-menu-item v-if="item.hasChild === '0'" :key="item.id + ',' + item.assContentId">
+      <a-menu-item v-if="item.isKey === 1" :key="item.id + ',' + item.assContentId">
         <div v-if='item.contentStatus'>
           <a-icon type='check-square' theme='twoTone' />
           <span>{{ item.assContentId_dictText }}</span>
