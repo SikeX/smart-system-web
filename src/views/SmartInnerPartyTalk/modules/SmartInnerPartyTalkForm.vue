@@ -77,7 +77,7 @@
           <a-col :span="24" >
             <a-form-model-item label="附件" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="files">
               <a-button icon="camera" @click="eloamScan">高拍仪拍照</a-button>
-<!--              <j-upload v-model="model.files" ></j-upload>-->
+              <j-upload v-model="model.files" ></j-upload>
             </a-form-model-item>
           </a-col>
         </a-row>

@@ -18,7 +18,7 @@
           </a-col>
           <a-col :span="24">
             <a-form-model-item label="考核年份" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="assessmentYear">
-              <a-input v-model="model.assessmentYear" placeholder="请输入考核年份" ></a-input>
+              <a-input-number v-model="model.assessmentYear" placeholder="请输入考核年份" :min="0" style="width: 100%"></a-input-number>
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
