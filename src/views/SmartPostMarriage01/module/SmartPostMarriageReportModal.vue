@@ -17,7 +17,7 @@
       </a-col>
     </a-row>
 
-    <smart-post-marriage-report-form ref="realForm" @ok="submitCallback" :disabled="disableSubmit" />
+    <smart-post-marriage-report-form ref="realForm" @ok="submitCallback" :disabled="disableSubmit" @refreshList="refreshList"/>
   </j-modal>
 </template>
 
@@ -42,6 +42,11 @@ export default {
     }
   },
   methods: {
+    //刷新list
+    refreshList(){
+      this.$emit('refreshList')
+    },
+
     add() {
       this.visible = true
       this.$refs.realForm.model.preId = this.preId
@@ -69,7 +74,18 @@ export default {
       this.visible = false
     },
     handleOk() {
-      this.$refs.realForm.submitForm()
+      let that = this
+      
+       this.$confirm({
+        title: '确认提交？',
+        content: '提交后无法更改，请仔细核对！',
+        onOk() {
+          that.$refs.realForm.submitForm()
+        },
+        onCancel() {},
+      });
+
+      
     },
     submitCallback() {
       this.$emit('ok')
@@ -91,6 +107,26 @@ export default {
       this.$nextTick(() => {
         this.$refs.realForm.add()
         this.$refs.realForm.model.preId = record.id
+
+        getAction('/smartPostMarriage/smartPostMarriageReport/getUserInfo', {}).then((res) => {
+        if (res.success) {
+          this.$refs.realForm.model.personId = res.result.id
+          this.$refs.realForm.model.name = res.result.realname
+          this.$refs.realForm.model.sex = res.result.sex
+          this.$refs.realForm.model.job = res.result.post
+          this.$refs.realForm.model.jobLevel = res.result.positionRank
+          this.$refs.realForm.model.politicsStatus = res.result.politicalStatus
+
+          let birth = res.result.birthday
+          if(birth == "undefined" || birth == null || birth == ""){
+            this.$refs.realForm.model.age = 0
+          }else{
+            this.$refs.realForm.model.age = this.$refs.realForm.$options.methods.ages(birth.slice(0, 11))
+      }
+
+        }
+      })
+
       })
     },
   },
