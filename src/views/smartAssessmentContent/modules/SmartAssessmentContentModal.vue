@@ -6,11 +6,11 @@
     :confirmLoading='confirmLoading'
     switchFullscreen
     @ok='handleOk'
+    :okButtonProps="{ class:{'jee-hidden': disableSubmit} }"
     @cancel='handleCancel'
     cancelText='关闭'>
     <a-spin :spinning='confirmLoading'>
       <a-form-model ref='form' :model='model' :rules='validatorRules'>
-        <j-form-container :disabled="disableSubmit">
           <a-form-model-item label='父级节点' :labelCol='labelCol' :wrapperCol='wrapperCol' prop='pid'>
             <j-tree-select
               ref='treeSelect'
@@ -20,20 +20,22 @@
               pidField='pid'
               pidValue='0'
               hasChildField='has_child'
+              :disabled="disableSubmit"
               :condition='condition'
             >
             </j-tree-select>
           </a-form-model-item>
           <a-form-model-item label='名称' :labelCol='labelCol' :wrapperCol='wrapperCol' prop='name'>
-            <a-input v-model='model.name' placeholder='请输入名称'></a-input>
+            <a-input v-model='model.name' placeholder='请输入名称' :disabled="disableSubmit"></a-input>
           </a-form-model-item>
           <a-form-model-item v-if='model.isKey === 1' label='填报说明' :labelCol='labelCol' :wrapperCol='wrapperCol'
                              prop='instructions'>
-            <a-textarea v-model='model.instructions' rows='4' placeholder='请输入填报说明'/>
+            <a-textarea v-model='model.instructions' rows='4' placeholder='请输入填报说明' :disabled="disableSubmit"/>
           </a-form-model-item>
           <a-form-model-item v-if='model.isKey === 1' label='分值' :labelCol='labelCol' :wrapperCol='wrapperCol'
                              prop='point'>
-            <a-input-number v-model='model.point' placeholder='请输入分值' style='width: 100%' :min="0"/>
+            <a-input-number v-model='model.point' placeholder='请输入分值' style='width: 100%' :min="0"
+                            :disabled="disableSubmit"/>
           </a-form-model-item>
           <a-form-model-item v-if='model.isKey === 1' label='评分考核单位' :labelCol='labelCol' :wrapperCol='wrapperCol'
                              prop='assDepart'>
@@ -44,19 +46,19 @@
               @change="handleChange"
               v-model="model.assDepart"
               :filterOption="filterOption"
+              :disabled="disableSubmit"
               allowClear>
               <a-spin v-if="loading" slot="notFoundContent" size="small"/>
               <a-select-option v-for="d in departOptions" :key="d.value" :value="d.value">{{ d.text }}</a-select-option>
             </a-select>
           </a-form-model-item>
           <a-form-model-item v-if='model.isKey === 1' label='评分考核组' :labelCol='labelCol' :wrapperCol='wrapperCol'
-                             prop='assTeam'>
-            <j-search-select-tag v-model='model.assTeam' dict='smart_assessment_teamwheredel_flag=0,team_name,id'/>
+                             prop='assTeam' >
+            <j-search-select-tag v-model='model.assTeam' dict='smart_assessment_teamwheredel_flag=0,team_name,id' :disabled="disableSubmit"/>
           </a-form-model-item>
           <a-form-model-item label='是否考核要点' :labelCol='labelCol' :wrapperCol='wrapperCol' prop='isKey'>
-            <j-switch v-model='model.isKey' :options='[1, 0]'></j-switch>
+            <j-switch v-model='model.isKey' :options='[1, 0]' :disabled="disableSubmit"></j-switch>
           </a-form-model-item>
-        </j-form-container>
 
       </a-form-model>
     </a-spin>
