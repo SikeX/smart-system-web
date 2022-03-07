@@ -181,7 +181,7 @@
           </a-col>
           <a-col :span="24" >
             <a-form-model-item label="附件" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="files">
-              <!-- <j-upload v-model="model.files"></j-upload> -->
+              <j-upload v-model="model.files"></j-upload>
               <a-button icon="camera" @click="eloamScan">高拍仪拍照</a-button>
             </a-form-model-item>
           </a-col>
@@ -220,7 +220,7 @@ import EloamModal from '@views/eloam/modules/EloamModal'
 
 export default {
   name: 'SmartPostMarriageReportForm',
-  mixins: [JEditableTableModelMixin],
+  // mixins: [JEditableTableModelMixin],
   components: { SelectUserByDep, EloamModal },
   data() {
     return {
@@ -418,66 +418,66 @@ export default {
       // alert( back[0].orgCodeTxt)
     },
 
-    addBefore() {
-      this.smartPostMarriageReportFileTable.dataSource = []
-    },
-    getAllTable() {
-      let values = this.tableKeys.map((key) => getRefPromise(this, key))
-      return Promise.all(values)
-    },
+    // addBefore() {
+    //   this.smartPostMarriageReportFileTable.dataSource = []
+    // },
+    // getAllTable() {
+    //   let values = this.tableKeys.map((key) => getRefPromise(this, key))
+    //   return Promise.all(values)
+    // },
     /** 调用完edit()方法之后会自动调用此方法 */
-    editAfter() {
-      this.$nextTick(() => {})
+    // editAfter() {
+    //   this.$nextTick(() => {})
 
-      //审核功能
-      if (this.model.id) {
-        console.log(this.model)
-        let params = { id: this.model.id }
-        getAction(this.url.queryById, params).then((res) => {
-          if (res.success) {
-            this.model = res.result
-          }
-        })
-      }
+    //   //审核功能
+    //   if (this.model.id) {
+    //     console.log(this.model)
+    //     let params = { id: this.model.id }
+    //     getAction(this.url.queryById, params).then((res) => {
+    //       if (res.success) {
+    //         this.model = res.result
+    //       }
+    //     })
+    //   }
 
-      // 加载子表数据
-      if (this.model.id) {
-        let params = { id: this.model.id }
-        this.requestSubTableData(
-          this.url.smartPostMarriageReportFile.list,
-          params,
-          this.smartPostMarriageReportFileTable
-        )
-      }
-    },
+    //   // 加载子表数据
+    //   if (this.model.id) {
+    //     let params = { id: this.model.id }
+    //     this.requestSubTableData(
+    //       this.url.smartPostMarriageReportFile.list,
+    //       params,
+    //       this.smartPostMarriageReportFileTable
+    //     )
+    //   }
+    // },
     //校验所有一对一子表表单
-    validateSubForm(allValues) {
-      return new Promise((resolve, reject) => {
-        Promise.all([])
-          .then(() => {
-            resolve(allValues)
-          })
-          .catch((e) => {
-            if (e.error === VALIDATE_NO_PASSED) {
-              // 如果有未通过表单验证的子表，就自动跳转到它所在的tab
-              this.activeKey = e.index == null ? this.activeKey : this.refKeys[e.index]
-            } else {
-              console.error(e)
-            }
-          })
-      })
-    },
+    // validateSubForm(allValues) {
+    //   return new Promise((resolve, reject) => {
+    //     Promise.all([])
+    //       .then(() => {
+    //         resolve(allValues)
+    //       })
+    //       .catch((e) => {
+    //         if (e.error === VALIDATE_NO_PASSED) {
+    //           // 如果有未通过表单验证的子表，就自动跳转到它所在的tab
+    //           this.activeKey = e.index == null ? this.activeKey : this.refKeys[e.index]
+    //         } else {
+    //           console.error(e)
+    //         }
+    //       })
+    //   })
+    // },
     /** 整理成formData */
-    classifyIntoFormData(allValues) {
-      let main = Object.assign(this.model, allValues.formValue)
-      return {
-        ...main, // 展开
-        smartPostMarriageReportFileList: allValues.tablesValue[0].values,
-      }
-    },
-    validateError(msg) {
-      this.$message.error(msg)
-    },
+    // classifyIntoFormData(allValues) {
+    //   let main = Object.assign(this.model, allValues.formValue)
+    //   return {
+    //     ...main, // 展开
+    //     smartPostMarriageReportFileList: allValues.tablesValue[0].values,
+    //   }
+    // },
+    // validateError(msg) {
+    //   this.$message.error(msg)
+    // },
     eloamScan() {
         this.$refs.modalForm.open()
       },

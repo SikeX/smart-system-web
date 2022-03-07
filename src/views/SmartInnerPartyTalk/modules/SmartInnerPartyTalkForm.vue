@@ -164,8 +164,10 @@
         addDefaultRowNum: 1,
         validatorRules: {
         },
-        refKeys: ['smartInnerPartyPacpa', 'smartInnerPartyAnnex', ],
-        tableKeys:['smartInnerPartyPacpa', 'smartInnerPartyAnnex', ],
+        //refKeys: ['smartInnerPartyPacpa', 'smartInnerPartyAnnex', ],
+        //tableKeys:['smartInnerPartyPacpa', 'smartInnerPartyAnnex', ],
+        refKeys: ['smartInnerPartyPacpa' ],
+        tableKeys:['smartInnerPartyPacpa' ],
         activeKey: 'smartInnerPartyPacpa',
         // 党内谈话参与人表
         smartInnerPartyPacpaTable: {
@@ -184,48 +186,48 @@
           ]
         },
         // 党内谈话附件表
-        smartInnerPartyAnnexTable: {
-          loading: false,
-          dataSource: [],
-          columns: [
-            {
-              title: '上传时间',
-              key: 'createTime',
-              type: FormTypes.datetime,
-              disabled:true,
-              width:"200px",
-              placeholder: '${title}',
-              defaultValue:'',
-            },
-            {
-              title: '附件说明',
-              key: 'supplement',
-              type: FormTypes.input,
-              width:"200px",
-              placeholder: '请输入${title}',
-              defaultValue:'',
-            },
-            {
-              title: '附件文件路径',
-              key: 'annex',
-              type: FormTypes.file,
-              token:true,
-              responseName:"message",
-              width:"200px",
-              placeholder: '请选择文件',
-              defaultValue:'',
-            },
-            /*{
-              title: '下载次数',
-              key: 'downloadCount',
-              type: FormTypes.inputNumber,
-              disabled:true,
-              width:"200px",
-              placeholder: '${title}',
-              defaultValue:'',
-            },*/
-          ]
-        },
+        // smartInnerPartyAnnexTable: {
+        //   loading: false,
+        //   dataSource: [],
+        //   columns: [
+        //     {
+        //       title: '上传时间',
+        //       key: 'createTime',
+        //       type: FormTypes.datetime,
+        //       disabled:true,
+        //       width:"200px",
+        //       placeholder: '${title}',
+        //       defaultValue:'',
+        //     },
+        //     {
+        //       title: '附件说明',
+        //       key: 'supplement',
+        //       type: FormTypes.input,
+        //       width:"200px",
+        //       placeholder: '请输入${title}',
+        //       defaultValue:'',
+        //     },
+        //     {
+        //       title: '附件文件路径',
+        //       key: 'annex',
+        //       type: FormTypes.file,
+        //       token:true,
+        //       responseName:"message",
+        //       width:"200px",
+        //       placeholder: '请选择文件',
+        //       defaultValue:'',
+        //     },
+        //     /*{
+        //       title: '下载次数',
+        //       key: 'downloadCount',
+        //       type: FormTypes.inputNumber,
+        //       disabled:true,
+        //       width:"200px",
+        //       placeholder: '${title}',
+        //       defaultValue:'',
+        //     },*/
+        //   ]
+        // },
         url: {
           add: "/SmartInnerPartyTalk/smartInnerPartyTalk/add",
           edit: "/SmartInnerPartyTalk/smartInnerPartyTalk/edit",
@@ -233,9 +235,9 @@
           smartInnerPartyPacpa: {
             list: '/SmartInnerPartyTalk/smartInnerPartyTalk/querySmartInnerPartyPacpaByMainId'
           },
-          smartInnerPartyAnnex: {
-            list: '/SmartInnerPartyTalk/smartInnerPartyTalk/querySmartInnerPartyAnnexByMainId'
-          },
+          // smartInnerPartyAnnex: {
+          //   list: '/SmartInnerPartyTalk/smartInnerPartyTalk/querySmartInnerPartyAnnexByMainId'
+          // },
         }
       }
     },
@@ -260,19 +262,21 @@
       },
       scanOk(url) {
         let image = url
+        // 请根据自己表单中的字段名称修改 field 变量的值
+        let field = 'files'
         if (image) {
           let arr = []
-          if (this.model.files) {
-            arr.push(this.model.files)
+          // 考虑如果存在已经上传的文件，则拼接起来，没有则直接添加
+          if (this.model[field]) {
+            arr.push(this.model[field])
           }
           arr.push(image)
-          // 更新表单中文件url字段, files 为字段名称
-          this.$set(this.model, 'files', arr.join())
+          this.$set(this.model, field, arr.join())
         }
       },
       addBefore(){
         this.smartInnerPartyPacpaTable.dataSource=[]
-        this.smartInnerPartyAnnexTable.dataSource=[]
+        //this.smartInnerPartyAnnexTable.dataSource=[]
       },
       getAllTable() {
         let values = this.tableKeys.map(key => getRefPromise(this, key))
@@ -299,7 +303,7 @@
             }
           })
           this.requestSubTableData(this.url.smartInnerPartyPacpa.list, params, this.smartInnerPartyPacpaTable)
-          this.requestSubTableData(this.url.smartInnerPartyAnnex.list, params, this.smartInnerPartyAnnexTable)
+          //this.requestSubTableData(this.url.smartInnerPartyAnnex.list, params, this.smartInnerPartyAnnexTable)
         }
       },
       //校验所有一对一子表表单
@@ -324,7 +328,7 @@
         return {
           ...main, // 展开
           smartInnerPartyPacpaList: allValues.tablesValue[0].values,
-          smartInnerPartyAnnexList: allValues.tablesValue[1].values,
+          //smartInnerPartyAnnexList: allValues.tablesValue[1].values,
         }
       },
       validateError(msg){
