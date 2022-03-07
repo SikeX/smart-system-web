@@ -39,12 +39,14 @@
       </a-upload>
       <!-- 高级查询区域 -->
       <j-super-query :fieldList="superFieldList" ref="superQueryModal" @handleSuperQuery="handleSuperQuery"></j-super-query>
-      <a-dropdown v-if="selectedRowKeys.length > 0 && roleId.indexOf('f6817f48af4fb3af11b9e8bf182f618b') != -1">
-        <a-menu slot="overlay">
-<!--          <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>-->
-        </a-menu>
-        <a-button style="margin-left: 8px"> 批量操作 <a-icon type="down" /></a-button>
-      </a-dropdown>
+<!--      <a-dropdown v-if="selectedRowKeys.length > 0">-->
+<!--        <a-menu slot="overlay">-->
+<!--&lt;!&ndash;          <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>&ndash;&gt;-->
+<!--        </a-menu>-->
+<!--        <a-button style="margin-left: 8px"> 批量操作 <a-icon type="down" /></a-button>-->
+<!--        &lt;!&ndash; 导出word &ndash;&gt;-->
+<!--      </a-dropdown>-->
+      <a-button v-if=" roleId.indexOf('f6817f48af4fb3af11b9e8bf182f618b') != -1" @click="saveFiles" type="primary" icon="download">导出word</a-button>
     </div>
 
     <!-- table区域-begin -->
@@ -89,8 +91,8 @@
         </template>
 
         <span slot="action" slot-scope="text, record">
-          <a  @click="viewPre(record)">查看口头报备</a>
-          <a-divider type="vertical" />
+<!--          <a  @click="viewPre(record)">查看口头报备</a>-->
+<!--          <a-divider type="vertical" />-->
           <a v-show="record.verifyStatus == '3' && roleId.indexOf('f6817f48af4fb3af11b9e8bf182f618b') != -1" @click="handleEdit(record)">编辑</a>
 
           <a-divider v-show="record.verifyStatus == '3' && roleId.indexOf('f6817f48af4fb3af11b9e8bf182f618b') != -1" type="vertical" />
@@ -119,6 +121,7 @@
   import SmartPostFuneralReportModal from './modules/SmartPostFuneralReportModal'
   import SmartFuneralReportModal from './module/SmartFuneralReportModal'
   import { mapGetters } from 'vuex'
+  import { myDownload } from '@/api/manage'
 
 
   export default {
@@ -259,7 +262,43 @@
         fieldList.push({type:'Text',value:'elseState',text:'其他需要说明事项',dictCode:''})
         fieldList.push({type:'datetime',value:'reportTime',text:'报备时间'})
         this.superFieldList = fieldList
-      }
+      },
+      saveFiles() {
+        //记录id
+        // console.log(this.selectedRowKeys)
+        let ids = this.selectedRowKeys.join(",")
+
+        if(ids.length == 0){
+          this.$message.error('请选择要导出的数据！')
+          return
+        }
+
+        //下载zip文件
+        myDownload('/smartPostFuneralReport/smartPostFuneralReport/exportWord', ids).then((res) => {
+          if (!res) {
+            console.log("lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll")
+            return
+          }
+          // 创建文件临时存储地址
+          const url = window.URL.createObjectURL(new Blob([res], { type: 'application/zip' }))
+          if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+            try {
+              window.navigator.msSaveOrOpenBlob(res, '附件.zip')
+            } catch (e) {
+              this.$message.error('下载附件失败')
+            }
+          } else {
+            const link = document.createElement('a')
+            link.style.display = 'none'
+            link.href = url
+            link.download = '附件.zip'
+            document.body.appendChild(link)
+            link.click()
+            URL.revokeObjectURL(link.href)
+            document.body.removeChild(link)
+          }
+        })
+      },
     }
   }
 </script>
