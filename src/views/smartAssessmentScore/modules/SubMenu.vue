@@ -4,7 +4,7 @@
           <span>{{ menuInfo.name }}</span>
         </span>
     <template v-for="item in menuInfo.children">
-      <a-menu-item v-if="item.hasChild === '0'" :key="item.id + ',' + item.missionId">
+      <a-menu-item v-if="item.isKey == 1" :key="item.id + ',' + item.missionId">
         <span>{{ item.name }}</span>
       </a-menu-item>
       <sub-menu v-else :key="item.id + ',' + item.missionId" :menu-info="item"/>

@@ -4,13 +4,12 @@
       <a-col :xs='24' :sm='24' :md='6' :lg='6' :xl='6'>
         <a-card title='考核内容目录'>
           <a-menu
-            style='width: 256px'
             mode='inline'
             @openChange='handleChange'
             @click='handleClick'
           >
             <template v-for='item in dataSource'>
-              <a-menu-item v-if="item.hasChild === '0'" :key="item.id + ',' + item.missionId">
+              <a-menu-item v-if="item.isKey == 1" :key="item.id + ',' + item.missionId">
                 <span>{{ item.name }}</span>
               </a-menu-item>
               <sub-menu v-else :key="item.id + ',' + item.missionId" :menu-info='item' />
@@ -55,7 +54,19 @@ export default {
       type: String,
       default: '',
       required: false
-    }
+    },
+    // 负责评分的考核单位ID
+    assDepartId: {
+      type: String,
+      default: '',
+      required: false
+    },
+    // 考核组ID
+    assTeamId: {
+      type: String,
+      default: '',
+      required: false
+    },
   },
   watch: {
     // 选择的 missionId
