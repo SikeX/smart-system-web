@@ -43,7 +43,7 @@
       </a-table>
     </div>
 
-    <smart-score-info-modal  ref='modalForm' @ok='modalFormOk'></smart-score-info-modal>
+    <smart-score-info-modal  ref='modalForm' :max-score="maxScore" @ok='modalFormOk'></smart-score-info-modal>
   </a-card>
 </template>
 
@@ -76,6 +76,11 @@ export default {
     contentId:{
       type:String,
       default:'',
+      required:false
+    },
+    maxScore:{
+      type: Number,
+      default:0,
       required:false
     }
   },
