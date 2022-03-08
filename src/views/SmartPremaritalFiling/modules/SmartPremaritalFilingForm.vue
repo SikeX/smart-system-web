@@ -4,134 +4,190 @@
       <!-- 主表单区域 -->
       <a-form-model ref="form" :model="model" :rules="validatorRules" slot="detail">
         <a-row>
-          <a-col :span="12" >
-             <a-form-model-item label="人员姓名" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="peopleId">
-              <select-user-by-dep v-model="model.peopleId" @info="getUser" ></select-user-by-dep>
+          <a-col :span="12">
+            <a-form-model-item label="人员姓名" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="peopleId">
+              <j-select-user-by-dep v-model="model.peopleId" :multi="false" @change="getUser"></j-select-user-by-dep>
             </a-form-model-item>
           </a-col>
-          <a-col :span="12" >
+          <!-- <a-col :span="12" >
             <a-form-model-item label="人员姓名" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="peopleName" v-show="false">
               <a-input v-model="model.peopleName" placeholder="请输入人员姓名" ></a-input>
             </a-form-model-item>
-          </a-col>
-          <a-col :span="12" >
+          </a-col> -->
+          <a-col :span="12">
             <a-form-model-item label="人员性别" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="peopleSex">
               <j-dict-select-tag type="list" v-model="model.peopleSex" dictCode="sex" placeholder="请选择人员性别" />
             </a-form-model-item>
           </a-col>
-          <a-col :span="12" >
+          <a-col :span="12">
             <a-form-model-item label="人员年龄" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="peopleAge">
               <a-input-number v-model="model.peopleAge" placeholder="请输入人员年龄" style="width: 100%" />
             </a-form-model-item>
           </a-col>
-          <a-col :span="12" >
+          <a-col :span="12">
             <a-form-model-item label="政治面貌" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="politicCou">
-              <j-dict-select-tag type="list" v-model="model.politicCou" dictCode="political_status" placeholder="请选择政治面貌" readOnly unselectable = "on" />
+              <j-dict-select-tag
+                type="list"
+                v-model="model.politicCou"
+                dictCode="political_status"
+                placeholder="请选择政治面貌"
+                readOnly
+                unselectable="on"
+              />
             </a-form-model-item>
           </a-col>
-          <a-col :span="12" >
+          <a-col :span="12">
             <a-form-model-item label="职务" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="post">
-              <j-dict-select-tag type="list" v-model="model.post" dictCode="sys_position,name,code" placeholder="请选择职务"  readOnly unselectable = "on" />
+              <j-dict-select-tag
+                type="list"
+                v-model="model.post"
+                dictCode="sys_position,name,code"
+                placeholder="请选择职务"
+                readOnly
+                unselectable="on"
+              />
             </a-form-model-item>
           </a-col>
-          <a-col :span="12" >
+          <a-col :span="12">
             <a-form-model-item label="职级" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="postRank">
-              <j-dict-select-tag type="list" v-model="model.postRank" dictCode="position_rank" placeholder="请选择职级" readOnly unselectable = "on"  />
+              <j-dict-select-tag
+                type="list"
+                v-model="model.postRank"
+                dictCode="position_rank"
+                placeholder="请选择职级"
+                readOnly
+                unselectable="on"
+              />
             </a-form-model-item>
           </a-col>
-          <a-col :span="12" >
+          <a-col :span="12">
             <a-form-model-item label="配偶姓名" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="spoName">
-              <a-input v-model="model.spoName" placeholder="请输入配偶姓名" ></a-input>
+              <a-input v-model="model.spoName" placeholder="请输入配偶姓名"></a-input>
             </a-form-model-item>
           </a-col>
-          <a-col :span="12" >
+          <a-col :span="12">
             <a-form-model-item label="配偶单位" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="spoUnit">
-              <a-input v-model="model.spoUnit" placeholder="请输入配偶单位" ></a-input>
+              <a-input v-model="model.spoUnit" placeholder="请输入配偶单位"></a-input>
             </a-form-model-item>
           </a-col>
-          <a-col :span="12" >
+          <a-col :span="12">
             <a-form-model-item label="配偶单位职务" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="spoUnitPos">
-              <a-input v-model="model.spoUnitPos" placeholder="请输入配偶单位职务" ></a-input>
+              <a-input v-model="model.spoUnitPos" placeholder="请输入配偶单位职务"></a-input>
             </a-form-model-item>
           </a-col>
-          <a-col :span="12" >
+          <a-col :span="12">
             <a-form-model-item label="配偶政治面貌" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="spoPoliticCou">
-              <j-dict-select-tag type="list" v-model="model.spoPoliticCou" dictCode="political_status" placeholder="请选择政治面貌" />
+              <j-dict-select-tag
+                type="list"
+                v-model="model.spoPoliticCou"
+                dictCode="political_status"
+                placeholder="请选择政治面貌"
+              />
               <!-- <a-input v-model="model.spoPoliticCou" placeholder="请输入配偶政治面貌" ></a-input> -->
             </a-form-model-item>
           </a-col>
-          <a-col :span="12" >
+          <a-col :span="12">
             <a-form-model-item label="结婚人姓名" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="marriedName">
-              <a-input v-model="model.marriedName" placeholder="请输入结婚人姓名" ></a-input>
+              <a-input v-model="model.marriedName" placeholder="请输入结婚人姓名"></a-input>
             </a-form-model-item>
           </a-col>
-          <a-col :span="12" >
-            <a-form-model-item label="与本人关系" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="relationWithMyself">
-              <a-input v-model="model.relationWithMyself" placeholder="请输入与本人关系" ></a-input>
+          <a-col :span="12">
+            <a-form-model-item
+              label="与本人关系"
+              :labelCol="labelCol"
+              :wrapperCol="wrapperCol"
+              prop="relationWithMyself"
+            >
+              <a-input v-model="model.relationWithMyself" placeholder="请输入与本人关系"></a-input>
             </a-form-model-item>
           </a-col>
-          <a-col :span="12" >
-            <a-form-model-item label="婚姻登记时间" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="marryRegistTime">
+          <a-col :span="12">
+            <a-form-model-item
+              label="婚姻登记时间"
+              :labelCol="labelCol"
+              :wrapperCol="wrapperCol"
+              prop="marryRegistTime"
+            >
               <j-date placeholder="请选择婚姻登记时间" v-model="model.marryRegistTime" style="width: 100%" />
             </a-form-model-item>
           </a-col>
-          <a-col :span="12" >
+          <a-col :span="12">
             <a-form-model-item label="婚礼时间" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="weddingTime">
               <j-date placeholder="请选择婚礼时间" v-model="model.weddingTime" style="width: 100%" />
             </a-form-model-item>
           </a-col>
-          <a-col :span="12" >
-            <a-form-model-item label="是否同城同地合办" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="isSameOrganized">
-               <a-input  v-model="model.isSameOrganized" placeholder="请输入是否同城同地合办" style="width: 100%" />
-             <!-- <a-radio-group v-model="value" @change="onChange">
+          <a-col :span="12">
+            <a-form-model-item
+              label="是否同城同地合办"
+              :labelCol="labelCol"
+              :wrapperCol="wrapperCol"
+              prop="isSameOrganized"
+            >
+              <a-input v-model="model.isSameOrganized" placeholder="请输入是否同城同地合办" style="width: 100%" />
+              <!-- <a-radio-group v-model="value" @change="onChange">
              <a-radio :value="1"> 是</a-radio>
              <a-radio :value="2">否</a-radio>
              </a-radio-group> -->
               <!-- <j-dict-select-tag type="list" v-model="model.isSameOrganized" dictCode="" placeholder="请选择是否同城同地合办" /> -->
             </a-form-model-item>
           </a-col>
-          <a-col :span="12" >
+          <a-col :span="12">
             <a-form-model-item label="拟宴请人数" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="guestsNumber">
               <a-input-number v-model="model.guestsNumber" placeholder="请输入拟宴请人数" style="width: 100%" />
             </a-form-model-item>
           </a-col>
-          <a-col :span="12" >
+          <a-col :span="12">
             <a-form-model-item label="婚宴场所名称" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="banqPlaceName">
-              <a-input v-model="model.banqPlaceName" placeholder="请输入婚宴场所名称" ></a-input>
+              <a-input v-model="model.banqPlaceName" placeholder="请输入婚宴场所名称"></a-input>
             </a-form-model-item>
           </a-col>
-          <a-col :span="12" >
+          <a-col :span="12">
             <a-form-model-item label="婚宴场所地址" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="banqPlaceAddr">
-              <a-input v-model="model.banqPlaceAddr" placeholder="请输入婚宴场所地址" ></a-input>
+              <a-input v-model="model.banqPlaceAddr" placeholder="请输入婚宴场所地址"></a-input>
             </a-form-model-item>
           </a-col>
-          <a-col :span="12" >
-            <a-form-model-item label="宴请人员范围" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="banqPersonScope">
-              <a-input v-model="model.banqPersonScope" placeholder="请输入宴请人员范围" ></a-input>
+          <a-col :span="12">
+            <a-form-model-item
+              label="宴请人员范围"
+              :labelCol="labelCol"
+              :wrapperCol="wrapperCol"
+              prop="banqPersonScope"
+            >
+              <a-input v-model="model.banqPersonScope" placeholder="请输入宴请人员范围"></a-input>
             </a-form-model-item>
           </a-col>
-          <a-col :span="12" >
-            <a-form-model-item label="拟用婚礼车辆来源" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="proCarsSource">
-              <a-input v-model="model.proCarsSource" placeholder="请输入拟用婚礼车辆来源" ></a-input>
+          <a-col :span="12">
+            <a-form-model-item
+              label="拟用婚礼车辆来源"
+              :labelCol="labelCol"
+              :wrapperCol="wrapperCol"
+              prop="proCarsSource"
+            >
+              <a-input v-model="model.proCarsSource" placeholder="请输入拟用婚礼车辆来源"></a-input>
             </a-form-model-item>
           </a-col>
-          <a-col :span="12" >
+          <a-col :span="12">
             <a-form-model-item label="拟用婚礼车辆数量" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="proCarsNum">
-              <a-input v-model="model.proCarsNum" placeholder="请输入拟用婚礼车辆数量" ></a-input>
+              <a-input v-model="model.proCarsNum" placeholder="请输入拟用婚礼车辆数量"></a-input>
             </a-form-model-item>
           </a-col>
-          <a-col :span="12" >
+          <a-col :span="12">
             <a-form-model-item label="结婚人配偶姓名" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="marrySpoName">
-              <a-input v-model="model.marrySpoName" placeholder="请输入结婚人配偶姓名" ></a-input>
+              <a-input v-model="model.marrySpoName" placeholder="请输入结婚人配偶姓名"></a-input>
             </a-form-model-item>
           </a-col>
-          <a-col :span="12" >
+          <a-col :span="12">
             <a-form-model-item label="结婚人配偶单位" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="marrySpoUnit">
-              <a-input v-model="model.marrySpoUnit" placeholder="请输入结婚人配偶单位" ></a-input>
+              <a-input v-model="model.marrySpoUnit" placeholder="请输入结婚人配偶单位"></a-input>
             </a-form-model-item>
           </a-col>
-          <a-col :span="12" >
-            <a-form-model-item label="结婚人配偶单位职务" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="marrySpoUnitPos">
+          <a-col :span="12">
+            <a-form-model-item
+              label="结婚人配偶单位职务"
+              :labelCol="labelCol"
+              :wrapperCol="wrapperCol"
+              prop="marrySpoUnitPos"
+            >
               <a-input v-model="model.marrySpoUnitPos" placeholder="请输入结婚人配偶单位职务" />
             </a-form-model-item>
           </a-col>
@@ -150,61 +206,102 @@
               <a-input v-model="model.marrySpoParUnitPos" placeholder="请输入结婚人配偶父母单位职务" ></a-input>
             </a-form-model-item>
           </a-col> -->
-          <a-col :span="12" >
-            <a-form-model-item label="结婚人配偶父亲姓名" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="marrySpoMaleName">
-              <a-input v-model="model.marrySpoMaleName" placeholder="请输入结婚人配偶父亲姓名" ></a-input>
+          <a-col :span="12">
+            <a-form-model-item
+              label="结婚人配偶父亲姓名"
+              :labelCol="labelCol"
+              :wrapperCol="wrapperCol"
+              prop="marrySpoMaleName"
+            >
+              <a-input v-model="model.marrySpoMaleName" placeholder="请输入结婚人配偶父亲姓名"></a-input>
             </a-form-model-item>
           </a-col>
-          <a-col :span="12" >
-            <a-form-model-item label="结婚人配偶母亲姓名" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="marrySpoFemaleName">
-              <a-input v-model="model.marrySpoFemaleName" placeholder="请输入结婚人配偶母亲姓名" ></a-input>
+          <a-col :span="12">
+            <a-form-model-item
+              label="结婚人配偶母亲姓名"
+              :labelCol="labelCol"
+              :wrapperCol="wrapperCol"
+              prop="marrySpoFemaleName"
+            >
+              <a-input v-model="model.marrySpoFemaleName" placeholder="请输入结婚人配偶母亲姓名"></a-input>
             </a-form-model-item>
           </a-col>
-          <a-col :span="12" >
-            <a-form-model-item label="结婚人配偶父亲单位" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="marrySpoMaleUnit">
-              <a-input v-model="model.marrySpoMaleUnit" placeholder="请输入结婚人配偶父亲单位" ></a-input>
+          <a-col :span="12">
+            <a-form-model-item
+              label="结婚人配偶父亲单位"
+              :labelCol="labelCol"
+              :wrapperCol="wrapperCol"
+              prop="marrySpoMaleUnit"
+            >
+              <a-input v-model="model.marrySpoMaleUnit" placeholder="请输入结婚人配偶父亲单位"></a-input>
             </a-form-model-item>
           </a-col>
-          <a-col :span="12" >
-            <a-form-model-item label="结婚人配偶母亲单位" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="marrySpoFemaleUnit">
-              <a-input v-model="model.marrySpoFemaleUnit" placeholder="请输入结婚人配偶母亲单位" ></a-input>
+          <a-col :span="12">
+            <a-form-model-item
+              label="结婚人配偶母亲单位"
+              :labelCol="labelCol"
+              :wrapperCol="wrapperCol"
+              prop="marrySpoFemaleUnit"
+            >
+              <a-input v-model="model.marrySpoFemaleUnit" placeholder="请输入结婚人配偶母亲单位"></a-input>
             </a-form-model-item>
           </a-col>
-          <a-col :span="12" >
-            <a-form-model-item label="结婚人配偶父亲职务" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="marrySpoMaleUnitPos">
-              <a-input v-model="model.marrySpoMaleUnitPos" placeholder="请输入结婚人配偶父亲职务" ></a-input>
+          <a-col :span="12">
+            <a-form-model-item
+              label="结婚人配偶父亲职务"
+              :labelCol="labelCol"
+              :wrapperCol="wrapperCol"
+              prop="marrySpoMaleUnitPos"
+            >
+              <a-input v-model="model.marrySpoMaleUnitPos" placeholder="请输入结婚人配偶父亲职务"></a-input>
             </a-form-model-item>
           </a-col>
-          <a-col :span="12" >
-            <a-form-model-item label="结婚人配偶母亲职务" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="marrySpoFemaleUnitPos">
-              <a-input v-model="model.marrySpoFemaleUnitPos" placeholder="请输入结婚人配偶母亲职务" ></a-input>
+          <a-col :span="12">
+            <a-form-model-item
+              label="结婚人配偶母亲职务"
+              :labelCol="labelCol"
+              :wrapperCol="wrapperCol"
+              prop="marrySpoFemaleUnitPos"
+            >
+              <a-input v-model="model.marrySpoFemaleUnitPos" placeholder="请输入结婚人配偶母亲职务"></a-input>
             </a-form-model-item>
           </a-col>
-          <a-col :span="12" >
-            <a-form-model-item label="其他需要说明的事情" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="otherMattersExp">
-              <a-input v-model="model.otherMattersExp" placeholder="请输入其他需要说明的事情" ></a-input>
+          <a-col :span="12">
+            <a-form-model-item
+              label="其他需要说明的事情"
+              :labelCol="labelCol"
+              :wrapperCol="wrapperCol"
+              prop="otherMattersExp"
+            >
+              <a-input v-model="model.otherMattersExp" placeholder="请输入其他需要说明的事情"></a-input>
             </a-form-model-item>
           </a-col>
-          <a-col :span="12" >
+          <a-col :span="12">
             <a-form-model-item label="报告时间" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="reportTime">
-              <j-date placeholder="请选择报告时间" v-model="model.reportTime" :show-time="true" date-format="YYYY-MM-DD HH:mm:ss" style="width: 100%" />
+              <j-date
+                placeholder="请选择报告时间"
+                v-model="model.reportTime"
+                :show-time="true"
+                date-format="YYYY-MM-DD HH:mm:ss"
+                style="width: 100%"
+              />
             </a-form-model-item>
           </a-col>
-          <a-col :span="12" >
+          <a-col :span="12">
             <a-form-model-item label="联系电话" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="contactNumber">
-              <a-input v-model="model.contactNumber" placeholder="请输入联系电话" readOnly unselectable = "on"  ></a-input>
+              <a-input v-model="model.contactNumber" placeholder="请输入联系电话" readOnly unselectable="on"></a-input>
             </a-form-model-item>
           </a-col>
-          <a-col :span="12" >
+          <a-col :span="12">
             <a-form-model-item label="附件" :labelCol="labelCol2" :wrapperCol="wrapperCol2">
-              <j-upload v-model="model.file"></j-upload>
+              <j-upload v-model="model.files"></j-upload>
               <a-button icon="camera" @click="eloamScan">高拍仪拍照</a-button>
             </a-form-model-item>
           </a-col>
         </a-row>
       </a-form-model>
     </j-form-container>
-      <!-- 子表单区域 -->
+    <!-- 子表单区域 -->
     <!-- <a-tabs v-model="activeKey" @change="handleChangeTabs">
       <a-tab-pane tab="8项规定婚前报备表附表" :key="refKeys[0]" :forceRender="true">
         <j-editable-table
@@ -219,12 +316,12 @@
           :actionButton="true"/>
       </a-tab-pane>
     </a-tabs> -->
-    <eloam-modal ref="modalForm" @ok='scanOk' biz-path='eloam-marriedbefore'></eloam-modal>
+    <eloam-modal ref="modalForm" @ok="scanOk" biz-path="eloam-marriedbefore"></eloam-modal>
   </a-spin>
 </template>
 
 <script>
-import { httpAction,getAction } from '@/api/manage'
+import { httpAction, getAction } from '@/api/manage'
 import { FormTypes, getRefPromise, VALIDATE_NO_PASSED } from '@/utils/JEditableTableUtil'
 import { JEditableTableModelMixin } from '@/mixins/JEditableTableModelMixin'
 import { validateDuplicateValue } from '@/utils/util'
@@ -235,19 +332,19 @@ import EloamModal from '@views/eloam/modules/EloamModal'
 export default {
   name: 'SmartPremaritalFilingForm',
   //mixins: [JEditableTableModelMixin],
-  components: {SelectUserByDep,EloamModal},
+  components: { SelectUserByDep, EloamModal },
   data() {
     return {
-      model:{
-        peopleId:'',
-        peopleName:'',
-        contactNumber:'',       
-        politicCou:'',
-        postRank:'',
-        post:'',
+      model: {
+        peopleId: '',
+        peopleName: '',
+        contactNumber: '',
+        politicCou: '',
+        postRank: '',
+        post: '',
       },
       value: 1,
-      rootUrl:'/smartPremaritalFiling/smartPremaritalFiling/',
+      rootUrl: '/smartPremaritalFiling/smartPremaritalFiling/',
       labelCol: {
         xs: { span: 24 },
         sm: { span: 6 },
@@ -367,20 +464,33 @@ export default {
       return this.disabled
     },
   },
-  created() { //备份model原始值
+  created() {
+    //备份model原始值
     this.modelDefault = JSON.parse(JSON.stringify(this.model))
   },
   methods: {
     //人员注释
-    getUser(back){
-       let that = this
-       console.log(back)
-       that.model.peopleId = back[0].id
-       that.model.peopleName = back[0].realname
-       that.model.contactNumber = back[0].phone
-       that.model.politicCou = back[0].politicalStatus_dictText
-       that.model.postRank = back[0].positionRank_dictText
-       that.model.post = back[0].post_dictText
+    getUser(back) {
+      getAction('/sys/user/queryById', { id: back }).then((res) => {
+        if (res.success) {
+          console.log(res.result)
+
+          this.model.peopleId = res.result.id
+          this.model.peopleName = res.result.realname
+          this.model.contactNumber = res.result.phone
+          this.model.politicCou = res.result.politicalStatus
+          this.model.postRank = res.result.positionRank
+          this.model.post = res.result.post
+
+          this.model = Object.assign({}, this.model)
+          console.log(this.model)
+          this.$nextTick(function () {
+            Object.assign(this.model, tmp)
+          })
+        } else {
+          this.$message.error(res.message)
+        }
+      })
     },
 
     // onChange(e) {
@@ -481,20 +591,34 @@ export default {
     },
     //高拍仪
     eloamScan() {
-        this.$refs.modalForm.open()
-      },
-      scanOk(url) {
-        let image = url
-        if (image) {
-          let arr = []
-          if (this.model.files) {
-            arr.push(this.model.files)
-          }
-          arr.push(image)
-          // 更新表单中文件url字段, files 为字段名称
-          this.$set(this.model, 'files', arr.join())
+      this.$refs.modalForm.open()
+    },
+    // scanOk(url) {
+    //   let image = url
+    //   if (image) {
+    //     let arr = []
+    //     if (this.model.files) {
+    //       arr.push(this.model.files)
+    //     }
+    //     arr.push(image)
+    //     // 更新表单中文件url字段, files 为字段名称
+    //     this.$set(this.model, 'files', arr.join())
+    //   }
+    // },
+    scanOk(url) {
+    let image = url
+    // 请根据自己表单中的字段名称修改 field 变量的值
+    let field = 'files'
+    if (image) {
+        let arr = []
+        // 考虑如果存在已经上传的文件，则拼接起来，没有则直接添加
+        if (this.model[field]) {
+            arr.push(this.model[field])
         }
-      },
+        arr.push(image)
+        this.$set(this.model, field, arr.join())
+    }
+},
   },
 }
 </script>
