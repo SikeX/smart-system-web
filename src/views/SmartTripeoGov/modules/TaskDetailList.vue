@@ -3,7 +3,7 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <!--<a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>-->
-<!--      <a-button type="primary" icon="download" @click="handleExportXls('选择结果')">导出</a-button>-->
+      <a-button type="primary" icon="download" @click="handleExportXls('调查结果')">导出</a-button>
       <!--      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
               <a-button type="primary" icon="import">导入</a-button>
             </a-upload>-->
@@ -29,7 +29,8 @@
       @change="handleTableChange"
     >
       <span slot="action" slot-scope="text, record">
-          <a @click="beginSurvey(record)" :class="isDisabled(record)">开始调查</a>
+        <!-- <a-divider type="vertical" />
+          <a @click="checkDetail(record)">详情</a> -->
       </span>
     </a-table>
     <!-- </div> -->
@@ -50,16 +51,15 @@ import { ACCESS_TOKEN,TENANT_ID } from '@/store/mutation-types'
 import Vue from 'vue'
 
 export default {
-  name: 'SelectedPeopleList',
+  name: 'TaskDetailList',
   //   mixins: [JeecgListMixin],
   components: {},
   data() {
     return {
-      dcId:"",
-      dcName:'',
       title:'',
-      paperId:'',
-      description: '选择结果',
+      examId:'',
+      departId:'',
+      description: '调查结果',
       upurl: window._CONFIG['domianURL'] + '/sys/common/static/',
       fileList: [],
       dataSource: [],
@@ -99,9 +99,10 @@ export default {
       anntId: '',
       // 查询条件
       queryParam: {},
+      departName:'',
       // 表头
       columns: [
-        /*{
+        {
           title: '#',
           dataIndex: '',
           key: 'rowIndex',
@@ -110,45 +111,43 @@ export default {
           customRender: function (t, r, index) {
             return parseInt(index) + 1
           },
-        },*/
-        {
-          title: '户主',
-          align: 'center',
-          dataIndex: 'idnumber_dictText',
-          //dataIndex: 'hostName',
         },
+        /*{
+          title: '单位',
+          align: 'center',
+          dataIndex: 'deptName',
+        },*/
         {
           title: '被访人',
           align: 'center',
           dataIndex: 'realname',
         },
         {
-          title: '手机号',
+          title: '是否完成',
           align: 'center',
-          dataIndex: 'phone',
+          dataIndex: 'isFinish_dictText',
         },
-        {
-          title: '操作',
-          dataIndex: 'action',
-          align:"center",
-          width:100,
-          scopedSlots: { customRender: 'action' }
-        }
+        /*{
+          title: '满意度',
+          align: 'center',
+          dataIndex: 'satisfaction_dictText',
+        },*/
       ],
       //   detailModal: { visible: false, url: '' },
       url: {
-        list: '/SmartPaper/smartPeople/SYPeopleList',
+        list: '/SmartPaper/smartPeople/getTriResultByEIdDId',
         delete: '/sys/annountCement/delete',
         deleteBatch: '/sys/annountCement/deleteBatch',
         releaseDataUrl: '/sys/annountCement/doReleaseData',
         reovkeDataUrl: 'sys/annountCement/doReovkeData',
         //exportXlsUrl: 'sys/annountCement/exportXls',
         importExcelUrl: 'sys/annountCement/importExcel',
+        exportXlsUrl: '/SmartPaper/smartPeople/exportTriSurResultXls',
       },
     }
   },
   created() {
-    this.getSuperFieldList()
+    //this.getSuperFieldList()
   },
   computed: {
     importExcelUrl: function () {
@@ -165,50 +164,19 @@ export default {
     }
   },
   methods: {
-    isDisabled(record){
-      if ( record.isFinish === "0") {
-        //激活开始调查
-        //console.log('激活发布');
-      } else if ( record.isFinish === "1"){
-        //console.log('No发布');
-        return "disabled";
-      }
-    },
-    edit(paperId,departId) {
-      console.log(paperId,departId,)
+    edit(examId,paperName,departId,departName) {
+      console.log(examId)
+      this.examId = examId
+      this.departId = departId
+      this.title =  paperName+departName+'调查结果'
       this.$nextTick(() => {
-        this.paperId = paperId
         // this.anntId = record.id
         // console.log(this.anntId)
-        this.loadData(1, paperId,departId)
+        this.loadData(1, examId,departId)
       })
       //   this.$emit('ok')
     },
-    beginSurvey(record){
-        console.log(record);
-        let paperId = this.paperId
-        let userName = record.realname
-        let userId = record.userId
-        let dcName = this.dcName
-        let dcId = this.dcId
-
-      /*this.$router.push({
-        name: "myTriPrePlusSurvey",
-        query: {paperId,userName,userId,dcName}
-      });*/
-        const { href } = this.$router.resolve({
-          name: "myTriPrePlusSurvey",
-          query: {paperId,userName,userId,dcName,dcId}
-        });
-        const win = window.open(href, "_blank");
-        const loop = setInterval(item => {
-          if (win.closed) {
-            clearInterval(loop);
-            this.$ref.table.reload();
-          }
-        }, 1000);
-      },
-    loadData(arg, paperId,departId) {
+    loadData(arg, examId,departId) {
       if (!this.url.list) {
         this.$message.error('请设置url.list属性!')
         return
@@ -219,24 +187,10 @@ export default {
       }
       var params = this.getQueryParams() //查询条件
       this.loading = true
-      getAction(this.url.list, {paperId:paperId,departId:departId})
+      getAction(this.url.list, {examId: examId,departId:departId})
         .then((res) => {
           if (res.success) {
-            console.log(res.message)
-            let mes = (res.message).split(",")
-            console.log(mes)
-            //调查人ID和姓名
-            this.dcId = mes[0]
-            this.dcName = mes[1]
             this.dataSource = res.result.records || res.result
-            let i = 0
-            for(i=0;i<this.dataSource.length;i++){
-              if(this.dataSource[i].examGrade === "-1" ){
-                this.dataSource[i].examGrade = '未参与调查'
-              }else if(this.dataSource[i].examGrade === "0" && this.dataSource[i].isMark === 0){
-                this.dataSource[i].examGrade = '已参与调查'
-              }
-            }
             if (res.result.total) {
               this.ipagination.total = res.result.total
             } else {
@@ -344,11 +298,15 @@ export default {
         text: '所属部门',
         dictCode: 'sys_depart,depart_name,org_code',
       })
-      fieldList.push({type:'string',value:'idnumber',text:'户主',dictCode:'sys_user,realname,idnumber'})
+      fieldList.push({type:'string',value:'hostId',text:'户主',dictCode:'sys_user,realname,id'})
       fieldList.push({type:'string',value:'userId',text:'被访人ID',dictCode:''})
       fieldList.push({type:'string',value:'realname',text:'被访人',dictCode:''})
+      fieldList.push({type:'string',value:'departId',text:'被访人村id',dictCode:'sys_depart,depart_name,id'})
+      fieldList.push({type:'string',value:'departName',text:'所属村',dictCode:''})
       fieldList.push({type:'string',value:'phone',text:'手机号',dictCode:''})
-      fieldList.push({type:'string',value:'isFinish',text:'',dictCode:'is_finish'})
+      fieldList.push({type:'string',value:'satisfaction',text:'满意度',dictCode:'evaluate_grade'})
+      fieldList.push({type:'string',value:'isFinish',text:'是否完成',dictCode:'is_finish'})
+      fieldList.push({type:'string',value:'isFinish',text:'是否举报',dictCode:'yn'})
       this.superFieldList = fieldList
     },
     /* 导出 */
@@ -367,7 +325,7 @@ export default {
       if(this.selectedRowKeys && this.selectedRowKeys.length>0){
         param['selections'] = this.selectedRowKeys.join(",")
       }
-      Object.assign(param,{title:this.title},{examId:this.examId})
+      Object.assign(param,{title:this.title},{examId:this.examId,departId:this.departId})
       console.log("导出参数",param)
       downFile(this.url.exportXlsUrl,param).then((data)=>{
         if (!data) {
@@ -407,12 +365,7 @@ export default {
 </script>
 <style scoped lang="less">
 @import '~@assets/less/common.less';
-.disabled {
-  pointer-events: none;
-  filter: alpha(opacity=50); /*IE滤镜，透明度50%*/
-  -moz-opacity: 0.5; /*Firefox私有，透明度50%*/
-  opacity: 0.5; /*其他，透明度50%*/
-}
+
 /** 查看详情弹窗的样式 */
 .detail-modal {
   .detail-iframe {

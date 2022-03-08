@@ -31,7 +31,7 @@
       <!-- 操作按钮区域 -->
       <div class="table-operator">
         <!--<a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>-->
-        <a-button @click="createTestPaper"  type="primary" icon="plus">创建问卷</a-button>
+        <!-- <a-button @click="createTestPaper"  type="primary" icon="plus">创建三员+调查问卷</a-button> -->
 
       </div>
 
@@ -81,9 +81,9 @@
 <!--          <a @click="handleIssueSurvey(record)" :class="isDisabled(record)">发布问卷</a>-->
 <!--          <a-divider type="vertical" />-->
 <!--          <a @click="editTestPaper(record.id)" :class="isDisabled(record)">修改问卷</a>-->
-            <a @click="showPeopleList(record)">查看被访人</a>
+            <a @click="showPeopleList(record)">被访人</a>
           <a-divider type="vertical" />
-          <a @click="showScore(record)">查看调查结果</a>
+          <a @click="showScore(record)">结果</a>
         </span>
 
         </a-table>
@@ -93,7 +93,7 @@
 
     <smart-paper-modal ref="modalForm" @ok="modalFormOk"></smart-paper-modal>
     <task-detail-modal ref="scoreModal" @ok="modalFormOk"></task-detail-modal>
-    <selected-people-modal ref="selectedPeopleModel" @ok="modalFormOk"/>
+    <selected-people-app-modal ref="selectedPeopleAppModel" @ok="modalFormOk"/>
     <!-- 发布调查问卷弹框 -->
     <ReleaseTest ref="releaseTestDialog" @ok="modalFormOk"/>
   </a-card>
@@ -109,13 +109,13 @@
   import { httpAction,putAction, postAction,getAction } from '@/api/manage'
   import ReleaseTest from './modules/ReleaseTest'
   import TaskDetailModal from './modules/TaskDetailModal.vue'
-  import SelectedPeopleModal from './modules/SelectedPeopleModal'
+  import SelectedPeopleAppModal from './modules/SelectedPeopleAppModal'
 
   export default {
     name: 'SmartSurveyList',
     mixins:[JeecgListMixin, mixinDevice],
     components: {
-      SelectedPeopleModal,
+      SelectedPeopleAppModal,
       SmartPaperModal,
       ReleaseTest,
       TaskDetailModal
@@ -144,12 +144,12 @@
             align:"center",
             dataIndex: 'paperType_dictText'
           },*/
-          {
-            title:'问卷名称',
-            align:"center",
-            dataIndex: 'paperName',
-            //sorter: true
-          },
+          // {
+          //   title:'问卷名称',
+          //   align:"center",
+          //   dataIndex: 'paperName',
+          //   //sorter: true
+          // },
           {
             title:'被调查村名',
             align:"center",
@@ -221,7 +221,7 @@
     created() {
     this.getSuperFieldList();
     },
-/*    beforeRouteEnter(to, from, next) {
+    beforeRouteEnter(to, from, next) {
       console.log("****************Enter**************");
       console.log('to', to);
       console.log('from', from);
@@ -230,10 +230,10 @@
         // beforeRouteEnter不能通过this访问组件实例，但是可以通过 vm 访问组件实例
         console.log(from.path)   //vm.demodata即this.demodata
       })
-      if(from.path ==='/InsertReportingInformation/Success' || from.path==='/myTriPrePlusSurvey'){
-        next({ path: '/SmartTriSurveyList' })
+      if(from.path ==='/InsertReportingInformation/Success' || from.path==='/myTriPrePlusAppSurvey'){
+        next({ path: '/SmartTriSurveyAppList' })
       }
-    },*/
+    },
     computed: {
       flag(){
         console.log(this.$route.query.flag);
@@ -247,11 +247,11 @@
     },
     methods: {
       searchReset(){
-        this.queryParam = {id:'', paperType:'3'}
+        this.queryParam = {}
         this.searchQuery();
       },
       showPeopleList(record){
-        this.$refs.selectedPeopleModel.edit(record.paperId,record.departId)
+        this.$refs.selectedPeopleAppModel.edit(record.paperId,record.departId)
       },
       showScore(record) {
         console.log(record)
