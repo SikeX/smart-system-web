@@ -9,15 +9,14 @@
           <li class="test-info">调查问卷名称: {{ testData.paperName }}</li>
 
           <!--<li class="test-info">出卷者: {{testData.creatorName}}</li>-->
-          <li class="test-info" >调查人: {{ dcName }}</li>
-          <li class="test-info">被访人：{{userName}}</li>
-<!--          <li class="test-info">答题时间: {{ testData.time }} 分钟</li>-->
+          <li class="test-info">答题时间: {{ testData.time }} 分钟</li>
           <li class="test-info">题目数量: 共 {{ testData.topicNum }} 道</li>
-          <li class="test-info" v-show="testData.isMark == 1">总分: {{ testData.totalScore }} 分</li>
+          <li class="test-info">总分: {{ testData.totalScore }} 分</li>
+          <!-- <li class="test-info" >答题人: {{ nickname() }}</li> -->
           <li class="test-info" v-if="finishTest">得分: {{ testData.userGrade.grade + '分' }}</li>
-<!--          <li class="test-info" v-else>剩余时间: {{ remainTime }}</li>-->
+          <li class="test-info" v-else>剩余时间: {{ remainTime }}</li>
           <li class="fr">
-            <el-button type="primary" size="mini" @click="supDialog"
+            <el-button type="primary" size="mini" @click="submitTestsurvey"
                        :disabled="isRead">交卷</el-button>
           </li>
         </ul>
@@ -28,18 +27,25 @@
 
           <!--<li class="test-info">试卷Id: E{{ testData.id }}</li>-->
           <li class="test-info">调查问卷名称: {{ testData.paperName }}</li>
+          <el-select v-model="label" placeholder="请选择试卷类型">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
           <!--<li class="test-info">出卷者: {{testData.creatorName}}</li>-->
-          <li class="test-info">调查人: {{ dcName }}</li>
-          <li class="test-info">被访人：{{userName}}</li>
-<!--          <li class="test-info">答题时间: {{ testData.time }} 分钟</li>-->
+          <li class="test-info">答题时间: {{ testData.time }} 分钟</li>
           <li class="test-info">题目数量: 共 {{ testData.topicNum }} 道</li>
-          <li class="test-info" v-show="testData.isMark == 1">总分: {{ testData.totalScore }} 分</li>
-<!--          <li class="test-info">答题时间: {{ testData.time }} 分钟</li>-->
+          <li class="test-info">总分: {{ testData.totalScore }} 分</li>
+          <li class="test-info">答题人: {{ nickname() }}</li>
+          <li class="test-info">答题时间: {{ testData.time }} 分钟</li>
           <li class="test-info" v-if="finishTest">得分: {{ testData.userGrade.grade + '分' }}</li>
-<!--          <li class="test-info" v-else>剩余时间: {{ remainTime }}</li>-->
+          <li class="test-info" v-else>剩余时间: {{ remainTime }}</li>
           <!-- {{expendTime}} -->
           <li class="fr">
-            <el-button type="primary" size="mini" @click="supDialog" :disabled="isRead">交卷</el-button>
+            <el-button type="primary" size="mini" @click="submitTestsurvey" :disabled="isRead">交卷</el-button>
           </li>
         </ul>
       </div>
@@ -57,7 +63,7 @@
                   <span class="required-symbol" v-if="t.required == 1">*</span>
                   <span class="question_nunber">{{ t.index }}、</span>
                   {{ t.question }}
-                  <span class="score" v-show="testData.isMark == 1">({{ t.score }}分)</span>
+                  <span class="score">({{ t.score }}分)</span>
                 </div>
 
                 <!-- 单选题 -->
@@ -120,37 +126,6 @@
 
           </div>
         </div>
-
-        <!-- 题目导航 -->
-        <div class="topic-nav " :class="isFixed?'isFixed':''" :style="topic_nav_style">
-          <div class="topic-nav-describe" v-if="finishTest ">
-            <span class="topic-nav-but correct"> </span> 正确
-            <span class="space"></span>
-            <span class="topic-nav-but error"> </span> 错误
-          </div>
-          <div class="topic-nav-describe" v-else>
-            <span class="topic-nav-but hasAnswer"> </span> 已答
-            <span class="space"></span>
-            <span class="topic-nav-but "> </span> 未答
-          </div>
-
-
-          <div v-for="(topics, Topics_index) in sortedTopics" :key="Topics_index">
-
-            <div class="topic-nav-item" v-if="topics.topic_content.length != 0">
-              <div class="nav-title">{{topicTypeName_mixin(topics.topicType)}}</div>
-
-              <!-- <span class="topic-nav-button" @click="topicNav(topics.topicType,index)" v-for="(item , index) in topics.topic_content" :key="index" :class="emptyAnswer(item.submitAnswer) ?'':'hasAnswer'">
-                {{topicNavIndex_mixin(topics.topicType,index)}}
-              </span> -->
-              <span class="topic-nav-button" @click="topicNav(topics.topicType,index)" v-for="(item , index) in topics.topic_content" :key="index" :class="emptyAnswer(item)">
-                {{topicNavIndex_mixin(topics.topicType,index)}}
-              </span>
-            </div>
-
-          </div>
-        </div>
-
       </div>
 
       <div class="back-top" @click="backTop_mixin()">
@@ -158,29 +133,6 @@
       </div>
 
     </div>
-
-    <!-- 选择满意度及线索-->
-    <el-dialog customClass="customWidth" title="补充调查" :visible.sync="dialogFormVisible"  @closed="handleClose">
-      <el-form :model="form" ref="form" :rules="rules">
-<!--        <el-form-item label="1、本次调查满意度" prop="satisfaction">
-          <el-rate :style="{fontSize:'30px'}" v-model="form.satisfaction" show-text :texts="['不满意', '基本满意', '满意', '非常满意', '完全满意']"></el-rate>
-        </el-form-item>-->
-        <el-form-item label="是否汇报问题" prop="isReport">
-          <el-radio-group v-model="form.isReport" >
-            <el-radio :label="1">是</el-radio>
-            <el-radio :label="0">否</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item>
-          <el-button style="float:right" type="primary" @click="submitTriSurvey(form)">确 定</el-button>
-          <el-button style="float:right;margin-right:15px" @click="closeDialog">取 消</el-button>
-        </el-form-item>
-      </el-form>
-<!--      <div slot="footer" class="dialog-footer">
-        <el-button @click="closeDialog">取 消</el-button>
-        <el-button type="primary" @click="submitTriSurvey()">确 定</el-button>
-      </div>-->
-    </el-dialog>
   </div>
 </template>
 
@@ -191,51 +143,18 @@
   import {postAction, httpAction, getAction ,putAction} from '@/api/manage'
 
   export default {
-    name: "MyTripreSurvey",
+    name: "MySurvey",
     mixins: [testPaperMixin],
     data() {
-      // 满意度必填
-      var validateSatisfaction = (rule, value, callback) => {
-        if (value === '' || value == undefined || value == 0) {
-          callback(new Error('请选择满意度'));
-        }
-        callback();
-      };
-      var validateIsReport = (rule, value, callback) => {
-        if (value === '' || value == undefined ) {
-          callback(new Error('请选择是否汇报问题！'));
-        }
-        callback();
-      };
       return {
-        dcId:"",
-        dcName:'',
-        dialogFormVisible: false,
-        form:{
-          satisfaction:'',
-          isReport:''
-        },
-        rules:{
-          satisfaction:[
-             //{ required: true, message: '请选择满意度', trigger: 'blur' },
-            {validator:validateSatisfaction,trigger: 'change'},
-          ],
-          isReport:[
-            //{ required: true, message: '请选择是否发现线索', trigger: 'blur' },
-            {validator:validateIsReport,trigger: 'change'},
-          ]
-        },
-      //被访人信息
-        hostIdnumber:"",
-        userName:'',
-        userId:'',
         model:{
          // person_name:'',
           //exam_grade:'',
-          /*excellent_number:'0',
+          excellent_number:'0',
           good_number:'0',
           pass_number:'0',
-          fail_number:'0',*/
+          fail_number:'0',
+
         },
 
         //按题目类型分类好的题目数据
@@ -249,13 +168,13 @@
         ],
         //试卷数据
         testData: {
-          isMark:'',
           testName:this.$route.params.examName,
           examInfo:{},
+
         },
 
-        //remainTime: "", //考试剩余时间
-        //expendTime: 0, //考试用时(秒)
+        remainTime: "", //考试剩余时间
+        expendTime: 0, //考试用时(秒)
         isRead: false, //是否为只读模式
         //forbid_copy: false, //是否禁止复制文本
         //switchPage: 0,
@@ -266,6 +185,7 @@
         isFixed: false,
         topic_nav_style: "top:0px",
         grade:'',
+        fullscreenLoading: false
       };
     },
     computed:{
@@ -279,13 +199,7 @@
     },
 
     created() {
-      console.log(this.$route.query)
-      this.paperId = this.$route.query.paperId
-      this.userId = this.$route.query.userId
-      this.userName = this.$route.query.userName
-      this.dcName = this.$route.query.dcName
-      this.dcId = this.$route.query.dcId
-      this.hostIdnumber = this.$route.query.hostIdnumber
+      //console.log(this.$route.query)
       this.getTestPaperData();
     },
     watch:{
@@ -303,43 +217,6 @@
     },
 
     methods: {
-      //满意度分数
-      getGrade(satisfaction){
-        let that = this
-        if(satisfaction == 1){
-          that.$set(that.form,'satisfaction','2')
-        }else if(satisfaction == 2){
-          that.$set(that.form,'satisfaction','4')
-        }else if(satisfaction == 3){
-          that.$set(that.form,'satisfaction','6')
-        }else if(satisfaction == 4){
-          that.$set(that.form,'satisfaction','8')
-        }else if(satisfaction == 5){
-          that.$set(that.form,'satisfaction','10')
-        }
-      },
-      supDialog(){
-        this.dialogFormVisible = true
-      },
-      handleClose () {
-        this.form = {}
-        this.$refs.form.resetFields()
-        //this.$emit('handleClose')
-      },
-      closeDialog(){
-        this.dialogFormVisible  = false
-        this.form = {}
-        this.$refs.form.resetFields()
-      },
-      submitTriSurvey(){
-        this.$refs.form.validate((valid) => {
-          if (valid) {
-            this.submitTestsurvey()
-          } else {
-            this.$refs.form.resetField();
-          }
-        })
-      },
       //获取当前用户信息
       ...mapGetters(["nickname", "avatar","userInfo"]),
       //提交调查问卷
@@ -351,13 +228,11 @@
           var item = JSON.parse(JSON.stringify(this.testData.smartTopicVoList[i]))
             console.log(item);
             if(item.submitAnswer === null || item.submitAnswer.length === 0){
-              this.$message.warning(`第${item.index}题目未作答`);
-              this.dialogFormVisible  = false
+              this.$message.warning(`第${item.index}题目未选答案`);
               return
           }
           //处理多选/填空答案
-          if (item.topicType === "1" || item.topicType === "3") {
-            console.log(item.topicType)
+          if (item.topicType == 1 || item.topicType == 3) {
             if (item.submitAnswer instanceof Array) {
               var submitAnswer = "";
               item.submitAnswer.forEach((c) => {
@@ -375,50 +250,32 @@
         }
 
         console.log(topic);
-        let personId = this.$route.query.userId
-        let paperId = this.$route.query.paperId
-        let isReport = this.form.isReport
-        this.getGrade(this.form.satisfaction)
-        console.log(isReport,this.form.satisfaction)
+        let examId = this.$route.query.examId
         var request = {
-          examId:paperId,
-          personId:personId,
-          isMark:this.testData.isMark,
+          examId:examId,
           smartSubmitList: topic,
-          satisfaction:this.form.satisfaction,
-          isReport: isReport
+
         };
         console.log(request);
-        postAction('/SmartPaper/smartSubmit/submitTriPreSurvey' ,request).then(res =>{
+        postAction('/SmartPaper/smartExam/submitTestSurvey' ,request).then(res =>{
           if (res.success) {
             console.log(res.result);
-            let title = ""
-            let describe = ""
-            if(this.testData.isMark === 1){
-              title = "成绩"
-              describe = "本次问卷成绩为"
-              grade = res.result;
-            }else {
-              title = "结果"
-              describe = "本次调查结束！"
-              grade = ""
-            }
+            grade = res.result;
             this.$message.success(res.message);
             const h = this.$createElement;
             this.$msgbox({
-              title: title,
+              title: '',
               message: h('p', null, [
-                h('span', null, describe),
-                h('i', { style: 'color: teal' }, grade)
+                h('span', null, '本次调查结束，感谢您的配合'),
+
               ]),
-              //showCancelButton: true,
+              showCancelButton: true,
               confirmButtonText: '确定',
-              //cancelButtonText: '取消',
-              customClass:'msgClass',
+              cancelButtonText: '取消',
               beforeClose: (action, instance, done) => {
                 if (action === 'confirm') {
                   instance.confirmButtonLoading = true;
-                  instance.confirmButtonText = 'Loading...';
+                  instance.confirmButtonText = '执行中...';
                   setTimeout(() => {
                     done();
                     setTimeout(() => {
@@ -430,32 +287,14 @@
                 }
               },
             }).then(action => {
-              this.$elmessage({
-                type:"success",
-                message: "本次调查结束！",
-                //onClose: close(),
-              });
-              console.log(isReport)
-              if(isReport === 1){
-                console.log("跳转...")
-                let surveyId = this.paperId
-                //走访人
-                let visiterId = this.dcId
-                //被走访人
-                let intervieweeId = this.userId
-                //问题填报
-                this.$router.push({
-                  name: "AddSmarTripeoQuestion",
-                  query:{surveyId,visiterId,intervieweeId},
+                this.$message.success({
+                  type:"success",
+                  message: "本次调查问卷结束！",
                 });
-              }else{
-                /*this.$router.push({
-                  path: "/SmartTriPrePlusSurvey/SmartSurveyList",
-                });*/
-                window.location.href="about:blank";
-                window.close();
-                window.opener.location.reload();
-              }
+                close()
+                {
+                  history.go(-1)
+                }
             });
           }
             //location.reload()
@@ -515,9 +354,7 @@
         /* 处理试卷的题目数据 */
         testData.smartTopicVoList.forEach((item) => {
           //按换行符分割字符串
-          if (item.topicType == 1 || item.topicType == 0){
-            item.choice = item.choice.split(/[\n]/g);
-          }
+          item.choice = item.choice.split(/[\n]/g);
           // item.correct_answer = item.correct_answer.split(/[\n]/g);
           //添加用户答案
           if (item.topicType == 1 || item.topicType == 3) {
@@ -578,7 +415,7 @@
         console.log("this.testData ==> ", this.testData);
 
         //判断考试是否已经结束
-        /*var nowDate = new Date().getTime();
+        var nowDate = new Date().getTime();
         //var deadline = testData.examInfo.endTime;
         var deadline = this.$route.query.deadline;
         console.log('deadline',deadline);
@@ -591,7 +428,7 @@
           this.remainTimer();
         } else {
           this.isRead = true;
-        }*/
+        }
 
 
         //按题目类型分类并保存
@@ -654,7 +491,6 @@
         let examId = this.$route.query.examId
         var request = {
           examId:examId,
-          isMark:this.testData.isMark,
           smartSubmitList: topic,
         };
         console.log(request);
@@ -662,28 +498,18 @@
           console.log(res)
           if (res.success) {
             console.log(res.result);
-            let title = ""
-            let describe = ""
-            if(this.testData.isMark === 1){
-              title = "成绩"
-              describe = "已到答题时间，自动交卷，本次问卷成绩为"
-              grade = res.result;
-            }else {
-              title = "结果"
-              describe = "本次问卷结束！"
-              grade = ""
-            }
+            grade = res.result;
             console.log(grade)
             const h = this.$createElement;
             this.$msgbox({
               title: '提醒',
               message: h('p', null, [
-                h('span', null, describe),
+                h('span', null, '已到答题时间，自动交卷，本次考试成绩为 '),
                 h('i', { style: 'color: teal' }, grade)
               ]),
               showCancelButton: true,
               confirmButtonText: '确定',
-              //cancelButtonText: '取消',
+              cancelButtonText: '取消',
               beforeClose: (action, instance, done) => {
                 if (action === 'confirm') {
                   instance.confirmButtonLoading = true
@@ -701,12 +527,10 @@
             }).then(action => {
               this.$elmessage({
                 type:"success",
-                message: "本次调查完成！",
+                message: "考试完成！",
                 onClose:()=> {
                   //此处写提示关闭后需要执行的函数
-                  window.location.href="about:blank";
-                  window.close();
-                  window.opener.location.reload();
+                  history.go(-1)
                 }
               });
             });
@@ -864,11 +688,15 @@
     padding: 0;
     margin: 0;
   }
-  .customWidth{
-        width:80%;
-    }
-  .msgClass{
-    width: 30%;
+  .w {
+    width: 100%
+  }
+  .testPaper
+  .topics {
+    width: 100%
+  }
+  .topics .topic .el-radio, .topics .topic .el-checkbox {
+    width: 100%
   }
 </style>
 

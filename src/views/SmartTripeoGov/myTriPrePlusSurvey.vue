@@ -17,7 +17,7 @@
           <li class="test-info" v-if="finishTest">得分: {{ testData.userGrade.grade + '分' }}</li>
 <!--          <li class="test-info" v-else>剩余时间: {{ remainTime }}</li>-->
           <li class="fr">
-            <el-button type="primary" size="mini" @click="supDialog"
+            <el-button type="primary" size="mini" @click="supDialog()"
                        :disabled="isRead">交卷</el-button>
           </li>
         </ul>
@@ -39,7 +39,7 @@
 <!--          <li class="test-info" v-else>剩余时间: {{ remainTime }}</li>-->
           <!-- {{expendTime}} -->
           <li class="fr">
-            <el-button type="primary" size="mini" @click="supDialog" :disabled="isRead">交卷</el-button>
+            <el-button type="primary" size="mini" @click="supDialog()" :disabled="isRead">交卷</el-button>
           </li>
         </ul>
       </div>
@@ -226,7 +226,6 @@
           ]
         },
       //被访人信息
-        hostIdnumber:"",
         userName:'',
         userId:'',
         model:{
@@ -285,7 +284,6 @@
       this.userName = this.$route.query.userName
       this.dcName = this.$route.query.dcName
       this.dcId = this.$route.query.dcId
-      this.hostIdnumber = this.$route.query.hostIdnumber
       this.getTestPaperData();
     },
     watch:{
@@ -306,15 +304,15 @@
       //满意度分数
       getGrade(satisfaction){
         let that = this
-        if(satisfaction == 1){
+        if(satisfaction === 1){
           that.$set(that.form,'satisfaction','2')
-        }else if(satisfaction == 2){
+        }else if(satisfaction === 2){
           that.$set(that.form,'satisfaction','4')
-        }else if(satisfaction == 3){
+        }else if(satisfaction === 3){
           that.$set(that.form,'satisfaction','6')
-        }else if(satisfaction == 4){
+        }else if(satisfaction === 4){
           that.$set(that.form,'satisfaction','8')
-        }else if(satisfaction == 5){
+        }else if(satisfaction === 5){
           that.$set(that.form,'satisfaction','10')
         }
       },
@@ -357,7 +355,6 @@
           }
           //处理多选/填空答案
           if (item.topicType === "1" || item.topicType === "3") {
-            console.log(item.topicType)
             if (item.submitAnswer instanceof Array) {
               var submitAnswer = "";
               item.submitAnswer.forEach((c) => {
@@ -379,7 +376,7 @@
         let paperId = this.$route.query.paperId
         let isReport = this.form.isReport
         this.getGrade(this.form.satisfaction)
-        console.log(isReport,this.form.satisfaction)
+
         var request = {
           examId:paperId,
           personId:personId,
@@ -448,7 +445,8 @@
                   name: "AddSmarTripeoQuestion",
                   query:{surveyId,visiterId,intervieweeId},
                 });
-              }else{
+              }
+              else{
                 /*this.$router.push({
                   path: "/SmartTriPrePlusSurvey/SmartSurveyList",
                 });*/
@@ -484,7 +482,6 @@
             this.$message.success(res.message);
           }
         })*/
-
       },
 
       //获取试卷数据
@@ -496,7 +493,7 @@
         getAction("/SmartPaper/smartPaper/getPaperById",params).then(res =>{
           if (res.success) {
             this.processTestPaperData(res.result);
-            this.$message.success(res.message);
+            this.$message.success("加载成功");
           } else {
             this.$message.error(res.message);
           }

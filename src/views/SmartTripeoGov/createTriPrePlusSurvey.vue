@@ -230,11 +230,11 @@
              element-loading-spinner="el-icon-loading"
              element-loading-background="rgba(0, 0, 0, 0.3)">
     <el-form :model="form" ref="form">
-      <el-form-item label="每村被访人数" :label-width="formLabelWidth"  prop="selectedPeoCount"
+      <el-form-item label="被访人数" :label-width="formLabelWidth"  prop="selectedPeoCount"
                     :rules="[{ required: true, message: '请输入人数', trigger: 'blur,change' },
       //{ type: 'number', message: '请输入数字', trigger: 'blur,change' },
       { pattern: /^[1-9]*$/, message:'请输入正整数', trigger: 'blur,change' }]">
-        <el-input v-model="form.selectedPeoCount" placeholder="请输入每村被访人数" autocomplete="off"></el-input>
+        <el-input v-model="form.selectedPeoCount" placeholder="请输入被访人数" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button style="float:right" type="primary" @click="randomSelect(form)">确 定</el-button>
@@ -378,11 +378,11 @@
 
       //获取当前用户信息
       ...mapGetters(["nickname", "avatar","userInfo"]),
-      //选择村民-被调查人-弹窗
+      //选择科级干部-被调查人-弹窗
       selectPeople(){
       this.dialogFormVisible  = true
       },
-      //随机选择村民
+      //随机选择科级干部
       randomSelect(){
         this.$refs.form.validate((valid) => {
           if (valid) {
@@ -569,7 +569,7 @@
               });
             }
             else if (this.params.opt === "addSurvey") {
-              let url = "/SmartPaper/smartPaper/addTriSurvey";
+              let url = "/SmartPaper/smartPaper/addTriGovSurvey";
               postAction(url, this.testData).then((res) => {
                 if (res.success) {
                   this.randomLoading = false
