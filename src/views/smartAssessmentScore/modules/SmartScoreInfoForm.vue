@@ -5,7 +5,7 @@
         <a-row>
           <a-col :span='24'>
             <a-form-model-item label='评分' :labelCol='labelCol' :wrapperCol='wrapperCol' prop='score'>
-              <a-input-number v-model='model.score' placeholder='请输入评分' style='width: 100%' />
+              <a-input-number v-model='model.score' placeholder='请输入评分' :min="0" :max="maxScore" style='width: 100%' />
             </a-form-model-item>
           </a-col>
           <a-col :span='24'>
@@ -45,7 +45,12 @@ export default {
       type:String,
       default:'',
       required:false
-    }
+    },
+    maxScore: {
+      type: Number,
+      default: 0,
+      required: false
+    },
   },
   watch:{
     mainId:{

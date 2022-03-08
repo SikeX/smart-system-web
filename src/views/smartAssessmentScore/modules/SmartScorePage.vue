@@ -22,7 +22,7 @@
           <smart-assessment-content-form ref='modalForm1' @ok='modalFormOk' :mainId='selectedContentKeys' />
         </a-row>
         <a-row style='margin-top: 20px'>
-          <SmartScoreDepartList :mission-id='mainId' :content-id='selectedContentKeys'></SmartScoreDepartList>
+          <SmartScoreDepartList :mission-id='mainId' :max-score="maxScore" :content-id='selectedContentKeys'></SmartScoreDepartList>
         </a-row>
       </a-col>
     </a-row>
@@ -88,6 +88,8 @@ export default {
       selectedKeys: [],
       selectedContentKeys: '',
       selectedAnswerAssContentKeys: '',
+      // 当前考核要点的最大分值
+      maxScore: 0,
       // 表头
       columns: [
         {
@@ -310,6 +312,10 @@ export default {
           this.expandedRowKeys.splice(keyIndex, 1)
         }
       }
+    },
+    modalFormOk(record) {
+      // 加载完成题目信息
+      this.maxScore = record.point
     },
     getSuperFieldList() {
       let fieldList = []
