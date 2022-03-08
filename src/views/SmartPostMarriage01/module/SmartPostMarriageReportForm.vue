@@ -405,7 +405,7 @@ export default {
 
     getPerson(back) {
       let that = this
-      console.log(back)
+      console.log('人员选择')
       that.model.personId = back[0].id
       that.model.name = back[0].realname
       that.model.sex = back[0].sex
@@ -521,6 +521,7 @@ export default {
               if (res.success) {
                 that.$message.success(res.message)
                 that.$emit('ok')
+                that.$emit('refreshList')
               } else {
                 that.$message.warning(res.message)
               }

@@ -112,12 +112,6 @@ export default {
           },
         },*/
         {
-          title: '户主',
-          align: 'center',
-          dataIndex: 'idnumber_dictText',
-          //dataIndex: 'hostName',
-        },
-        {
           title: '被访人',
           align: 'center',
           dataIndex: 'realname',
@@ -344,7 +338,6 @@ export default {
         text: '所属部门',
         dictCode: 'sys_depart,depart_name,org_code',
       })
-      fieldList.push({type:'string',value:'idnumber',text:'户主',dictCode:'sys_user,realname,idnumber'})
       fieldList.push({type:'string',value:'userId',text:'被访人ID',dictCode:''})
       fieldList.push({type:'string',value:'realname',text:'被访人',dictCode:''})
       fieldList.push({type:'string',value:'phone',text:'手机号',dictCode:''})

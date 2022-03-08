@@ -139,7 +139,7 @@ export default {
           dataIndex: 'satisfaction_dictText',
         },*/
         {
-          title: '是否举报',
+          title: '是否汇报问题',
           align: 'center',
           dataIndex: 'isReport_dictText',
         },

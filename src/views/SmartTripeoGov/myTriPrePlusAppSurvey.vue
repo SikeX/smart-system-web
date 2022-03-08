@@ -10,6 +10,7 @@
 
           <!--<li class="test-info">出卷者: {{testData.creatorName}}</li>-->
           <li class="test-info" >调查人: {{ dcName }}</li>
+          <li class="test-info">户主：{{userName}}</li>
           <li class="test-info">被访人：{{userName}}</li>
 <!--          <li class="test-info">答题时间: {{ testData.time }} 分钟</li>-->
           <li class="test-info">题目数量: 共 {{ testData.topicNum }} 道</li>
@@ -30,6 +31,7 @@
           <li class="test-info">调查问卷名称: {{ testData.paperName }}</li>
           <!--<li class="test-info">出卷者: {{testData.creatorName}}</li>-->
           <li class="test-info">调查人: {{ dcName }}</li>
+          <li class="test-info">户主： {{hostText}}</li>
           <li class="test-info">被访人：{{userName}}</li>
 <!--          <li class="test-info">答题时间: {{ testData.time }} 分钟</li>-->
           <li class="test-info">题目数量: 共 {{ testData.topicNum }} 道</li>
@@ -120,37 +122,6 @@
 
           </div>
         </div>
-
-        <!-- 题目导航 -->
-        <div class="topic-nav " :class="isFixed?'isFixed':''" :style="topic_nav_style">
-          <div class="topic-nav-describe" v-if="finishTest ">
-            <span class="topic-nav-but correct"> </span> 正确
-            <span class="space"></span>
-            <span class="topic-nav-but error"> </span> 错误
-          </div>
-          <div class="topic-nav-describe" v-else>
-            <span class="topic-nav-but hasAnswer"> </span> 已答
-            <span class="space"></span>
-            <span class="topic-nav-but "> </span> 未答
-          </div>
-
-
-          <div v-for="(topics, Topics_index) in sortedTopics" :key="Topics_index">
-
-            <div class="topic-nav-item" v-if="topics.topic_content.length != 0">
-              <div class="nav-title">{{topicTypeName_mixin(topics.topicType)}}</div>
-
-              <!-- <span class="topic-nav-button" @click="topicNav(topics.topicType,index)" v-for="(item , index) in topics.topic_content" :key="index" :class="emptyAnswer(item.submitAnswer) ?'':'hasAnswer'">
-                {{topicNavIndex_mixin(topics.topicType,index)}}
-              </span> -->
-              <span class="topic-nav-button" @click="topicNav(topics.topicType,index)" v-for="(item , index) in topics.topic_content" :key="index" :class="emptyAnswer(item)">
-                {{topicNavIndex_mixin(topics.topicType,index)}}
-              </span>
-            </div>
-
-          </div>
-        </div>
-
       </div>
 
       <div class="back-top" @click="backTop_mixin()">
@@ -165,7 +136,7 @@
 <!--        <el-form-item label="1、本次调查满意度" prop="satisfaction">
           <el-rate :style="{fontSize:'30px'}" v-model="form.satisfaction" show-text :texts="['不满意', '基本满意', '满意', '非常满意', '完全满意']"></el-rate>
         </el-form-item>-->
-        <el-form-item label="是否汇报问题" prop="isReport">
+        <el-form-item label="是否发现线索" prop="isReport">
           <el-radio-group v-model="form.isReport" >
             <el-radio :label="1">是</el-radio>
             <el-radio :label="0">否</el-radio>
@@ -191,7 +162,7 @@
   import {postAction, httpAction, getAction ,putAction} from '@/api/manage'
 
   export default {
-    name: "MyTripreSurvey",
+    name: "MyTripreAppSurvey",
     mixins: [testPaperMixin],
     data() {
       // 满意度必填
@@ -203,12 +174,11 @@
       };
       var validateIsReport = (rule, value, callback) => {
         if (value === '' || value == undefined ) {
-          callback(new Error('请选择是否汇报问题！'));
+          callback(new Error('请选择是否发现线索'));
         }
         callback();
       };
       return {
-        dcId:"",
         dcName:'',
         dialogFormVisible: false,
         form:{
@@ -226,7 +196,6 @@
           ]
         },
       //被访人信息
-        hostIdnumber:"",
         userName:'',
         userId:'',
         model:{
@@ -280,12 +249,8 @@
 
     created() {
       console.log(this.$route.query)
-      this.paperId = this.$route.query.paperId
-      this.userId = this.$route.query.userId
       this.userName = this.$route.query.userName
       this.dcName = this.$route.query.dcName
-      this.dcId = this.$route.query.dcId
-      this.hostIdnumber = this.$route.query.hostIdnumber
       this.getTestPaperData();
     },
     watch:{
@@ -356,8 +321,7 @@
               return
           }
           //处理多选/填空答案
-          if (item.topicType === "1" || item.topicType === "3") {
-            console.log(item.topicType)
+          if (item.topicType == 1 || item.topicType == 3) {
             if (item.submitAnswer instanceof Array) {
               var submitAnswer = "";
               item.submitAnswer.forEach((c) => {
@@ -414,7 +378,7 @@
               //showCancelButton: true,
               confirmButtonText: '确定',
               //cancelButtonText: '取消',
-              customClass:'msgClass',
+              customClass:'customWidth',
               beforeClose: (action, instance, done) => {
                 if (action === 'confirm') {
                   instance.confirmButtonLoading = true;
@@ -436,25 +400,18 @@
                 //onClose: close(),
               });
               console.log(isReport)
-              if(isReport === 1){
+              if(isReport == "1"){
                 console.log("跳转...")
-                let surveyId = this.paperId
-                //走访人
-                let visiterId = this.dcId
-                //被走访人
-                let intervieweeId = this.userId
-                //问题填报
                 this.$router.push({
-                  name: "AddSmarTripeoQuestion",
-                  query:{surveyId,visiterId,intervieweeId},
+                  name: "InsertReportingInformation",
                 });
               }else{
-                /*this.$router.push({
-                  path: "/SmartTriPrePlusSurvey/SmartSurveyList",
-                });*/
-                window.location.href="about:blank";
+                this.$router.push({
+                  name: "SmartTriSurveyAppList",
+                });
+               /* window.location.href="about:blank";
                 window.close();
-                window.opener.location.reload();
+                window.opener.location.reload();*/
               }
             });
           }
@@ -670,7 +627,7 @@
               grade = res.result;
             }else {
               title = "结果"
-              describe = "本次问卷结束！"
+              describe = "本次问卷结束，感谢您的参与！"
               grade = ""
             }
             console.log(grade)
@@ -678,7 +635,7 @@
             this.$msgbox({
               title: '提醒',
               message: h('p', null, [
-                h('span', null, describe),
+                h('span', null, title),
                 h('i', { style: 'color: teal' }, grade)
               ]),
               showCancelButton: true,
@@ -864,11 +821,20 @@
     padding: 0;
     margin: 0;
   }
+  .w {
+    width: 100%
+  }
+  .testPaper
+  .topics {
+    width: 100%
+  }
+  .topics .topic .el-radio, .topics .topic .el-checkbox {
+    width: 100%
+  }
+
   .customWidth{
         width:80%;
-    }
-  .msgClass{
-    width: 30%;
   }
+
 </style>
 
