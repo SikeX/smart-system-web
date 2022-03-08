@@ -169,11 +169,11 @@
               <a-input v-model="model.otherViolations" placeholder="请输入有无其他违诺行为"></a-input>
             </a-form-model-item>
           </a-col>
-          <a-col :span="12">
-            <a-form-model-item label="报告时间" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="reportTime">
-              <j-date placeholder="请选择报告时间" v-model="model.reportTime" style="width: 100%" />
-            </a-form-model-item>
-          </a-col>
+<!--          <a-col :span="12">-->
+<!--            <a-form-model-item label="报告时间" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="reportTime">-->
+<!--              <j-date placeholder="请选择报告时间" v-model="model.reportTime" style="width: 100%" />-->
+<!--            </a-form-model-item>-->
+<!--          </a-col>-->
           <a-col :span="12">
             <a-form-model-item label="联系电话" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="phoneNumber">
               <a-input v-model="model.phoneNumber" placeholder="请输入联系电话"></a-input>
@@ -215,6 +215,8 @@ import { FormTypes, getRefPromise, VALIDATE_NO_PASSED } from '@/utils/JEditableT
 import { JEditableTableModelMixin } from '@/mixins/JEditableTableModelMixin'
 import { validateDuplicateValue } from '@/utils/util'
 import SelectUserByDep from '@/components/jeecgbiz/modal/SelectUserByDep'
+import JSelectUserByDep from '../../../components/jeecgbiz/JSelectUserByDep.vue'
+
 
 // import { loadData } from '@/mixins/JeecgListMixin'
 import EloamModal from '@views/eloam/modules/EloamModal'
@@ -222,7 +224,7 @@ import EloamModal from '@views/eloam/modules/EloamModal'
 export default {
   name: 'SmartPostMarriageReportForm',
   // mixins: [JEditableTableModelMixin],
-  components: { SelectUserByDep, EloamModal },
+  components: { JSelectUserByDep, EloamModal },
   data() {
     return {
       preId:'',

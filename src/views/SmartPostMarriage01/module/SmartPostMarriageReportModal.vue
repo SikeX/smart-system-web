@@ -81,8 +81,6 @@ export default {
     postAdd(record) {
       this.visible = true
 
-      console.log(record.id + "这是婚后")
-
       getAction('/taskType/smartVerifyType/queryByTypeName', { typeName: this.typeName }).then((res) => {
         if (res.success) {
           this.typeDesc = res.result

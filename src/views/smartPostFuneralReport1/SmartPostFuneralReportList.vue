@@ -4,9 +4,15 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
-          <a-col :xl="6" :lg="7" :md="8" :sm="24"  v-if="roleId.indexOf('1465163864583323650') == -1">
-            <a-form-item label="单位">
-              <j-select-depart placeholder="请选择单位"  v-model="queryParam.departId" customReturnField='id' :multi="false" :treeOpera="true"></j-select-depart>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24" v-if="roleId.indexOf('1465163864583323650') == -1">
+            <a-form-item label="工作单位">
+              <j-select-depart
+                placeholder="请输入单位"
+                v-model="queryParam.departId"
+                customReturnField="id"
+                :multi="false"
+                :treeOpera="true"
+              ></j-select-depart>
             </a-form-item>
           </a-col>
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
@@ -26,19 +32,21 @@
 
     <!-- 操作按钮区域 -->
     <div class="table-operator">
-      <a-button @click="handleAdd" type="primary" icon="plus" v-show="roleId.indexOf('f6817f48af4fb3af11b9e8bf182f618b') != -1">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('丧事口头报备表')">导出</a-button>
+<!--      <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>-->
+      <a-button type="primary" icon="download" @click="handleExportXls('丧事事后报备表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
       <!-- 高级查询区域 -->
       <j-super-query :fieldList="superFieldList" ref="superQueryModal" @handleSuperQuery="handleSuperQuery"></j-super-query>
-      <a-dropdown v-if="selectedRowKeys.length > 0 && roleId.indexOf('f6817f48af4fb3af11b9e8bf182f618b') != -1">
-        <a-menu slot="overlay">
-<!--          <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>-->
-        </a-menu>
-        <a-button style="margin-left: 8px"> 批量操作 <a-icon type="down" /></a-button>
-      </a-dropdown>
+<!--      <a-dropdown v-if="selectedRowKeys.length > 0">-->
+<!--        <a-menu slot="overlay">-->
+<!--&lt;!&ndash;          <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>&ndash;&gt;-->
+<!--        </a-menu>-->
+<!--        <a-button style="margin-left: 8px"> 批量操作 <a-icon type="down" /></a-button>-->
+<!--        &lt;!&ndash; 导出word &ndash;&gt;-->
+<!--      </a-dropdown>-->
+      <a-button v-if=" roleId.indexOf('f6817f48af4fb3af11b9e8bf182f618b') != -1" @click="saveFiles" type="primary" icon="download">导出word</a-button>
     </div>
 
     <!-- table区域-begin -->
@@ -83,24 +91,27 @@
         </template>
 
         <span slot="action" slot-scope="text, record">
-<!--        <a  @click="postAdd(record)">进行事后报备</a>-->
-<!--           <a-divider type="vertical" />-->
-          <a v-show=" record.verifyStatus == '3' && roleId.indexOf('f6817f48af4fb3af11b9e8bf182f618b') != -1" @click="handleEdit(record)">编辑</a>
+<!--          <a  @click="viewPre(record)">查看口头报备</a>-->
+<!--          <a-divider type="vertical" />-->
+          <a v-show="record.ifReport == '0'" @click="postAdd(record)">事后报备</a>
+                    <a-divider v-show="record.verifyStatus == '3' && roleId.indexOf('f6817f48af4fb3af11b9e8bf182f618b') != -1" type="vertical" />
+          <a v-show="record.verifyStatus == '3' && roleId.indexOf('f6817f48af4fb3af11b9e8bf182f618b') != -1" @click="postEdit(record.id)">编辑</a>
+
           <a-divider v-show="record.verifyStatus == '3' && roleId.indexOf('f6817f48af4fb3af11b9e8bf182f618b') != -1" type="vertical" />
-                <a @click="handleDetail(record)">详情</a>
-              <a-divider v-show="record.verifyStatus == '3' && roleId.indexOf('f6817f48af4fb3af11b9e8bf182f618b') != -1" type="vertical" />
-                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
+
+                <a v-show="record.ifReport == '1'" @click="postDetail(record.id)">详情</a>
+             <a-divider v-show="record.verifyStatus == '3' && roleId.indexOf('f6817f48af4fb3af11b9e8bf182f618b') != -1" type="vertical" />
+                <a-popconfirm title="确定删除吗?" @confirm="() => postDelete(record)">
                   <a v-show="record.verifyStatus == '3' && roleId.indexOf('f6817f48af4fb3af11b9e8bf182f618b') != -1">删除</a>
                 </a-popconfirm>
-
 
 
         </span>
 
       </a-table>
     </div>
-    <smart-post-funeral-report-modal ref="postForm"></smart-post-funeral-report-modal>
-    <smart-funeral-report-modal ref="modalForm" @ok="modalFormOk"></smart-funeral-report-modal>
+    <smart-funeral-report-modal ref="preModal"></smart-funeral-report-modal>
+    <smart-post-funeral-report-modal ref="modalForm" @ok="modalFormOk" @refreshList="refreshList"></smart-post-funeral-report-modal>
   </a-card>
 </template>
 
@@ -109,17 +120,19 @@
   import '@/assets/less/TableExpand.less'
   import { mixinDevice } from '@/utils/mixin'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import SmartFuneralReportModal from './modules/SmartFuneralReportModal'
-  import SmartPostFuneralReportModal from './module/SmartPostFuneralReportModal'
+  import SmartPostFuneralReportModal from './modules/SmartPostFuneralReportModal'
+  import SmartFuneralReportModal from './module/SmartFuneralReportModal'
   import { mapGetters } from 'vuex'
+  import { myDownload } from '@/api/manage'
+  import { getAction } from '../../api/manage'
 
 
   export default {
-    name: 'SmartFuneralReportList',
+    name: 'SmartPostFuneralReportList',
     mixins:[JeecgListMixin, mixinDevice],
     components: {
-      SmartFuneralReportModal,
-      SmartPostFuneralReportModal
+      SmartPostFuneralReportModal,
+      SmartFuneralReportModal
     },
     data () {
       return {
@@ -199,10 +212,10 @@
         roleId: [],
         url: {
           list: "/smartFuneralReport/smartFuneralReport/list",
-          delete: "/smartFuneralReport/smartFuneralReport/delete",
-          deleteBatch: "/smartFuneralReport/smartFuneralReport/deleteBatch",
-          exportXlsUrl: "/smartFuneralReport/smartFuneralReport/exportXls",
-          importExcelUrl: "smartFuneralReport/smartFuneralReport/importExcel",
+          delete: "/smartPostFuneralReport/smartPostFuneralReport/delete",
+          deleteBatch: "/smartPostFuneralReport/smartPostFuneralReport/deleteBatch",
+          exportXlsUrl: "/smartPostFuneralReport/smartPostFuneralReport/exportXls",
+          importExcelUrl: "smartPostFuneralReport/smartPostFuneralReport/importExcel",
           
         },
         dictOptions:{},
@@ -219,17 +232,13 @@
       },
     },
     methods: {
-      postAdd(record){
-        if(record.ifReport == 1)
-        {
-          this.$message.error("请勿重复报备！");
-        }
-        else{
-          this.$refs.postForm.postAdd(record);
-        }
-
+      refreshList(){
+        this.loadData(1)
       },
       ...mapGetters(["userInfo"]),
+      viewPre(record){
+        this.$refs.preModal.preView(record)
+      },
       initDictConfig(){
       },
       getSuperFieldList(){
@@ -242,7 +251,111 @@
         fieldList.push({type:'string',value:'peopleType',text:'宴请人员范围',dictCode:''})
         fieldList.push({type:'datetime',value:'reportTime',text:'报告时间'})
         this.superFieldList = fieldList
-      }
+      },
+      saveFiles() {
+        //记录id
+        // console.log(this.selectedRowKeys)
+        let ids = this.selectedRowKeys.join(",")
+
+        if(ids.length == 0){
+          this.$message.error('请选择要导出的数据！')
+          return
+        }
+
+        //下载zip文件
+        myDownload('/smartPostFuneralReport/smartPostFuneralReport/exportWord', ids).then((res) => {
+          if (res.size == 0) {
+            console.log("lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll")
+            return
+          }
+          // 创建文件临时存储地址
+          const url = window.URL.createObjectURL(new Blob([res], { type: 'application/zip' }))
+          if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+            try {
+              window.navigator.msSaveOrOpenBlob(res, '附件.zip')
+            } catch (e) {
+              this.$message.error('下载附件失败')
+            }
+          } else {
+            const link = document.createElement('a')
+            link.style.display = 'none'
+            link.href = url
+            link.download = '附件.zip'
+            document.body.appendChild(link)
+            link.click()
+            URL.revokeObjectURL(link.href)
+            document.body.removeChild(link)
+          }
+        })
+      },
+      postAdd(record){
+        if(record.isReport == '1'){
+          this.$message.error('该条记录已事后报备！')
+          return
+        }
+
+        this.$refs.modalForm.postAdd(record);
+        this.$refs.modalForm.title="添加";
+        this.$refs.modalForm.disableSubmit = false;
+
+      },
+      //婚后编辑
+      postEdit(preId){
+        console.log(preId)
+        getAction('/smartPostFuneralReport/smartPostFuneralReport/queryByPreId', { id: preId,preId:preId }).then((record) => {
+          if (record.success) {
+            //传到编辑
+            console.log(record)
+            this.$nextTick(() => {
+              this.$refs.modalForm.edit(record.result)
+              this.$refs.modalForm.title="编辑";
+              this.$refs.modalForm.disableSubmit = false;
+            })
+          }else{
+            this.$message.error('未找到对应的事后报备记录！')
+            return
+          }
+        })
+      },
+      //婚后详情
+      postDetail(preId){
+        console.log(preId)
+
+        getAction('/smartPostFuneralReport/smartPostFuneralReport/queryByPreId', { id: preId,preId:preId }).then((record) => {
+          if (record.success) {
+            //传到编辑
+            console.log(record)
+            this.$nextTick(() => {
+              this.$refs.modalForm.edit(record.result)
+              this.$refs.modalForm.title="详情";
+              this.$refs.modalForm.disableSubmit = true;
+            })
+          }else{
+            this.$message.error('未找到对应的事后报备记录！')
+            return
+          }
+        })
+      },
+
+      //婚后删除
+      postDelete(record){
+        console.log(record)
+
+        getAction('/smartPostFuneralReport/smartPostFuneralReport/queryById', { id: record.id,preId:record.id }).then((res) => {
+          if (res.success) {
+            //传到删除
+            console.log(res)
+            this.$nextTick(() => {
+              this.handleDelete(res.result.id)
+            })
+          }else{
+            this.$message.error('未找到对应的事后报备记录！')
+            return
+          }
+        })
+
+      },
+
     }
   }
 </script>
