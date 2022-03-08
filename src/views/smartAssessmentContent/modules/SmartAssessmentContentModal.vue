@@ -6,7 +6,6 @@
     :confirmLoading='confirmLoading'
     switchFullscreen
     @ok='handleOk'
-    :okButtonProps="{ class:{'jee-hidden': disableSubmit} }"
     @cancel='handleCancel'
     cancelText='关闭'>
     <a-spin :spinning='confirmLoading'>
@@ -26,11 +25,11 @@
             </j-tree-select>
           </a-form-model-item>
           <a-form-model-item label='名称' :labelCol='labelCol' :wrapperCol='wrapperCol' prop='name'>
-            <a-input v-model='model.name' placeholder='请输入名称' :disabled="disableSubmit"></a-input>
+            <a-input v-model='model.name' placeholder='请输入名称'></a-input>
           </a-form-model-item>
           <a-form-model-item v-if='model.isKey === 1' label='填报说明' :labelCol='labelCol' :wrapperCol='wrapperCol'
                              prop='instructions'>
-            <a-textarea v-model='model.instructions' rows='4' placeholder='请输入填报说明' :disabled="disableSubmit"/>
+            <a-textarea v-model='model.instructions' rows='4' placeholder='请输入填报说明'/>
           </a-form-model-item>
           <a-form-model-item v-if='model.isKey === 1' label='分值' :labelCol='labelCol' :wrapperCol='wrapperCol'
                              prop='point'>
