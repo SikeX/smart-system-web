@@ -265,7 +265,7 @@
         //下载zip文件
         myDownload('/smartPostFuneralReport/smartPostFuneralReport/exportWord', ids).then((res) => {
           if (res.size == 0) {
-            console.log("lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll")
+            // console.log("lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll")
             return
           }
           // 创建文件临时存储地址

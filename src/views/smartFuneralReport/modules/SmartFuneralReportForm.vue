@@ -42,14 +42,14 @@
             <a-form-model-item label="附件" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="files">
 <!--              <a-button icon="camera" v-on:click="imgClick()">手机拍照</a-button>-->
               <a-button icon="camera" @click="eloamScan">高拍仪拍照</a-button>
-              <input
-                style="float: left; display: none"
-                type="file"
-                id="uploadFile"
-                accept="image/*"
-                capture="camera"
-                v-on:change="readLocalFile()"
-              />
+<!--              <input-->
+<!--                style="float: left; display: none"-->
+<!--                type="file"-->
+<!--                id="uploadFile"-->
+<!--                accept="image/*"-->
+<!--                capture="camera"-->
+<!--                v-on:change="readLocalFile()"-->
+<!--              />-->
               <j-upload v-model="model.files" :biz-path="bizPath"  ></j-upload>
             </a-form-model-item>
           </a-col>
