@@ -13,12 +13,12 @@
         <a-row>
           <a-col :span="24">
             <a-form-model-item label="被考核单位" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="assessmentDepart">
-              <j-select-depart v-model="model.assessmentDepart" :multi="false" />
+              <j-select-depart v-model="model.assessmentDepart" :multi="false" :disabled="isDisabled"/>
             </a-form-model-item>
           </a-col>
           <a-col :span="24" v-if="model.assessmentDepart">
             <a-form-model-item label="被考核单位登录账号" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="departUser">
-              <my-select-user-by-dep v-model="model.departUser" :multi="false" :depart-id="model.assessmentDepart" store="id" text="realname"></my-select-user-by-dep>
+              <my-select-user-by-dep v-model="model.departUser" :multi="false" :depart-id="model.assessmentDepart" store="id" text="realname" />
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
@@ -98,6 +98,11 @@
         }
 
       }
+    },
+    computed: {
+      isDisabled() {
+        return this.model.id;
+      },
     },
     created () {
     //备份model原始值
