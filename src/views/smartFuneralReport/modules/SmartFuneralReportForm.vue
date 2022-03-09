@@ -5,7 +5,7 @@
         <a-row>
           <a-col :span="24">
             <a-form-model-item label="人员" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="peopleId">
-              <select-user-by-dep v-model="model.peopleId"  @info="getPerson"/>
+              <j-select-user-by-dep v-model="model.peopleId" :multi="false" @change="getPerson"></j-select-user-by-dep>
             </a-form-model-item>
           </a-col>
 <!--          <a-col :span="24">-->
@@ -33,23 +33,23 @@
               <a-input v-model="model.peopleType" placeholder="请输入宴请人员范围"  ></a-input>
             </a-form-model-item>
           </a-col>
-          <a-col :span="24">
-            <a-form-model-item label="报告时间" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="reportTime">
-              <j-date placeholder="请选择报告时间"  v-model="model.reportTime" :show-time="true" date-format="YYYY-MM-DD HH:mm:ss" style="width: 100%" />
-            </a-form-model-item>
-          </a-col>
+<!--          <a-col :span="24">-->
+<!--            <a-form-model-item label="报告时间" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="reportTime">-->
+<!--              <j-date placeholder="请选择报告时间"  v-model="model.reportTime" :show-time="true" date-format="YYYY-MM-DD HH:mm:ss" style="width: 100%" />-->
+<!--            </a-form-model-item>-->
+<!--          </a-col>-->
           <a-col :span="24" >
             <a-form-model-item label="附件" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="files">
-              <a-button icon="camera" v-on:click="imgClick()">手机拍照</a-button>
+<!--              <a-button icon="camera" v-on:click="imgClick()">手机拍照</a-button>-->
               <a-button icon="camera" @click="eloamScan">高拍仪拍照</a-button>
-              <input
-                style="float: left; display: none"
-                type="file"
-                id="uploadFile"
-                accept="image/*"
-                capture="camera"
-                v-on:change="readLocalFile()"
-              />
+<!--              <input-->
+<!--                style="float: left; display: none"-->
+<!--                type="file"-->
+<!--                id="uploadFile"-->
+<!--                accept="image/*"-->
+<!--                capture="camera"-->
+<!--                v-on:change="readLocalFile()"-->
+<!--              />-->
               <j-upload v-model="model.files" :biz-path="bizPath"  ></j-upload>
             </a-form-model-item>
           </a-col>
@@ -66,11 +66,12 @@
   import { validateDuplicateValue } from '@/utils/util'
   import SelectUserByDep from '@/components/jeecgbiz/modal/SelectUserByDep'
   import EloamModal from '@views/eloam/modules/EloamModal'
+  import JSelectUserByDep from '../../../components/jeecgbiz/JSelectUserByDep.vue'
 
   export default {
     name: 'SmartFuneralReportForm',
     components: {
-      SelectUserByDep,
+      JSelectUserByDep,
   EloamModal
     },
     props: {
@@ -111,9 +112,9 @@
            peopleType: [
               { required: true, message: '请输入宴请人员范围!'},
            ],
-           reportTime: [
-              { required: true, message: '请输入报告时间!'},
-           ],
+           // reportTime: [
+           //    { required: true, message: '请输入报告时间!'},
+           // ],
         },
         url: {
           add: "/smartFuneralReport/smartFuneralReport/add",
@@ -203,10 +204,30 @@
         })
       },
       getPerson(back) {
-        let that = this
-        console.log(back)
-        that.model.peopleId = back[0].id
+        // let that = this
+        // console.log(back)
+        // that.model.peopleId = back[0].id
         // that.model.name = back[0].realname
+        getAction('/sys/user/queryById', { id: back }).then((res) => {
+          if (res.success) {
+            console.log(res.result)
+
+            this.model.peopleId = res.result.id
+            // this.model.peopleName = res.result.realname
+            // this.model.contactNumber = res.result.phone
+            // this.model.politicCou = res.result.politicalStatus
+            // this.model.postRank = res.result.positionRank
+            // this.model.post = res.result.post
+
+            this.model = Object.assign({}, this.model)
+            console.log(this.model)
+            this.$nextTick(function () {
+              Object.assign(this.model, tmp)
+            })
+          } else {
+            this.$message.error(res.message)
+          }
+        })
       },
       add () {
         this.edit(this.modelDefault);
