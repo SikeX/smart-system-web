@@ -209,7 +209,7 @@
         confirmLoading: false,
         validatorRules: {
            peopleId: [
-              { required: true, message: '请输入报备人ID!'},
+              { required: true, message: '请输入报备人!'},
            ],
            theDeadName: [
               { required: true, message: '请输入逝世人姓名!'},
