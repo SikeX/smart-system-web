@@ -91,7 +91,7 @@
           </j-multi-select-tag>
         </a-form-model-item>
         <!--部门分配-->
-        <a-form-model-item label="单位分配" :labelCol="labelCol" :wrapperCol="wrapperCol" v-show="!departDisabled" prop="selecteddeparts">
+        <a-form-model-item label="单位" :labelCol="labelCol" :wrapperCol="wrapperCol" v-show="!departDisabled" prop="selecteddeparts">
          <!-- <j-select-depart v-model="model.selecteddeparts" :multi="false" @back="backDepartInfo" :backDepart="true" :treeOpera="true"/>-->
           <a-tree-select
             style="width:100%"

@@ -51,15 +51,15 @@
                 <j-input placeholder="输入账号" v-model="queryParam.username"></j-input>
               </a-form-item>
             </a-col>
-            <a-col :md="6" :sm="8">
-              <a-form-item label="用户状态">
-                <a-select v-model="queryParam.status" placeholder="请选择">
-                  <a-select-option value="">请选择</a-select-option>
-                  <a-select-option value="1">正常</a-select-option>
-                  <a-select-option value="2">冻结</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
+<!--            <a-col :md="6" :sm="8">-->
+<!--              <a-form-item label="用户状态">-->
+<!--                <a-select v-model="queryParam.status" placeholder="请选择">-->
+<!--                  <a-select-option value="">请选择</a-select-option>-->
+<!--                  <a-select-option value="1">正常</a-select-option>-->
+<!--                  <a-select-option value="2">冻结</a-select-option>-->
+<!--                </a-select>-->
+<!--              </a-form-item>-->
+<!--            </a-col>-->
           </template>
 
           <a-col :md="6" :sm="8">
@@ -251,7 +251,7 @@
             sorter: true
           },*/
           {
-            title: '用户姓名',
+            title: '姓名',
             align: "center",
             width: 100,
             dataIndex: 'realname',
@@ -340,13 +340,13 @@
             dataIndex: 'politicalStatus_dictText',
             sorter: true
           },
-          {
-            title: '状态',
-            align: "center",
-            width: 80,
-            dataIndex: 'status_dictText',
-            sorter: true
-          },
+          // {
+          //   title: '状态',
+          //   align: "center",
+          //   width: 80,
+          //   dataIndex: 'status_dictText',
+          //   sorter: true
+          // },
           {
             title: '操作',
             dataIndex: 'action',
@@ -466,5 +466,5 @@
   }
 </script>
 <style scoped>
-  @import '~@assets/less/common.less'
+  @import '~@assets/less/common.less';
 </style>

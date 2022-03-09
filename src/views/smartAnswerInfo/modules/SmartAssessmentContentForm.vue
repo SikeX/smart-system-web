@@ -76,6 +76,7 @@ export default {
           if (Number(result.total) > 0) {
             this.dataSource = res.result.records
             this.model = this.dataSource[0]
+            this.$emit('ok', this.model)
           } else {
             this.dataSource = []
           }
