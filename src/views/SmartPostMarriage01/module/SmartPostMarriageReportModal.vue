@@ -97,8 +97,6 @@ export default {
     postAdd(record) {
       this.visible = true
 
-      console.log(record.id + "这是婚后")
-
       getAction('/taskType/smartVerifyType/queryByTypeName', { typeName: this.typeName }).then((res) => {
         if (res.success) {
           this.typeDesc = res.result
@@ -116,6 +114,7 @@ export default {
           this.$refs.realForm.model.job = res.result.post
           this.$refs.realForm.model.jobLevel = res.result.positionRank
           this.$refs.realForm.model.politicsStatus = res.result.politicalStatus
+          this.$refs.realForm.model.phoneNumber = res.result.phone
 
           let birth = res.result.birthday
           if(birth == "undefined" || birth == null || birth == ""){

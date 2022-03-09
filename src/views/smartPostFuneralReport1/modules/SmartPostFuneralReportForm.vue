@@ -5,11 +5,11 @@
         <a-row>
           <a-col :span="12">
             <a-form-model-item label="人员" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="peopleId">
-              <select-user-by-dep v-model="model.peopleId" @info="getPerson" />
+              <j-select-user-by-dep v-model="model.peopleId" :multi="false" @change="getPerson"></j-select-user-by-dep>
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
-            <a-form-model-item label="性别" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="reportSex">
+            <a-form-model-item label="性别" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="reportSex" >
               <j-dict-select-tag
                 type="list"
                 v-model="model.reportSex"
@@ -17,58 +17,59 @@
                 placeholder="请选择性别"
                 readOnly
                 unselectable="on"
+                disabled
               />
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
-            <a-form-model-item label="年龄" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="reportAge">
-              <a-input-number v-model="model.reportAge" placeholder="请输入年龄" style="width: 100%" />
+            <a-form-model-item label="年龄" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="reportAge" >
+              <a-input-number v-model="model.reportAge" placeholder="请输入年龄" style="width: 100%" readOnly />
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
-            <a-form-model-item label="政治面貌" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="politics">
+            <a-form-model-item label="政治面貌" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="politics" disabled='disabled'>
               <j-dict-select-tag
                 type="list"
                 v-model="model.politics"
                 dictCode="political_status"
                 placeholder="请选择政治面貌"
-                readOnly
+                disabled
                 unselectable="on"
               />
             </a-form-model-item>
           </a-col>
-<!--          <a-col :span="12">-->
-<!--            <a-form-model-item label="工作单位" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="departId">-->
-<!--              <a-input v-model="model.departId" placeholder="请输入工作单位"  ></a-input>-->
-<!--            </a-form-model-item>-->
-<!--          </a-col>-->
           <a-col :span="12">
-            <a-form-model-item label="职务" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="zhiwu">
+            <a-form-model-item label="工作单位" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="departId" disabled='disabled'>
+              <a-input v-model="model.departId" placeholder="请输入工作单位" readOnly ></a-input>
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="12">
+            <a-form-model-item label="职务" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="zhiwu" disabled='disabled'>
               <j-dict-select-tag
                 type="list"
                 v-model="model.zhiwu"
                 dictCode="sys_position,name,code"
                 placeholder="请选择职务"
-                readOnly
+                disabled
                 unselectable="on"
               />
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
-            <a-form-model-item label="职级" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="zhiji">
+            <a-form-model-item label="职级" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="zhiji" disabled='disabled'>
               <j-dict-select-tag
                 type="list"
                 v-model="model.zhiji"
                 dictCode="position_rank"
                 placeholder="请选择职级"
-                readOnly
+                disabled
                 unselectable="on"
               />
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
-            <a-form-model-item label="联系电话" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="phone">
-              <a-input v-model="model.phone" placeholder="请输入联系电话"  ></a-input>
+            <a-form-model-item label="联系电话" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="phone" >
+              <a-input v-model="model.phone" placeholder="请输入联系电话" readOnly></a-input>
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
@@ -146,23 +147,23 @@
               <a-input v-model="model.elseState" placeholder="请输入其他需要说明事项"  ></a-input>
             </a-form-model-item>
           </a-col>
-          <a-col :span="12">
-            <a-form-model-item label="报备时间" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="reportTime">
-              <j-date placeholder="请选择报备时间"  v-model="model.reportTime" :show-time="true" date-format="YYYY-MM-DD HH:mm:ss" style="width: 100%" />
-            </a-form-model-item>
-          </a-col>
+<!--          <a-col :span="12">-->
+<!--            <a-form-model-item label="报备时间" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="reportTime">-->
+<!--              <j-date placeholder="请选择报备时间"  v-model="model.reportTime" :show-time="true" date-format="YYYY-MM-DD HH:mm:ss" style="width: 100%" />-->
+<!--            </a-form-model-item>-->
+<!--          </a-col>-->
           <a-col :span="12" >
             <a-form-model-item label="附件" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="files">
 <!--              <a-button icon="camera" v-on:click="imgClick()">手机拍照</a-button>-->
               <a-button icon="camera" @click="eloamScan">高拍仪拍照</a-button>
-              <input
-                style="float: left; display: none"
-                type="file"
-                id="uploadFile"
-                accept="image/*"
-                capture="camera"
-                v-on:change="readLocalFile()"
-              />
+<!--              <input-->
+<!--                style="float: left; display: none"-->
+<!--                type="file"-->
+<!--                id="uploadFile"-->
+<!--                accept="image/*"-->
+<!--                capture="camera"-->
+<!--                v-on:change="readLocalFile()"-->
+<!--              />-->
               <j-upload v-model="model.files" :biz-path="bizPath"  ></j-upload>
             </a-form-model-item>
           </a-col>
@@ -209,7 +210,7 @@
         confirmLoading: false,
         validatorRules: {
            peopleId: [
-              { required: true, message: '请输入报备人ID!'},
+              { required: true, message: '请选择报备人!'},
            ],
            theDeadName: [
               { required: true, message: '请输入逝世人姓名!'},
@@ -253,9 +254,9 @@
            isElse: [
               { required: true, message: '请输入有否其他违规情况!'},
            ],
-           reportTime: [
-              { required: true, message: '请输入报备时间!'},
-           ],
+           // reportTime: [
+           //    { required: true, message: '请输入报备时间!'},
+           // ],
         },
         url: {
           add: "/smartPostFuneralReport/smartPostFuneralReport/add",
@@ -345,24 +346,49 @@
         })
       },
       getPerson(back) {
-        let that = this
-        console.log(back)
-        that.model.peopleId = back[0].id
-        // that.model.name = back[0].realname
-        that.model.reportSex = back[0].sex
-        // that.model.reportAge = back[0].age
-        that.model.zhiwu = back[0].post_dictText
-        that.model.zhiji = back[0].positionRank_dictText
-        that.model.politics = back[0].politicalStatus_dictText
-        that.model.phone = back[0].phone
+        // let that = this
+        // console.log(back)
+        // that.model.peopleId = back[0].id
+        // // that.model.name = back[0].realname
+        // that.model.reportSex = back[0].sex
+        // // that.model.reportAge = back[0].age
+        // that.model.zhiwu = back[0].post_dictText
+        // that.model.zhiji = back[0].positionRank_dictText
+        // that.model.politics = back[0].politicalStatus_dictText
+        // that.model.phone = back[0].phone
+        //
+        // let birth = back[0].birthday
+        // if(birth == "undefined" || birth == null || birth == ""){
+        //   // that.model.reportAge = 0
+        // }else{
+        //   that.model.reportAge = that.$options.methods.ages(birth.slice(0, 11))
+        // }
+        getAction('/sys/user/queryById', { id: back }).then((res) => {
+          if (res.success) {
+            console.log(res.result)
 
-        let birth = back[0].birthday
-        if(birth == "undefined" || birth == null || birth == ""){
-          // that.model.reportAge = 0
-        }else{
-          that.model.reportAge = that.$options.methods.ages(birth.slice(0, 11))
-        }
-
+            this.model.peopleId = res.result.id
+            this.model.name = res.result.realname
+            this.model.reportSex = res.result.sex
+            this.model.phone = res.result.phone
+            this.model.politics = res.result.politicalStatus
+            this.model.zhiji = res.result.positionRank
+            this.model.zhiwu = res.result.post
+            let birth = res.result.birthday
+if(birth == "undefined" || birth == null || birth == ""){
+              // that.model.reportAge = 0
+            }else{
+              that.model.reportAge = that.$options.methods.ages(birth.slice(0, 11))
+            }
+            this.model = Object.assign({}, this.model)
+            console.log(this.model)
+            this.$nextTick(function () {
+              Object.assign(this.model, tmp)
+            })
+          } else {
+            this.$message.error(res.message)
+          }
+        })
         //工作单位文本
         // alert( back[0].orgCodeTxt)
       },
