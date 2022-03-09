@@ -197,7 +197,9 @@
     },
     data () {
       return {
+        preId:'',
         model:{
+          preId:''
          },
         labelCol: {
           xs: { span: 24 },
