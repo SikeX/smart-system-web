@@ -170,7 +170,7 @@
             dataIndex: 'createBy'
           },
           {
-            title:'标题',
+            title:'职能',
             align:"center",
             dataIndex: 'title'
           },
