@@ -178,7 +178,8 @@
           {
             title:'被访人',
             align:"center",
-            dataIndex: 'userId_dictText',
+            //dataIndex: 'userId_dictText',
+            dataIndex: 'realname'
           },
           {
             title: '操作',
@@ -320,6 +321,7 @@
         fieldList.push({type:'string',value:'paperId',text:'试卷ID',dictCode:''})
         fieldList.push({type:'string',value:'paperName',text:'试卷名称',dictCode:''})
         fieldList.push({type:'string',value:'userId',text:'被访人',dictCode:'sys_user,realname,id'})
+        fieldList.push({type:'string',value:'realname',text:'被访人',dictCode:''})
         this.superFieldList = fieldList
       },
 
