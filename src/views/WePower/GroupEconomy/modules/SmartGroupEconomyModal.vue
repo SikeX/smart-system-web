@@ -12,7 +12,7 @@
   >
     <a-spin :spinning="confirmLoading">
       <j-form-container :disabled="disableSubmit">
-        <a-form-model ref="form" :model="model" :rules="validatorRules">
+        <a-form-model ref="form" :model="model" :rules="validatorRules" slot="detail">
           <a-row>
             <a-col :span="24">
               <a-form-model-item label="农村集体经济组织类型" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="type">
@@ -61,7 +61,7 @@ export default {
   data() {
     return {
       title: '操作',
-      width: 800,
+      width: 900,
       visible: false,
       model: {},
       labelCol: {
