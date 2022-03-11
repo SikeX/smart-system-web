@@ -57,6 +57,7 @@ import { getAction, putAction } from '@api/manage'
 import SmartAssessmentContentForm from '@views/smartAnswerInfo/modules/SmartAssessmentContentForm'
 import SmartAnswerPage from '@views/smartAnswerInfo/modules/SmartAnswerPage'
 import SmartScoreInfoModal from '@views/smartAssessmentScore/modules/SmartScoreInfoModal'
+import Vue from "vue";
 
 export default {
   name: 'SmartScoreDepartList',
@@ -92,7 +93,13 @@ export default {
           this.clearList()
         }else{
           this.queryParam['missionId'] = this.missionId
-          this.loadData(1);
+          let assessInfo = Vue.ls.get("assessInfo")
+          if (assessInfo) {
+            this.queryParam['depart'] = assessInfo.departs || assessInfo.responsibleDepart;
+            this.loadData(1);
+          } else {
+            this.$message.warning('没有评分权限!')
+          }
         }
       }
     }
@@ -148,7 +155,7 @@ export default {
         }
       ],
       url: {
-        list: '/smartAnswerInfo/smartAnswerInfo/list',
+        list: '/smartAnswerInfo/smartAnswerInfo/listAll',
         delete: '/smartAnswerInfo/smartAnswerInfo/delete',
         sign: '/smartAnswerInfo/smartAnswerInfo/sign',
         deleteBatch: '/smartAnswerInfo/smartAnswerInfo/deleteBatch',
