@@ -20,6 +20,12 @@
       </a-form>
     </a-modal>
     <a-card :title='description' :bordered="false">
+      <a-tooltip slot="extra">
+        <template slot="title">
+          切换评分角色
+        </template>
+        <a-button type="primary" @click="isShowModal = true" ghost><a-icon type="swap" /></a-button>
+      </a-tooltip>
       <!-- table区域-begin -->
       <div>
 
@@ -97,6 +103,7 @@ import SmartAssessmentContentList from '@views/smartAssessmentContent/SmartAsses
 import '@/assets/less/TableExpand.less'
 import SmartScorePage from '@views/smartAssessmentScore/modules/SmartScorePage'
 import SmartScoreInfoModal from '@views/smartAssessmentScore/modules/SmartScoreInfoModal'
+import Vue from "vue";
 
 export default {
   name: "SmartScoreList",
@@ -110,8 +117,10 @@ export default {
     return {
       description: '考核任务列表',
       disableMixinCreated: true,
-      isShowModal: true,
+      isShowModal: false,
       scoreRole: 'team',
+      // 评分角色信息
+      scoreRoleId: '',
       // 表头
       columns: [
         {
@@ -175,6 +184,21 @@ export default {
   created() {
     this.getSuperFieldList();
   },
+  mounted() {
+    if (Vue.ls.get('assessInfo')) {
+      let assessInfo = Vue.ls.get('assessInfo');
+      if (assessInfo.type === "depart") {
+        this.url.list = this.url.departmentMissionList;
+      } else {
+        this.url.list = this.url.teamMissionList;
+      }
+      this.scoreRole = assessInfo.type;
+      this.scoreRoleId = assessInfo.id;
+      this.loadData(1);
+    } else {
+      this.isShowModal = true
+    }
+  },
   computed: {
     importExcelUrl: function () {
       return `${window._CONFIG['domianURL']}/${this.url.importExcelUrl}`;
@@ -183,12 +207,53 @@ export default {
   methods: {
     handleRoleOk() {
       if (this.scoreRole === "depart") {
+        this.loadMyDepartment();
         this.url.list = this.url.departmentMissionList;
       } else {
+        this.loadMyTeamInfo();
         this.url.list = this.url.teamMissionList;
       }
-      this.loadData(1)
+      // this.loadData(1)
       this.isShowModal = false;
+    },
+    // 查询考核组信息
+    loadMyTeamInfo() {
+      let that = this
+      getAction('/smartAssessmentTeam/smartAssessmentTeam/listMyTeam').then((res) => {
+        if (res.success && res.result.length > 0) {
+          console.log(res)
+          // 前端存储查询到的考核组信息
+          let assessInfo = res.result[0]
+          assessInfo.type = 'team'
+          Vue.ls.set("assessInfo", assessInfo)
+          // 然后加载考核任务
+          this.scoreRoleId = res.result[0].id
+          this.loadData(1)
+        } else {
+          this.$message.warning(res.message)
+          this.isShowModal = true;
+        }
+        this.loading = false;
+      })
+    },
+    // 查询考核单位信息
+    loadMyDepartment() {
+      let that = this
+      getAction('/smartAssessmentDepartment/smartAssessmentDepartment/listMyDepartment').then((res) => {
+        if (res.success && res.result.length > 0) {
+          console.log(res)
+          // 前端存储查询到的考核单位信息
+          let assessInfo = res.result[0]
+          assessInfo.type = 'depart'
+          Vue.ls.set("assessInfo", assessInfo)
+          this.scoreRoleId = res.result[0].id
+          this.loadData(1)
+        } else {
+          this.$message.warning(res.message)
+          this.isShowModal = true;
+        }
+        this.loading = false;
+      })
     },
     initDictConfig() {
     },
@@ -222,6 +287,7 @@ export default {
       }
       this.onClearSelected()
       var params = this.getQueryParams();//查询条件
+      params.scoreRoleId = this.scoreRoleId
       this.loading = true;
       getAction(this.url.list, params).then((res) => {
         if (res.success) {
