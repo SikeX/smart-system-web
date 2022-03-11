@@ -14,8 +14,23 @@
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
+            <a-form-model-item label="人员类型" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="peopleType">
+              <j-dict-select-tag
+                type="list"
+                v-model="model.peopleType"
+                dictCode="lead_people_type"
+                placeholder="请选择人员类型"
+              />
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="24">
             <a-form-model-item label="职务" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="job">
-              <a-input v-model="model.job" placeholder="请输入职务"></a-input>
+              <j-dict-select-tag
+                type="list"
+                v-model="model.job"
+                dictCode="lead_job"
+                placeholder="请选择职务"
+              />
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
@@ -24,8 +39,8 @@
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
-            <a-form-model-item label="标题" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="title">
-              <a-input v-model="model.title" placeholder="请输入标题"></a-input>
+            <a-form-model-item label="职能" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="title">
+              <a-input v-model="model.title" placeholder="请输入职能"></a-input>
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
