@@ -24,21 +24,24 @@
           </a-col>
           <a-col :span="24">
             <a-form-model-item label="职务" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="job">
-              <j-dict-select-tag
-                  type="list"
-                  v-model="model.job"
-                  dictCode="economy_job"
-                  placeholder="请选择职务"
-                />
+              <j-dict-select-tag type="list" v-model="model.job" dictCode="economy_job" placeholder="请选择职务" />
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
-            <a-form-model-item label="任期开始时间" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="termStartDate">
+            <a-form-model-item
+              label="任期开始时间"
+              :labelCol="labelCol"
+              :wrapperCol="wrapperCol"
+              prop="termStartDate"
+              class="termStartDate"
+            >
               <j-date placeholder="请选择任期开始时间" v-model="model.termStartDate" style="width: 100%" />
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
-            <a-form-model-item label="任期结束时间" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="termEndDate">
+            <a-form-model-item label="任期结束时间" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="termEndDate"
+            class="termEndDate"
+            >
               <j-date placeholder="请选择任期结束时间" v-model="model.termEndDate" style="width: 100%" />
             </a-form-model-item>
           </a-col>
@@ -60,11 +63,15 @@
 
 <script>
 import { httpAction } from '@/api/manage'
+import moment from 'moment'
+import JDate from '@/components/jeecg/JDate'
 import { validateDuplicateValue } from '@/utils/util'
 
 export default {
   name: 'SmartGroupEconomyPeopleModal',
-  components: {},
+  components: {
+    JDate
+  },
   props: {
     mainId: {
       type: String,
@@ -96,7 +103,11 @@ export default {
         // termEndDate: [{ required: true, message: '请输入任期结束时间!' }],
         idNumber: [
           { required: true, message: '请输入身份证号!' },
-          { pattern: /(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}$)/, message: '请输入正确的身份证号码!' },
+          {
+            pattern:
+              /(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}$)/,
+            message: '请输入正确的身份证号码!',
+          },
         ],
         pic: [{ required: true, message: '请输入照片!' }],
         termEndDate: [{ required: true, message: '请选择任期开始时间!' }, { validator: this.endTimeValidate }],
