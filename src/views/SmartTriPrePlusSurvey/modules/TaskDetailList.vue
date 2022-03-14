@@ -120,16 +120,17 @@ export default {
         {
           title: '户主',
           align: 'center',
-          //dataIndex: 'hostId_dictText',
-          dataIndex:'hostName'
+          //dataIndex: 'idnumber_dictText',
+          dataIndex: 'hostName'
         },
         {
           title: '被访人',
           align: 'center',
-          dataIndex: 'realname',
+          //dataIndex: 'userId_dictText',
+          dataIndex: 'realname'
         },
         {
-          title: '是否完成',
+          title: '是否完成调查',
           align: 'center',
           dataIndex: 'isFinish_dictText',
         },
@@ -309,15 +310,16 @@ export default {
         text: '所属部门',
         dictCode: 'sys_depart,depart_name,org_code',
       })
-      fieldList.push({type:'string',value:'hostId',text:'户主',dictCode:'sys_user,realname,id'})
-      fieldList.push({type:'string',value:'userId',text:'被访人ID',dictCode:''})
+      fieldList.push({type:'string',value:'idnumber',text:'户主',dictCode:'sys_user,realname,idnumber'})
+      fieldList.push({type:'string',value:'hostName',text:'户主',dictCode:''})
+      fieldList.push({type:'string',value:'userId',text:'被访人',dictCode:'sys_user,realname,id'})
       fieldList.push({type:'string',value:'realname',text:'被访人',dictCode:''})
-      fieldList.push({type:'string',value:'departId',text:'被访人村id',dictCode:'sys_depart,depart_name,id'})
+      fieldList.push({type:'string',value:'departId',text:'被访人村',dictCode:'sys_depart,depart_name,id'})
       fieldList.push({type:'string',value:'departName',text:'所属村',dictCode:''})
       fieldList.push({type:'string',value:'phone',text:'手机号',dictCode:''})
-      fieldList.push({type:'string',value:'satisfaction',text:'满意度',dictCode:'evaluate_grade'})
-      fieldList.push({type:'string',value:'isFinish',text:'是否完成',dictCode:'is_finish'})
-      fieldList.push({type:'string',value:'isFinish',text:'是否举报',dictCode:'yn'})
+      //fieldList.push({type:'string',value:'satisfaction',text:'满意度',dictCode:'evaluate_grade'})
+      fieldList.push({type:'string',value:'isFinish',text:'是否完成调查',dictCode:'is_finish'})
+      fieldList.push({type:'string',value:'isReport',text:'是否汇报问题',dictCode:'yn'})
       this.superFieldList = fieldList
     },
     /* 导出 */

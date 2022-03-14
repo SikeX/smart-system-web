@@ -23,7 +23,7 @@
         </a-card>
       </a-col>
     </a-row>-->
-    <a-tabs defaultActiveKey="1" @change="callback">
+    <a-tabs defaultActiveKey="1">
       <!-- 多列柱状图 -->
       <a-tab-pane  tab="审核状况统计" key="1">
         <h3>{{barTitle}}</h3>
@@ -101,7 +101,7 @@
                 <a-form-item label="月份">
                   <a-date-picker
                     format="YYYY-MM"
-                    v-model="queryParam.barDate"
+                    v-model="queryParam.pieDate"
                     mode="month"
                     :open="pieOpen"
                     @openChange="openPieChange"
@@ -278,7 +278,7 @@ export default {
         if(res.success){
           let data = res.result
           console.log(data)
-          if(data.length != 0){
+          if(data.length !== 0){
             for (let i = 0; i < data.length; i++) {
               this.pieData.push({
                 item: data[i].keyName,
@@ -300,6 +300,7 @@ export default {
     },
     // 按月份查询
     queryDatebar(){
+      this.barDataSource =[]
       this.getBarTitle()
       let time = this.queryParam.barDate.format("YYYY-MM")
       console.log(time)
@@ -351,6 +352,7 @@ export default {
       this.loadBarData();
     },
     queryDatepie(){
+      this.pieData = []
       this.getPieTitle();
       let time = this.queryParam.pieDate.format("YYYY-MM")
       //console.log(time)
@@ -359,18 +361,15 @@ export default {
         if(res.success){
           let data = res.result
           console.log(data)
-          if(data.length != 0){
+          if(data.length !== 0){
             for (let i = 0; i < data.length; i++) {
               this.pieData.push({
                 item: data[i].keyName,
                 count:data[i].value
               })
             }
+            console.log(this.pieData)
           }else{
-            this.pieData.push({
-              item: '',
-              count:"无数据！"
-            })
             this.$message.warning("无数据!")
           }
 

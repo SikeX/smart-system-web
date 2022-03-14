@@ -1,18 +1,15 @@
 <template>
   <div class="upload_list">
-    <img class="layui-upload-img" name="titleBase64Img" id="base64Img" :src="headImg" />
-    <div class="fileInput">
-      <input
-        type="file"
-        id="Updateimage"
-        lay-verify="required"
-        @change="toBase64()"
-        accept="image/jpeg, image/png, image/jpg"
-      />
-    </div>
+    <a-form-item label="发票图">
+      <a-upload listType="picture-card" :beforeUpload="beforeUpload" :customRequest="selfUpload" :show-upload-list="false">
+        <img class="layui-upload-img" name="titleBase64Img" id="base64Img" :src="this.imgUrl" />
+      </a-upload>
+    </a-form-item>
     <div>
       <a-button @click="checkInvoice()">查询发票</a-button>
     </div>
+    <div>发票数据</div>
+    <div>{{ invoiceData }}</div>
   </div>
 </template>
 
@@ -25,44 +22,42 @@ export default {
   name: 'invoice',
   data() {
     return {
+      invoiceData: 'a',
       headImg: '',
       imageUrl: '',
       type: '',
     }
   },
   methods: {
-    toBase64: function() {
-      var that = this
-      var file = document.querySelector('input[type=file]').files[0]
-      console.log('base64', file)
-      var reader = new FileReader()
-      // reader.onloadend = function () {
-      //     $("#base64Img").attr("style","display:inline-block");
-      //     $("#base64Img").attr("src",reader.result);
-      //   //把转换后的数据给id为base64Img的src属性
-      //     console.log(reader.result);
-      //     that.imageUrl = reader.result
-      //     that.updataImg()
-      //   //这里调用了向后台发请求的代码
-      // }
-      if (file) {
-        reader.readAsDataURL(file)
-        reader.onloadend = function (e) {
-          //读取完毕后调用接口
-          // this.$set(this.imageUrl, e.target.result)
-          this.imageUrl = e.target.result
-          postAction('/invoice/recognize',{img: this.imageUrl}).then((res) => {
-            alert(res)
-          })
-          // this.checkInvoice(this.imageUrl)
-          console.log(this.imageUrl)
-        }
+    beforeUpload(file) {
+      const isJPG =
+        file.type === 'image/jpeg' ||
+        file.type === 'image/jpg' ||
+        file.type === 'image/png' ||
+        file.type === 'image/bmp'
+      if (!isJPG) {
+        this.$message.error('请上传图片文件')
       }
+      const isLt2M = file.size / 1024 < 1024 * 16 && file.size / 1024 > 10
+      if (!isLt2M) {
+        this.$message.error('文件大小应在10KB~200KB之间')
+      }
+      return isJPG && isLt2M
     },
-    invoiceApi(imgUrl) {
+    selfUpload({ action, file, onSuccess, onError, onProgress }) {
+      const base64 = new Promise((resolve) => {
+        const fileReader = new FileReader()
+        fileReader.readAsDataURL(file)
+        fileReader.onload = () => {
+          resolve(fileReader.result)
+          this.imgUrl = fileReader.result
+        }
+      })
+    },
+    invoiceApi() {
       let that = this
       console.log(that)
-      const parameter = { img: imgUrl }
+      const parameter = { img: this.imgUrl }
       console.log(parameter)
       const url = 'http://dgfp.market.alicloudapi.com/ocrservice/invoice'
       let sign = signMd5Utils.getSign(url, parameter)
@@ -81,9 +76,8 @@ export default {
         headers: signHeader,
       })
     },
-
-    checkInvoice(url) {
-      this.invoiceApi(url).then((res) => {
+    checkInvoice() {
+      this.invoiceApi().then((res) => {
         console.log(res.data)
         this.$message.info(res.data)
       })

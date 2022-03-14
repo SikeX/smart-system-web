@@ -42,7 +42,8 @@
 
     <!-- 操作按钮区域 -->
     <div class="table-operator">
-      <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
+      <a-button @click="handleAdd" type="primary" icon="plus">村两委新增</a-button>
+      <!-- <a-button @click="handlePeopleAdd" type="primary" icon="plus">党员、村民代表新增</a-button> -->
       <a-button type="primary" icon="download" @click="handleExportXls('村（社区）领导班子')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
@@ -120,7 +121,9 @@
       </a-table>
     </div>
 
+    <smart-village-lead-2-list></smart-village-lead-2-list>
     <smart-village-lead-modal ref="modalForm" @ok="modalFormOk"></smart-village-lead-modal>
+    <smart-village-lead-2-modal ref="peopleForm" @ok="modalFormOk"></smart-village-lead-2-modal>
   </a-card>
 </template>
 
@@ -131,12 +134,17 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import SmartVillageLeadModal from './modules/SmartVillageLeadModal'
   import {filterMultiDictText} from '@/components/dict/JDictSelectUtil'
+  import SmartVillageLead2Modal from './modules/SmartVillageLead2Modal'
+  import SmartVillageLead2List from './SmartVillageLead2List'
+
 
   export default {
     name: 'SmartVillageLeadList',
     mixins:[JeecgListMixin, mixinDevice],
     components: {
-      SmartVillageLeadModal
+      SmartVillageLeadModal,
+      SmartVillageLead2Modal,
+      SmartVillageLead2List
     },
     data () {
       return {
@@ -170,7 +178,7 @@
             dataIndex: 'createBy'
           },
           {
-            title:'标题',
+            title:'职能',
             align:"center",
             dataIndex: 'title'
           },
@@ -219,6 +227,10 @@
       },
     },
     methods: {
+      handlePeopleAdd() {
+        this.$refs.peopleForm.add()
+        this.$refs.peopleForm.title = '党员、村民代表新增'
+      },
       initDictConfig(){
       },
       getSuperFieldList(){
