@@ -50,7 +50,7 @@ import rankList from './rankList.vue'
         this.visible = false;
       },
       handleOk () {
-        this.$refs.realForm.handleOk();
+        this.visible = false;
       },
       submitCallback(){
         this.$emit('ok');
