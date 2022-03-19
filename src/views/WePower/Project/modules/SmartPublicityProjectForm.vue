@@ -51,6 +51,11 @@
               </a-form-model-item>
             </a-col>
             <a-col :span="24">
+              <a-form-model-item v-if="model.type !== '1493964824436678658'" label="合同截止日期" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="signEndTime">
+                <j-date placeholder="请选择合同截止日期" v-model="model.signEndTime" style="width: 100%" />
+              </a-form-model-item>
+            </a-col>
+            <a-col :span="24">
               <a-form-model-item
                 label="村集体经济组织相关材料"
                 :labelCol="labelCol"

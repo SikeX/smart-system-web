@@ -144,14 +144,14 @@
             align:"center",
             dataIndex: 'paperType_dictText'
           },*/
-          // {
-          //   title:'问卷名称',
-          //   align:"center",
-          //   dataIndex: 'paperName',
-          //   //sorter: true
-          // },
           {
-            title:'被调查村名',
+            title:'问卷',
+            align:"center",
+            dataIndex: 'paperName',
+            //sorter: true
+          },
+          {
+            title:'村名',
             align:"center",
             dataIndex: 'departName',
             //dataIndex: 'departId_dictText',

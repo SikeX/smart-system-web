@@ -40,7 +40,13 @@
           </a-col>
           <a-col :span="12">
             <a-form-model-item label="工作单位" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="departId" disabled='disabled'>
-              <a-input v-model="model.departId" placeholder="请输入工作单位" readOnly ></a-input>
+              <j-select-depart
+                placeholder="请输入单位"
+                v-model="model.departId"
+                customReturnField="id"
+                :multi="false"
+                :treeOpera="true"
+              ></j-select-depart>
             </a-form-model-item>
           </a-col>
           <a-col :span="12">

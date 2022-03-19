@@ -1,25 +1,33 @@
 <template>
-  <a-card :bordered='false'>
+  <a-card :bordered="false">
     <!-- 查询区域 -->
-    <div class='table-page-search-wrapper'>
-      <a-form layout='inline' @keyup.enter.native='searchQuery'>
-        <a-row :gutter='24'>
-        </a-row>
+    <div class="table-page-search-wrapper">
+      <a-form layout="inline" @keyup.enter.native="searchQuery">
+        <a-row :gutter="24"> </a-row>
       </a-form>
     </div>
     <!-- 查询区域-END -->
 
     <!-- 操作按钮区域 -->
-    <div class='table-operator'>
+    <div class="table-operator">
       <!-- <a-button @click='handleAdd' type='primary' icon='plus'>新增</a-button> -->
-      <a-button type='primary' icon='download' @click="handleExportXls('考核表')">导出</a-button>
-      <a-upload name='file' :showUploadList='false' :multiple='false' :headers='tokenHeader' :action='importExcelUrl'
-                @change='handleImportExcel'>
+      <a-button type="primary" icon="download" @click="handleExportXls('考核表')">导出</a-button>
+      <a-upload
+        name="file"
+        :showUploadList="false"
+        :multiple="false"
+        :headers="tokenHeader"
+        :action="importExcelUrl"
+        @change="handleImportExcel"
+      >
         <!-- <a-button type='primary' icon='import'>导入</a-button> -->
       </a-upload>
       <!-- 高级查询区域 -->
-      <j-super-query :fieldList='superFieldList' ref='superQueryModal'
-                     @handleSuperQuery='handleSuperQuery'></j-super-query>
+      <j-super-query
+        :fieldList="superFieldList"
+        ref="superQueryModal"
+        @handleSuperQuery="handleSuperQuery"
+      ></j-super-query>
     </div>
 
     <!-- table区域-begin -->
@@ -31,78 +39,56 @@
       </div> -->
 
       <a-table
-        ref='table'
-        size='middle'
+        ref="table"
+        size="middle"
         bordered
-        rowKey='id'
-        class='j-table-force-nowrap'
-        :scroll='{x:true}'
-        :columns='columns'
-        :dataSource='dataSource'
-        :pagination='ipagination'
-        :loading='loading'
-        :customRow='clickThenSelect'
-        @change='handleTableChange'>
-
-        <template slot='htmlSlot' slot-scope='text'>
-          <div v-html='text'></div>
+        rowKey="id"
+        class="j-table-force-nowrap"
+        :scroll="{ x: true }"
+        :columns="columns"
+        :dataSource="dataSource"
+        :pagination="ipagination"
+        :loading="loading"
+        :customRow="clickThenSelect"
+        @change="handleTableChange"
+      >
+        <template slot="htmlSlot" slot-scope="text">
+          <div v-html="text"></div>
         </template>
-        <template slot='imgSlot' slot-scope='text'>
-          <span v-if='!text' style='font-size: 12px;font-style: italic;'>无图片</span>
-          <img v-else :src='getImgView(text)' height='25px' alt=''
-               style='max-width:80px;font-size: 12px;font-style: italic;' />
-        </template>
-        <template slot='fileSlot' slot-scope='text'>
-          <span v-if='!text' style='font-size: 12px;font-style: italic;'>无文件</span>
-          <a-button
+        <template slot="imgSlot" slot-scope="text">
+          <span v-if="!text" style="font-size: 12px; font-style: italic">无图片</span>
+          <img
             v-else
-            :ghost='true'
-            type='primary'
-            icon='download'
-            size='small'
-            @click='downloadFile(text)'>
+            :src="getImgView(text)"
+            height="25px"
+            alt=""
+            style="max-width: 80px; font-size: 12px; font-style: italic"
+          />
+        </template>
+        <template slot="fileSlot" slot-scope="text">
+          <span v-if="!text" style="font-size: 12px; font-style: italic">无文件</span>
+          <a-button v-else :ghost="true" type="primary" icon="download" size="small" @click="downloadFile(text)">
             下载
           </a-button>
         </template>
 
-        <span slot='action' slot-scope='text, record'>
-          <a @click='checkScore(record)'>得分排名</a>
-          <!-- <a @click='checkScore(record)'></a> -->
-
-          <a-divider type='vertical' />
-
-          <a-dropdown>
-            <a class='ant-dropdown-link'>更多 <a-icon type='down' /></a>
-            <a-menu slot='overlay'>
-              <a-menu-item>
-                  <a @click='changeColumnVisible(record)'>修改可见字段</a>
-              </a-menu-item>
-              <a-menu-item v-if='record.missionStatus === "未发布"'>
-                <a-popconfirm title='确定删除吗?' @confirm='() => handleDelete(record.id)'>
-                  <a>删除</a>
-                </a-popconfirm>
-              </a-menu-item>
-            </a-menu>
-          </a-dropdown>
+        <span slot="action" slot-scope="text, record">
+          <a @click="checkScore(record)">得分排名</a>
+          <a-divider type="vertical" />
+          <a @click="changeColumnVisible(record)">修改可见字段</a>
         </span>
-
       </a-table>
     </div>
-    <rank-modal ref='rankModal' @ok='modalFormOk'></rank-modal>
-    <column-visible-modal ref='visibleModal' @ok='modalFormOk'></column-visible-modal>
-
+    <rank-modal ref="rankModal" @ok="modalFormOk"></rank-modal>
+    <column-visible-modal ref="visibleModal" @ok="modalFormOk"></column-visible-modal>
   </a-card>
 </template>
 
 <script>
-
 import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-// import SmartAssessmentMissionModal from './modules/SmartAssessmentMissionModal'
 import { deleteAction, getAction, postAction, putAction } from '@/api/manage'
-// import SmartAssessmentDepartList from './SmartAssessmentDepartList'
-// import SmartAssessmentContentList from '@views/smartAssessmentContent/SmartAssessmentContentList'
-import RankModal from './RankModal'
-import columnVisibleModal from "./columnVisibleModal";
+import RankModal from './modules/RankModal'
+import ColumnVisibleModal from './modules/ColumnVisibleModal'
 import '@/assets/less/TableExpand.less'
 
 export default {
@@ -110,7 +96,7 @@ export default {
   mixins: [JeecgListMixin],
   components: {
     RankModal,
-    columnVisibleModal 
+    ColumnVisibleModal,
   },
   data() {
     return {
@@ -120,32 +106,27 @@ export default {
         {
           title: '任务名称',
           align: 'center',
-          dataIndex: 'missionName'
+          dataIndex: 'missionName',
         },
         {
           title: '考核年份',
           align: 'center',
-          dataIndex: 'assessmentYear'
+          dataIndex: 'assessmentYear',
         },
         {
           title: '考核时间',
           align: 'center',
-          dataIndex: 'assessmentTime'
+          dataIndex: 'assessmentTime',
         },
         {
           title: '总分',
           align: 'center',
-          dataIndex: 'totalPoint'
+          dataIndex: 'totalPoint',
         },
-        // {
-        //   title: '任务状态',
-        //   align: 'center',
-        //   dataIndex: 'missionStatus'
-        // },
         {
           title: '考核要点总数',
           align: 'center',
-          dataIndex: 'keyPointsAmount'
+          dataIndex: 'keyPointsAmount',
         },
         {
           title: '操作',
@@ -153,13 +134,13 @@ export default {
           align: 'center',
           fixed: 'right',
           width: 147,
-          scopedSlots: { customRender: 'action' }
-        }
+          scopedSlots: { customRender: 'action' },
+        },
       ],
       url: {
         list: '/smartAnswerInfo/rank/getMissionList',
         exportXlsUrl: '/smartAssessmentMission/smartAssessmentMission/exportXls',
-        importExcelUrl: 'smartAssessmentMission/smartAssessmentMission/importExcel'
+        importExcelUrl: 'smartAssessmentMission/smartAssessmentMission/importExcel',
       },
       dictOptions: {},
       /* 分页参数 */
@@ -172,33 +153,36 @@ export default {
         },
         showQuickJumper: true,
         showSizeChanger: true,
-        total: 0
+        total: 0,
       },
       selectedMainId: '',
-      superFieldList: []
+      superFieldList: [],
     }
   },
   created() {
     this.getSuperFieldList()
   },
   computed: {
-    importExcelUrl: function() {
+    importExcelUrl: function () {
       return `${window._CONFIG['domianURL']}/${this.url.importExcelUrl}`
-    }
+    },
   },
   methods: {
     checkScore(record) {
       this.$refs.rankModal.edit(record)
     },
-    initDictConfig() {
+    changeColumnVisible(record) {
+      this.$refs.visibleModal.show(record)
+      this.$refs.visibleModal.title = "修改可见字段"
     },
+    initDictConfig() {},
     clickThenSelect(record) {
       return {
         on: {
           click: () => {
             this.onSelectChange(record.id.split(','), [record])
-          }
-        }
+          },
+        },
       }
     },
     onClearSelected() {
@@ -221,7 +205,7 @@ export default {
         this.ipagination.current = 1
       }
       this.onClearSelected()
-      var params = this.getQueryParams()//查询条件
+      var params = this.getQueryParams() //查询条件
       this.loading = true
       getAction(this.url.list, params).then((res) => {
         if (res.success) {
@@ -245,36 +229,38 @@ export default {
       this.superFieldList = fieldList
     },
     handleReset: function (record) {
-      if(!this.url.reset){
-        this.$message.error("请设置url.reset属性!")
+      if (!this.url.reset) {
+        this.$message.error('请设置url.reset属性!')
         return
       }
-      var that = this;
+      var that = this
       putAction(that.url.reset, record).then((res) => {
         if (res.success) {
-          that.$message.success(res.message);
-          that.loadData(1);
+          that.$message.success(res.message)
+          that.loadData(1)
         } else {
-          that.$message.warning(res.message);
+          that.$message.warning(res.message)
         }
-      });
+      })
     },
     publishMission(record) {
       this.loading = true
-      putAction(this.url.publish, record).then((res) => {
-        if (res.success) {
-          this.$message.success(res.message);
-          this.loadData(1)
-        }else{
-          this.$message.warning(res.message);
-        }
-      }).finally(() => {
-        this.loading = false;
-      })
-    }
-  }
+      putAction(this.url.publish, record)
+        .then((res) => {
+          if (res.success) {
+            this.$message.success(res.message)
+            this.loadData(1)
+          } else {
+            this.$message.warning(res.message)
+          }
+        })
+        .finally(() => {
+          this.loading = false
+        })
+    },
+  },
 }
 </script>
 <style scoped>
-@import '~@assets/less/common.less'
+@import '~@assets/less/common.less';
 </style>
