@@ -63,10 +63,10 @@
           </a-button>
         </template>
 
-        <span v-if='mainId && mainInfo.missionStatus === isShowText' slot="action" slot-scope="text, record">
+        <span slot="action" slot-scope="text, record">
           <a @click="handleEdit(record)">编辑</a>
           <a-divider type="vertical" />
-          <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
+          <a-popconfirm v-if='mainId && mainInfo.missionStatus === isShowText' title="确定删除吗?" @confirm="() => handleDelete(record.id)">
             <a>删除</a>
           </a-popconfirm>
         </span>

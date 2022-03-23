@@ -20,7 +20,7 @@
           </a-col>
           <a-col :span="24">
             <a-form-model-item label="成员" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="members">
-              <j-select-user-by-dep v-model="model.members" />
+              <j-select-user-by-dep v-model="model.members" store="id" text="realname" />
             </a-form-model-item>
           </a-col>
           <a-col :span="24">

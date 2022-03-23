@@ -165,7 +165,7 @@
 <!--        <el-form-item label="1、本次调查满意度" prop="satisfaction">
           <el-rate :style="{fontSize:'30px'}" v-model="form.satisfaction" show-text :texts="['不满意', '基本满意', '满意', '非常满意', '完全满意']"></el-rate>
         </el-form-item>-->
-        <el-form-item label="是否发现线索" prop="isReport">
+        <el-form-item label="是否汇报问题" prop="isReport">
           <el-radio-group v-model="form.isReport" >
             <el-radio :label="1">是</el-radio>
             <el-radio :label="0">否</el-radio>
@@ -203,11 +203,12 @@
       };
       var validateIsReport = (rule, value, callback) => {
         if (value === '' || value == undefined ) {
-          callback(new Error('请选择是否发现线索'));
+          callback(new Error('请选择是否汇报问题！'));
         }
         callback();
       };
       return {
+        dcId:"",
         dcName:'',
         dialogFormVisible: false,
         form:{
@@ -225,6 +226,7 @@
           ]
         },
       //被访人信息
+        hostIdnumber:"",
         userName:'',
         userId:'',
         model:{
@@ -278,8 +280,12 @@
 
     created() {
       console.log(this.$route.query)
+      this.paperId = this.$route.query.paperId
+      this.userId = this.$route.query.userId
       this.userName = this.$route.query.userName
       this.dcName = this.$route.query.dcName
+      this.dcId = this.$route.query.dcId
+      this.hostIdnumber = this.$route.query.hostIdnumber
       this.getTestPaperData();
     },
     watch:{
@@ -350,7 +356,8 @@
               return
           }
           //处理多选/填空答案
-          if (item.topicType == 1 || item.topicType == 3) {
+          if (item.topicType === "1" || item.topicType === "3") {
+            console.log(item.topicType)
             if (item.submitAnswer instanceof Array) {
               var submitAnswer = "";
               item.submitAnswer.forEach((c) => {
@@ -429,10 +436,17 @@
                 //onClose: close(),
               });
               console.log(isReport)
-              if(isReport == "1"){
+              if(isReport === 1){
                 console.log("跳转...")
+                let surveyId = this.paperId
+                //走访人
+                let visiterId = this.dcId
+                //被走访人
+                let intervieweeId = this.userId
+                //问题填报
                 this.$router.push({
-                  name: "InsertReportingInformation",
+                  name: "AddSmarTripeoQuestion",
+                  query:{surveyId,visiterId,intervieweeId},
                 });
               }else{
                 /*this.$router.push({

@@ -20,7 +20,7 @@
             @click='handleClick'
           >
             <template v-for='item in dataSource'>
-              <a-menu-item v-if="item.hasChild === '0'" :key="item.id + ',' + item.assContentId">
+              <a-menu-item v-if="item.isKey === 1" :key="item.id + ',' + item.assContentId">
                 <div v-if='item.contentStatus'>
                   <a-icon type='check-square' theme='twoTone' />
                   <span>{{ item.assContentId_dictText }}</span>
@@ -56,7 +56,7 @@
       </a-col>
       <a-col :xs='24' :sm='24' :md='18' :lg='18' :xl='18'>
         <a-row>
-          <smart-assessment-content-form ref='modalForm1' @ok='modalFormOk' :mainId='selectedContentKeys' />
+          <smart-assessment-content-form ref='modalForm1' :mainId='selectedContentKeys' />
         </a-row>
         <a-row style='margin-top: 20px'>
           <SmartAnswerFileList :mainId='selectedAnswerAssContentKeys' :disabled='disableSubmit' @ok='loadData()'/>

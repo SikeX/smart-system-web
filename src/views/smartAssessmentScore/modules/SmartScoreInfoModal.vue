@@ -9,7 +9,7 @@
     @cancel="handleCancel"
     cancelText="关闭">
     <smart-score-file-list :main-id='answerAssContentId'></smart-score-file-list>
-    <smart-score-info-form ref="realForm" @ok="submitCallback" :main-id='answerAssContentId' :disabled="disableSubmit"></smart-score-info-form>
+    <smart-score-info-form ref="realForm" @ok="submitCallback" :main-id='answerAssContentId' :max-score="maxScore" :disabled="disableSubmit"></smart-score-info-form>
   </j-modal>
 </template>
 
@@ -23,6 +23,13 @@
     components: {
       SmartScoreFileList,
       SmartScoreInfoForm
+    },
+    props: {
+      maxScore: {
+        type: Number,
+        default: 0,
+        required: false
+      },
     },
     data () {
       return {

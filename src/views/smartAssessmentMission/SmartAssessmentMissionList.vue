@@ -45,6 +45,14 @@
         :customRow='clickThenSelect'
         @change='handleTableChange'>
 
+        <template slot="countDown" slot-scope="text, record">
+          <a-statistic-countdown
+            format="D 天 H 时 m 分 s 秒"
+            :value="record.assessmentTime"
+            valueStyle="font-size: 14px"
+          />
+        </template>
+
         <template slot='htmlSlot' slot-scope='text'>
           <div v-html='text'></div>
         </template>
@@ -130,6 +138,16 @@ export default {
       // 表头
       columns: [
         {
+          title: '#',
+          dataIndex: '',
+          key:'rowIndex',
+          width:60,
+          align:"center",
+          customRender:function (t,r,index) {
+            return parseInt(index)+1;
+          }
+        },
+        {
           title: '任务名称',
           align: 'center',
           dataIndex: 'missionName'
@@ -140,9 +158,15 @@ export default {
           dataIndex: 'assessmentYear'
         },
         {
-          title: '考核时间',
+          title: '截止时间',
           align: 'center',
           dataIndex: 'assessmentTime'
+        },
+        {
+          title: '距离截止时间倒计时',
+          align: 'center',
+          dataIndex: 'endTime',
+          scopedSlots: { customRender: 'countDown' }
         },
         {
           title: '总分',
@@ -200,7 +224,7 @@ export default {
   computed: {
     importExcelUrl: function() {
       return `${window._CONFIG['domianURL']}/${this.url.importExcelUrl}`
-    }
+    },
   },
   methods: {
     initDictConfig() {
@@ -262,6 +286,7 @@ export default {
         this.$message.error("请设置url.reset属性!")
         return
       }
+      this.loading = true
       var that = this;
       putAction(that.url.reset, record).then((res) => {
         if (res.success) {
@@ -270,6 +295,8 @@ export default {
         } else {
           that.$message.warning(res.message);
         }
+      }).finally(() => {
+        this.loading = false;
       });
     },
     publishMission(record) {

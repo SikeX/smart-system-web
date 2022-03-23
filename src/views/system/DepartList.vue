@@ -552,11 +552,11 @@
                 this.$message.warning('该类型不可更改!')
                 return
               }
-            if (this.currSelected.departName === "哈尔滨道里区纪委" && this.currSelected.businessParentId !== "01c47d4fbf994b34a13237552f2aeec8") {
+            if (this.currSelected.departName === "中共哈尔滨市道里区纪律检查委员会" && this.currSelected.businessParentId !== "01c47d4fbf994b34a13237552f2aeec8") {
               this.$message.warning('上级部门不可更改!')
               return
             }
-            if (this.currSelected.departName === "哈尔滨道里区纪委" && this.currSelected.parentId !== "") {
+            if (this.currSelected.departName === "中共哈尔滨市道里区纪律检查委员会" && this.currSelected.parentId !== "") {
               this.$message.warning('上级业务部门不可更改!')
               return
             }

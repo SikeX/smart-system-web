@@ -4,13 +4,12 @@
       <a-col :xs='24' :sm='24' :md='6' :lg='6' :xl='6'>
         <a-card title='考核内容目录'>
           <a-menu
-            style='width: 256px'
             mode='inline'
             @openChange='handleChange'
             @click='handleClick'
           >
             <template v-for='item in dataSource'>
-              <a-menu-item v-if="item.hasChild === '0'" :key="item.id + ',' + item.missionId">
+              <a-menu-item v-if="item.isKey == 1" :key="item.id + ',' + item.missionId">
                 <span>{{ item.name }}</span>
               </a-menu-item>
               <sub-menu v-else :key="item.id + ',' + item.missionId" :menu-info='item' />
@@ -23,7 +22,7 @@
           <smart-assessment-content-form ref='modalForm1' @ok='modalFormOk' :mainId='selectedContentKeys' />
         </a-row>
         <a-row style='margin-top: 20px'>
-          <SmartScoreDepartList :mission-id='mainId' :content-id='selectedContentKeys'></SmartScoreDepartList>
+          <SmartScoreDepartList :mission-id='mainId' :max-score="maxScore" :content-id='selectedContentKeys'></SmartScoreDepartList>
         </a-row>
       </a-col>
     </a-row>
@@ -43,7 +42,7 @@ import SmartScoreDepartList from '@views/smartAssessmentScore/modules/SmartScore
 
 
 export default {
-  name: 'SmartAnswerPage',
+  name: 'SmartScorePage',
   mixins: [JeecgListMixin],
   components: {
     SmartScoreDepartList,
@@ -55,7 +54,19 @@ export default {
       type: String,
       default: '',
       required: false
-    }
+    },
+    // 负责评分的考核单位ID
+    assDepartId: {
+      type: String,
+      default: '',
+      required: false
+    },
+    // 考核组ID
+    assTeamId: {
+      type: String,
+      default: '',
+      required: false
+    },
   },
   watch: {
     // 选择的 missionId
@@ -77,6 +88,8 @@ export default {
       selectedKeys: [],
       selectedContentKeys: '',
       selectedAnswerAssContentKeys: '',
+      // 当前考核要点的最大分值
+      maxScore: 0,
       // 表头
       columns: [
         {
@@ -299,6 +312,10 @@ export default {
           this.expandedRowKeys.splice(keyIndex, 1)
         }
       }
+    },
+    modalFormOk(record) {
+      // 加载完成题目信息
+      this.maxScore = record.point
     },
     getSuperFieldList() {
       let fieldList = []
