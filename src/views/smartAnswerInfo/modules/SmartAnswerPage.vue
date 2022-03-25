@@ -98,6 +98,7 @@ export default {
     }
   },
   watch: {
+    // 答题信息表ID
     mainId: {
       immediate: true,
       handler(val) {
@@ -148,6 +149,7 @@ export default {
         rootList: '/smartAnswerAssContent/smartAnswerAssContent/rootList',
         childList: '/smartAnswerAssContent/smartAnswerAssContent/childList',
         getChildListBatch: '/smartAnswerAssContent/smartAnswerAssContent/getChildListBatch',
+        getChildListBatchWithMainId: '/smartAnswerAssContent/smartAnswerAssContent/getChildListBatchWithMainId',
         delete: '/smartAnswerAssContent/smartAnswerAssContent/delete',
         deleteBatch: '/smartAnswerAssContent/smartAnswerAssContent/deleteBatch',
         exportXlsUrl: '/smartAnswerAssContent/smartAnswerAssContent/exportXls',
@@ -230,7 +232,10 @@ export default {
         let record = records[i]
         if (record.hasChild) {
           this.expandedKeys.push(record.id)
-          getAction(this.url.childList, { pid: record.id }).then((res) => {
+          let params = this.getQueryParams()
+          params.pid = record.id
+          params.hasQuery = 'false'
+          getAction(this.url.childList, params).then((res) => {
             if (res.success) {
               if (res.result.records) {
                 record.children = this.getDataByResult(res.result.records)
@@ -250,7 +255,11 @@ export default {
     // 根据已展开的行查询数据（用于保存后刷新时异步加载子级的数据）
     loadDataByExpandedRows(dataList) {
       if (this.expandedRowKeys.length > 0) {
-        return getAction(this.url.getChildListBatch, { parentIds: this.expandedRowKeys.join(',') }).then(res => {
+        let params = {
+          parentIds: this.expandedRowKeys.join(','),
+          mainId: this.mainId
+        }
+        return getAction(this.url.getChildListBatchWithMainId, params).then(res => {
           if (res.success && res.result.records.length > 0) {
             //已展开的数据批量子节点
             let records = res.result.records
@@ -329,8 +338,6 @@ export default {
       let [id, assContentId] = info.key.split(',')
       this.selectedContentKeys = assContentId
       this.selectedAnswerAssContentKeys = id
-      console.log(id)
-      console.log(assContentId)
     },
     handleChange(openKeys) {
       this.expandedRowKeys = []
