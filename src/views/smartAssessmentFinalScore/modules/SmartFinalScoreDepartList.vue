@@ -173,6 +173,11 @@ export default {
           dataIndex: 'finalScore'
         },
         {
+          title: '考核任务总分',
+          align: 'center',
+          dataIndex: 'totalPoints'
+        },
+        {
           title: '操作',
           dataIndex: 'action',
           align: 'center',
