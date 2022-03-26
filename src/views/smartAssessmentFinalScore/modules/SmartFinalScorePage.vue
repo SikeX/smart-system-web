@@ -22,7 +22,7 @@
           <smart-assessment-content-form ref='modalForm1' @ok='modalFormOk' :mainId='selectedContentKeys' />
         </a-row>
         <a-row style='margin-top: 20px'>
-          <SmartScoreDepartList :mission-id='mainId' :max-score="maxScore" :content-id='selectedContentKeys'></SmartScoreDepartList>
+          <SmartFinalScoreDepartList :mission-id='mainId' :max-score="maxScore" :content-id='selectedContentKeys'></SmartFinalScoreDepartList>
         </a-row>
       </a-col>
     </a-row>
@@ -36,16 +36,16 @@ import { JeecgListMixin } from '@/mixins/JeecgListMixin'
 import { filterMultiDictText } from '@/components/dict/JDictSelectUtil'
 import { filterObj } from '@/utils/util'
 import SmartAssessmentContentForm from '@views/smartAnswerInfo/modules/SmartAssessmentContentForm'
-import SubMenu from '@views/smartAssessmentScore/modules/SubMenu'
-import SmartScoreDepartList from '@views/smartAssessmentScore/modules/SmartScoreDepartList'
+import SubMenu from './SubMenu'
+import SmartFinalScoreDepartList from './SmartFinalScoreDepartList'
 
 
 
 export default {
-  name: 'SmartScorePage',
+  name: 'SmartFinalScorePage',
   mixins: [JeecgListMixin],
   components: {
-    SmartScoreDepartList,
+    SmartFinalScoreDepartList,
     SmartAssessmentContentForm,
     'sub-menu': SubMenu
   },

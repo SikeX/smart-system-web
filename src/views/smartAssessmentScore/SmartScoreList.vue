@@ -185,19 +185,9 @@ export default {
     this.getSuperFieldList();
   },
   mounted() {
-    if (Vue.ls.get('assessInfo')) {
-      let assessInfo = Vue.ls.get('assessInfo');
-      if (assessInfo.type === "depart") {
-        this.url.list = this.url.departmentMissionList;
-      } else {
-        this.url.list = this.url.teamMissionList;
-      }
-      this.scoreRole = assessInfo.type;
-      this.scoreRoleId = assessInfo.id;
-      this.loadData(1);
-    } else {
-      this.isShowModal = true
-    }
+    // 由于不同用户不会改变，先每次进入都清空
+    Vue.ls.remove('assessInfo')
+    this.isShowModal = true
   },
   computed: {
     importExcelUrl: function () {
@@ -233,27 +223,32 @@ export default {
           this.$message.warning(res.message)
           this.isShowModal = true;
         }
+      }).finally(() => {
         this.loading = false;
-      })
+      });
     },
     // 查询考核单位信息
     loadMyDepartment() {
       let that = this
       getAction('/smartAssessmentDepartment/smartAssessmentDepartment/listMyDepartment').then((res) => {
-        if (res.success && res.result.length > 0) {
-          console.log(res)
-          // 前端存储查询到的考核单位信息
-          let assessInfo = res.result[0]
-          assessInfo.type = 'depart'
-          Vue.ls.set("assessInfo", assessInfo)
-          this.scoreRoleId = res.result[0].id
-          this.loadData(1)
+        if (res.success) {
+          if (res.result.length === 0) {
+            this.$message.warning('无考核单位权限！');
+          } else {
+            // 前端存储查询到的考核单位信息
+            let assessInfo = res.result[0];
+            assessInfo.type = 'depart'
+            Vue.ls.set("assessInfo", assessInfo)
+            this.scoreRoleId = res.result[0].id
+            this.loadData(1)
+          }
         } else {
           this.$message.warning(res.message)
           this.isShowModal = true;
         }
+      }).finally(() => {
         this.loading = false;
-      })
+      });
     },
     initDictConfig() {
     },

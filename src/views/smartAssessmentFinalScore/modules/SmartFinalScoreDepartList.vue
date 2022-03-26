@@ -1,5 +1,34 @@
 <template>
-  <a-card :bordered='false'>
+  <a-card :title='description' v-if='contentId' :bordered='false'>
+    <a-modal v-model="isShowModal" title="请选择最终得分方式">
+      <template slot="footer">
+        <a-button key="back" @click="isShowModal=false">
+          取消
+        </a-button>
+        <a-button key="submit" type="primary" @click="changeFinalScore">
+          确 定
+        </a-button>
+      </template>
+      <a-form layout="inline">
+        <a-form-item label="最终得分方式">
+          <a-select v-model="scoreType" style="width: 200px">
+            <a-select-option value="low">
+              最低分
+            </a-select-option>
+            <a-select-option value="high">
+              最高分
+            </a-select-option>
+            <a-select-option value="ave">
+              平均分
+            </a-select-option>
+          </a-select>
+        </a-form-item>
+      </a-form>
+    </a-modal>
+    <!-- 操作按钮区域 -->
+    <div class="table-operator">
+      <a-button @click="isShowModal = true" type="primary">修改最终得分方式</a-button>
+    </div>
     <!-- table区域-begin -->
     <div>
       <a-table
@@ -12,18 +41,8 @@
         :dataSource='dataSource'
         :pagination='ipagination'
         :loading='loading'
-        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange, type:'radio'}"
-        :customRow='clickThenSelect'
         class='j-table-force-nowrap'
         @change='handleTableChange'>
-
-        <template slot="countDown" slot-scope="text, record">
-          <a-statistic-countdown
-            format="D 天 H 时 m 分 s 秒"
-            :value="record.endTime"
-            valueStyle="font-size: 14px"
-          />
-        </template>
 
         <template slot='htmlSlot' slot-scope='text'>
           <div v-html='text'></div>
@@ -47,33 +66,14 @@
         </template>
 
         <span slot='action' slot-scope='text, record'>
-          <a @click='handleDetail(record)'>详情</a>
-          <a-divider v-if='record.missionStatus === "未签收"' type='vertical' />
-          <a v-if='record.missionStatus === "未签收"' @click='signMission(record)'>签收</a>
+          <a v-if="record.answerAssContentId" @click='handleDetail(record)'>详情</a>
+          <a v-else @click='signMission(record)'>手动签收</a>
         </span>
 
       </a-table>
     </div>
 
-    <div>
-      <a-row v-if='selectedMainId'>
-        <a-empty
-          v-if='selectionRows[0].missionStatus === "未签收"'
-          image='https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original'
-          :image-style="{
-            height: '60px',
-          }"
-        >
-          <span slot='description'> 请签收任务后查看 </span>
-          <a-button type='primary' @click='signMission(selectionRows[0])'>
-            签收
-          </a-button>
-        </a-empty>
-        <smart-answer-page v-else :main-id='selectedMainId' :main-info='selectionRows[0]'></smart-answer-page>
-      </a-row>
-    </div>
-
-    <smart-answer-info-modal ref='modalForm' @ok='modalFormOk'></smart-answer-info-modal>
+    <smart-score-info-modal  ref='modalForm' :max-score="maxScore" @ok='modalFormOk'></smart-score-info-modal>
   </a-card>
 </template>
 
@@ -82,24 +82,59 @@
 import '@/assets/less/TableExpand.less'
 import { mixinDevice } from '@/utils/mixin'
 import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-import SmartAnswerInfoModal from './modules/SmartAnswerInfoModal'
 import SmartAssessmentContentModal from '@views/smartAssessmentContent/modules/SmartAssessmentContentModal'
-import { getAction, putAction } from '@api/manage'
+import { getAction, putAction, postAction } from '@api/manage'
 import SmartAssessmentContentForm from '@views/smartAnswerInfo/modules/SmartAssessmentContentForm'
-import SmartAnswerPage from "./modules/SmartAnswerPage";
+import SmartAnswerPage from '@views/smartAnswerInfo/modules/SmartAnswerPage'
+import SmartScoreInfoModal from './SmartScoreInfoModal'
+import Vue from "vue";
 
 export default {
-  name: 'SmartAnswerInfoList',
+  name: 'SmartFinalScoreDepartList',
   mixins: [JeecgListMixin, mixinDevice],
   components: {
+    SmartScoreInfoModal,
     SmartAnswerPage,
     SmartAssessmentContentForm,
-    SmartAssessmentContentModal,
-    SmartAnswerInfoModal
+    SmartAssessmentContentModal
+  },
+  props:{
+    missionId:{
+      type:String,
+      default:'',
+      required:false
+    },
+    contentId:{
+      type:String,
+      default:'',
+      required:false
+    },
+    maxScore:{
+      type: Number,
+      default:0,
+      required:false
+    }
+  },
+  watch:{
+    contentId:{
+      immediate: true,
+      handler(val) {
+        if(!this.contentId){
+          this.clearList()
+        }else{
+          this.queryParam['missionId'] = this.missionId
+          this.queryParam['assContentId'] = val
+          this.loadData(1);
+        }
+      }
+    }
   },
   data() {
     return {
-      description: '答题信息表管理页面',
+      description: '被考核单位列表',
+      disableMixinCreated:true,
+      isShowModal: false,
+      scoreType: '',
       // 表头
       columns: [
         {
@@ -113,50 +148,29 @@ export default {
           }
         },
         {
-          title: '考核任务',
-          align: 'center',
-          dataIndex: 'missionId_dictText'
-        },
-        {
           title: '单位',
           align: 'center',
-          dataIndex: 'depart_dictText'
+          dataIndex: 'departName'
         },
         {
-          title: '任务状态',
+          title: '最低得分',
           align: 'center',
-          dataIndex: 'missionStatus'
+          dataIndex: 'lowestScore'
         },
         {
-          title:'截止时间',
-          align:"center",
-          dataIndex: 'endTime'
-        },
-        {
-          title: '距离截止时间倒计时',
+          title: '最高得分',
           align: 'center',
-          dataIndex: '',
-          scopedSlots: { customRender: 'countDown' }
+          dataIndex: 'highestScore'
         },
         {
-          title: '完成要点个数',
+          title: '平均得分',
           align: 'center',
-          dataIndex: 'finishedPoint'
+          dataIndex: 'averageScore'
         },
         {
-          title: '完成度',
+          title: '最终得分',
           align: 'center',
-          dataIndex: 'completionDegree'
-        },
-        {
-          title: '总分',
-          align: 'center',
-          dataIndex: 'totalPoints'
-        },
-        {
-          title: '排名',
-          align: 'center',
-          dataIndex: 'ranking'
+          dataIndex: 'finalScore'
         },
         {
           title: '操作',
@@ -168,9 +182,10 @@ export default {
         }
       ],
       url: {
-        list: '/smartAnswerInfo/smartAnswerInfo/list',
+        list: '/smartAnswerInfo/smartAnswerInfo/listDepartContentScore',
         delete: '/smartAnswerInfo/smartAnswerInfo/delete',
         sign: '/smartAnswerInfo/smartAnswerInfo/sign',
+        changeFinalScore: '/smartAnswerAssContent/smartAnswerAssContent/changeFinalScore',
         deleteBatch: '/smartAnswerInfo/smartAnswerInfo/deleteBatch',
         exportXlsUrl: '/smartAnswerInfo/smartAnswerInfo/exportXls',
         importExcelUrl: 'smartAnswerInfo/smartAnswerInfo/importExcel'
@@ -191,26 +206,55 @@ export default {
     }
   },
   methods: {
-    initDictConfig() {
+    clearList() {
+      this.dataSource = []
+      this.ipagination.current = 1
     },
-    clickThenSelect(record) {
-      return {
-        on: {
-          click: () => {
-            this.onSelectChange(record.id.split(','), [record])
-          }
+    handleDetail:function(record){
+      // console.log(record)
+      this.$refs.modalForm.title="详情";
+      this.$refs.modalForm.disableSubmit = true;
+      this.$refs.modalForm.edit(record.answerAssContentId);
+    },
+    signMission(record) {
+      // 签收任务，并生成答题要点记录
+      this.loading = true
+      putAction(this.url.sign, record).then((res) => {
+        if (res.success) {
+          this.$message.success(res.message);
+          this.loadData(1)
+        }else{
+          this.$message.warning(res.message);
         }
+      }).finally(() => {
+        this.loading = false;
+      })
+    },
+    changeFinalScore() {
+      let that = this
+
+      this.isShowModal = false
+      this.loading = true
+
+      let params = {
+        contentId: this.contentId,
+        missionId: this.missionId,
+        scoreType: this.scoreType
       }
+
+      // TODO: 向后端发送修改请求
+      getAction(this.url.changeFinalScore, params).then((res) => {
+        if (res.success) {
+          this.$message.success(res.message);
+          this.loadData(1)
+        }else{
+          this.$message.warning(res.message);
+        }
+      }).finally(() => {
+        this.loading = false;
+      })
     },
-    onClearSelected() {
-      this.selectedRowKeys = []
-      this.selectionRows = []
-      this.selectedMainId = ''
-    },
-    onSelectChange(selectedRowKeys, selectionRows) {
-      this.selectedMainId = selectedRowKeys[0]
-      this.selectedRowKeys = selectedRowKeys
-      this.selectionRows = selectionRows
+    initDictConfig() {
     },
     getSuperFieldList() {
       let fieldList = []
@@ -222,31 +266,12 @@ export default {
       })
       fieldList.push({ type: 'sel_depart', value: 'depart', text: '单位' })
       fieldList.push({ type: 'string', value: 'missionStatus', text: '任务状态', dictCode: '' })
-      fieldList.push({ type: 'date', value: 'endTime', text: '任务状态', dictCode: '' })
       fieldList.push({ type: 'int', value: 'finishedPoint', text: '完成要点个数', dictCode: '' })
       fieldList.push({ type: 'double', value: 'completionDegree', text: '完成度', dictCode: '' })
       fieldList.push({ type: 'int', value: 'totalPoints', text: '总分', dictCode: '' })
       fieldList.push({ type: 'int', value: 'ranking', text: '排名', dictCode: '' })
       this.superFieldList = fieldList
     },
-    signMission(record) {
-      // 签收任务，并生成答题要点记录
-      this.loading = true
-      putAction(this.url.sign, record).then((res) => {
-        if (res.success) {
-          this.$message.success(res.message);
-          this.onClearSelected()
-          this.loadData(1)
-        }else{
-          this.$message.warning(res.message);
-        }
-      }).finally(() => {
-        this.loading = false;
-      })
-    },
-    startMission(record) {
-
-    }
   }
 }
 </script>
