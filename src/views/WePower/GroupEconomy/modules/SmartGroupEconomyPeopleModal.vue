@@ -95,14 +95,15 @@ export default {
       },
 
       confirmLoading: false,
+      // TODO 先放开必填项
       validatorRules: {
-        depart: [{ required: true, message: '请输入所在村!' }],
+        depart: [{ required: false, message: '请输入所在村!' }],
         name: [{ required: true, message: '请输入姓名!' }],
-        job: [{ required: true, message: '请输入职务!' }],
+        job: [{ required: false, message: '请输入职务!' }],
         // termStartDate: [{ required: true, message: '请输入任期开始时间!' }],
         // termEndDate: [{ required: true, message: '请输入任期结束时间!' }],
         idNumber: [
-          { required: true, message: '请输入身份证号!' },
+          { required: false, message: '请输入身份证号!' },
           {
             pattern:
               /(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}$)/,
@@ -110,8 +111,8 @@ export default {
           },
         ],
         pic: [{ required: true, message: '请输入照片!' }],
-        termEndDate: [{ required: true, message: '请选择任期开始时间!' }, { validator: this.endTimeValidate }],
-        termStartDate: [{ required: true, message: '请选择任期结束时间!' }, { validator: this.startTimeValidate }],
+        termEndDate: [{ required: false, message: '请选择任期开始时间!' }, { validator: this.endTimeValidate }],
+        termStartDate: [{ required: false, message: '请选择任期结束时间!' }, { validator: this.startTimeValidate }],
       },
       url: {
         add: '/smartGroupEconomy/smartGroupEconomy/addSmartGroupEconomyPeople',
@@ -178,7 +179,7 @@ export default {
                 that.$message.success(res.message)
                 that.$emit('ok')
               } else {
-                that.$message.warning(res.message)
+                that.$message.error(res.message)
               }
             })
             .finally(() => {
