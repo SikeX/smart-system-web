@@ -126,24 +126,9 @@ export default {
           dataIndex: 'depart_dictText'
         },
         {
-          title: '任务状态',
+          title: '状态',
           align: 'center',
           dataIndex: 'missionStatus'
-        },
-        {
-          title: '完成要点个数',
-          align: 'center',
-          dataIndex: 'finishedPoint'
-        },
-        {
-          title: '完成度',
-          align: 'center',
-          dataIndex: 'completionDegree'
-        },
-        {
-          title: '总分',
-          align: 'center',
-          dataIndex: 'totalPoints'
         },
         {
           title: '操作',
