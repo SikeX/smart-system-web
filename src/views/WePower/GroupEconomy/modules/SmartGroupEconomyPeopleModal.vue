@@ -14,7 +14,8 @@
         <a-row>
           <a-col :span="24">
             <a-form-model-item label="所在村" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="depart">
-              <j-select-depart v-model="model.depart" multi />
+              <select-village-depart v-model="model.depart" />
+              <!-- <j-select-depart v-model="model.depart" multi /> -->
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
@@ -66,11 +67,13 @@ import { httpAction } from '@/api/manage'
 import moment from 'moment'
 import JDate from '@/components/jeecg/JDate'
 import { validateDuplicateValue } from '@/utils/util'
+import SelectVillageDepart from '@/components/common/SelectVillageDepart'
 
 export default {
   name: 'SmartGroupEconomyPeopleModal',
   components: {
-    JDate
+    JDate,
+    SelectVillageDepart,
   },
   props: {
     mainId: {
@@ -97,13 +100,13 @@ export default {
       confirmLoading: false,
       // TODO 先放开必填项
       validatorRules: {
-        depart: [{ required: false, message: '请输入所在村!' }],
+        depart: [{ required: true, message: '请输入所在村!' }],
         name: [{ required: true, message: '请输入姓名!' }],
-        job: [{ required: false, message: '请输入职务!' }],
+        job: [{ required: true, message: '请输入职务!' }],
         // termStartDate: [{ required: true, message: '请输入任期开始时间!' }],
         // termEndDate: [{ required: true, message: '请输入任期结束时间!' }],
         idNumber: [
-          { required: false, message: '请输入身份证号!' },
+          { required: true, message: '请输入身份证号!' },
           {
             pattern:
               /(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}$)/,
