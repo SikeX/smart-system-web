@@ -1,5 +1,34 @@
 <template>
   <a-card :title='description' v-if='contentId' :bordered='false'>
+    <a-modal v-model="isShowModal" title="请选择最终得分方式">
+      <template slot="footer">
+        <a-button key="back" @click="isShowModal=false">
+          取消
+        </a-button>
+        <a-button key="submit" type="primary" @click="changeFinalScore">
+          确 定
+        </a-button>
+      </template>
+      <a-form layout="inline">
+        <a-form-item label="最终得分方式">
+          <a-select v-model="scoreType" style="width: 200px">
+            <a-select-option value="low">
+              最低分
+            </a-select-option>
+            <a-select-option value="high">
+              最高分
+            </a-select-option>
+            <a-select-option value="ave">
+              平均分
+            </a-select-option>
+          </a-select>
+        </a-form-item>
+      </a-form>
+    </a-modal>
+    <!-- 操作按钮区域 -->
+    <div class="table-operator">
+      <a-button @click="isShowModal = true" type="primary">修改最终得分方式</a-button>
+    </div>
     <!-- table区域-begin -->
     <div>
       <a-table
@@ -37,7 +66,8 @@
         </template>
 
         <span slot='action' slot-scope='text, record'>
-          <a @click='handleMark(record)'>评分</a>
+          <a v-if="record.answerAssContentId" @click='handleDetail(record)'>详情</a>
+          <a v-else @click='signMission(record)'>手动签收</a>
         </span>
 
       </a-table>
@@ -53,14 +83,14 @@ import '@/assets/less/TableExpand.less'
 import { mixinDevice } from '@/utils/mixin'
 import { JeecgListMixin } from '@/mixins/JeecgListMixin'
 import SmartAssessmentContentModal from '@views/smartAssessmentContent/modules/SmartAssessmentContentModal'
-import { getAction, putAction } from '@api/manage'
+import { getAction, putAction, postAction } from '@api/manage'
 import SmartAssessmentContentForm from '@views/smartAnswerInfo/modules/SmartAssessmentContentForm'
 import SmartAnswerPage from '@views/smartAnswerInfo/modules/SmartAnswerPage'
-import SmartScoreInfoModal from '@views/smartAssessmentScore/modules/SmartScoreInfoModal'
+import SmartScoreInfoModal from './SmartScoreInfoModal'
 import Vue from "vue";
 
 export default {
-  name: 'SmartScoreDepartList',
+  name: 'SmartFinalScoreDepartList',
   mixins: [JeecgListMixin, mixinDevice],
   components: {
     SmartScoreInfoModal,
@@ -89,17 +119,12 @@ export default {
     contentId:{
       immediate: true,
       handler(val) {
-        if(!this.missionId){
+        if(!this.contentId){
           this.clearList()
         }else{
           this.queryParam['missionId'] = this.missionId
-          let assessInfo = Vue.ls.get("assessInfo")
-          if (assessInfo) {
-            this.queryParam['depart'] = assessInfo.departs || assessInfo.responsibleDepart;
-            this.loadData(1);
-          } else {
-            this.$message.warning('没有评分权限!')
-          }
+          this.queryParam['assContentId'] = val
+          this.loadData(1);
         }
       }
     }
@@ -108,6 +133,8 @@ export default {
     return {
       description: '被考核单位列表',
       disableMixinCreated:true,
+      isShowModal: false,
+      scoreType: '',
       // 表头
       columns: [
         {
@@ -123,12 +150,32 @@ export default {
         {
           title: '单位',
           align: 'center',
-          dataIndex: 'depart_dictText'
+          dataIndex: 'departName'
         },
         {
-          title: '状态',
+          title: '最低得分',
           align: 'center',
-          dataIndex: 'missionStatus'
+          dataIndex: 'lowestScore'
+        },
+        {
+          title: '最高得分',
+          align: 'center',
+          dataIndex: 'highestScore'
+        },
+        {
+          title: '平均得分',
+          align: 'center',
+          dataIndex: 'averageScore'
+        },
+        {
+          title: '最终得分',
+          align: 'center',
+          dataIndex: 'finalScore'
+        },
+        {
+          title: '考核任务总分',
+          align: 'center',
+          dataIndex: 'totalPoints'
         },
         {
           title: '操作',
@@ -140,9 +187,10 @@ export default {
         }
       ],
       url: {
-        list: '/smartAnswerInfo/smartAnswerInfo/listAll',
+        list: '/smartAnswerInfo/smartAnswerInfo/listDepartContentScore',
         delete: '/smartAnswerInfo/smartAnswerInfo/delete',
         sign: '/smartAnswerInfo/smartAnswerInfo/sign',
+        changeFinalScore: '/smartAnswerAssContent/smartAnswerAssContent/changeFinalScore',
         deleteBatch: '/smartAnswerInfo/smartAnswerInfo/deleteBatch',
         exportXlsUrl: '/smartAnswerInfo/smartAnswerInfo/exportXls',
         importExcelUrl: 'smartAnswerInfo/smartAnswerInfo/importExcel'
@@ -163,11 +211,53 @@ export default {
     }
   },
   methods: {
-    handleMark:function(record){
+    clearList() {
+      this.dataSource = []
+      this.ipagination.current = 1
+    },
+    handleDetail:function(record){
       // console.log(record)
-      this.$refs.modalForm.title="评分";
-      this.$refs.modalForm.disableSubmit = false;
-      this.$refs.modalForm.edit(this.contentId, record.id);
+      this.$refs.modalForm.title="详情";
+      this.$refs.modalForm.disableSubmit = true;
+      this.$refs.modalForm.edit(record.answerAssContentId);
+    },
+    signMission(record) {
+      // 签收任务，并生成答题要点记录
+      this.loading = true
+      putAction(this.url.sign, record).then((res) => {
+        if (res.success) {
+          this.$message.success(res.message);
+          this.loadData(1)
+        }else{
+          this.$message.warning(res.message);
+        }
+      }).finally(() => {
+        this.loading = false;
+      })
+    },
+    changeFinalScore() {
+      let that = this
+
+      this.isShowModal = false
+      this.loading = true
+
+      let params = {
+        contentId: this.contentId,
+        missionId: this.missionId,
+        scoreType: this.scoreType
+      }
+
+      // TODO: 向后端发送修改请求
+      getAction(this.url.changeFinalScore, params).then((res) => {
+        if (res.success) {
+          this.$message.success(res.message);
+          this.loadData(1)
+        }else{
+          this.$message.warning(res.message);
+        }
+      }).finally(() => {
+        this.loading = false;
+      })
     },
     initDictConfig() {
     },

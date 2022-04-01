@@ -1,72 +1,45 @@
 <template>
-  <div>
-    <a-modal v-model="isShowModal" title="请选择参与评分的角色" :maskClosable="false" :closable="false">
-      <template slot="footer">
-        <a-button key="submit" type="primary" @click="handleRoleOk">
-          确 定
-        </a-button>
-      </template>
-      <a-form layout="inline">
-        <a-form-item label="评分角色">
-          <a-select v-model="scoreRole" style="width: 200px">
-            <a-select-option value="team">
-              考核组
-            </a-select-option>
-            <a-select-option value="depart">
-              考核单位
-            </a-select-option>
-          </a-select>
-        </a-form-item>
-      </a-form>
-      <smart-assessment-user-team-list :score-role="scoreRole" @select="selectRoleInfo"></smart-assessment-user-team-list>
-    </a-modal>
-    <a-card :title='description' :bordered="false">
-      <a-tooltip slot="extra">
-        <template slot="title">
-          切换评分角色
+  <a-card :title='description' :bordered="false">
+    <!-- table区域-begin -->
+    <div>
+
+      <a-table
+        ref="table"
+        size="middle"
+        bordered
+        rowKey="id"
+        class="j-table-force-nowrap"
+        :scroll="{x:true}"
+        :columns="columns"
+        :dataSource="dataSource"
+        :pagination="ipagination"
+        :loading="loading"
+        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange, type:'radio'}"
+        :customRow="clickThenSelect"
+        @change="handleTableChange">
+
+        <template slot="htmlSlot" slot-scope="text">
+          <div v-html="text"></div>
         </template>
-        <a-button type="primary" @click="isShowModal = true" ghost><a-icon type="swap" /></a-button>
-      </a-tooltip>
-      <!-- table区域-begin -->
-      <div>
+        <template slot="imgSlot" slot-scope="text">
+          <span v-if="!text" style="font-size: 12px;font-style: italic;">无图片</span>
+          <img v-else :src="getImgView(text)" height="25px" alt=""
+               style="max-width:80px;font-size: 12px;font-style: italic;"/>
+        </template>
+        <template slot="fileSlot" slot-scope="text">
+          <span v-if="!text" style="font-size: 12px;font-style: italic;">无文件</span>
+          <a-button
+            v-else
+            :ghost="true"
+            type="primary"
+            icon="download"
+            size="small"
+            @click="downloadFile(text)">
+            下载
+          </a-button>
+        </template>
 
-        <a-table
-          ref="table"
-          size="middle"
-          bordered
-          rowKey="id"
-          class="j-table-force-nowrap"
-          :scroll="{x:true}"
-          :columns="columns"
-          :dataSource="dataSource"
-          :pagination="ipagination"
-          :loading="loading"
-          :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange, type:'radio'}"
-          :customRow="clickThenSelect"
-          @change="handleTableChange">
-
-          <template slot="htmlSlot" slot-scope="text">
-            <div v-html="text"></div>
-          </template>
-          <template slot="imgSlot" slot-scope="text">
-            <span v-if="!text" style="font-size: 12px;font-style: italic;">无图片</span>
-            <img v-else :src="getImgView(text)" height="25px" alt=""
-                 style="max-width:80px;font-size: 12px;font-style: italic;"/>
-          </template>
-          <template slot="fileSlot" slot-scope="text">
-            <span v-if="!text" style="font-size: 12px;font-style: italic;">无文件</span>
-            <a-button
-              v-else
-              :ghost="true"
-              type="primary"
-              icon="download"
-              size="small"
-              @click="downloadFile(text)">
-              下载
-            </a-button>
-          </template>
-
-          <span slot="action" slot-scope="text, record">
+        <span slot="action" slot-scope="text, record">
           <a @click="handleEdit(record)">编辑</a>
 
           <a-divider type="vertical"/>
@@ -84,16 +57,15 @@
           </a-dropdown>
         </span>
 
-        </a-table>
-      </div>
+      </a-table>
+    </div>
 
-      <div>
-        <a-row v-if='selectedMainId'>
-          <smart-score-page :main-id='selectedMainId'></smart-score-page>
-        </a-row>
-      </div>
-    </a-card>
-  </div>
+    <div>
+      <a-row v-if='selectedMainId'>
+        <smart-final-score-page :main-id='selectedMainId'></smart-final-score-page>
+      </a-row>
+    </div>
+  </a-card>
 </template>
 
 <script>
@@ -102,28 +74,22 @@ import {JeecgListMixin} from '@/mixins/JeecgListMixin'
 import {getAction, postAction, putAction} from '@/api/manage'
 import SmartAssessmentContentList from '@views/smartAssessmentContent/SmartAssessmentContentList'
 import '@/assets/less/TableExpand.less'
-import SmartScorePage from '@views/smartAssessmentScore/modules/SmartScorePage'
-import SmartScoreInfoModal from '@views/smartAssessmentScore/modules/SmartScoreInfoModal'
+import SmartFinalScorePage from './modules/SmartFinalScorePage'
+import SmartScoreInfoModal from './modules/SmartScoreInfoModal'
 import Vue from "vue";
-import SmartAssessmentUserTeamList from "@views/smartAssessmentScore/modules/SmartAssessmentUserTeamList";
 
 export default {
-  name: "SmartScoreList",
+  name: "SmartFinalScoreList",
   mixins: [JeecgListMixin],
   components: {
-    SmartAssessmentUserTeamList,
     SmartScoreInfoModal,
-    SmartScorePage,
+    SmartFinalScorePage,
     SmartAssessmentContentList,
   },
   data() {
     return {
-      description: '考核任务列表',
-      disableMixinCreated: true,
-      isShowModal: false,
-      scoreRole: 'team',
-      // 评分角色信息
-      scoreRoleId: '',
+      description: '最终评分考核任务列表',
+      // disableMixinCreated: true,
       // 表头
       columns: [
         {
@@ -158,9 +124,7 @@ export default {
         }
       ],
       url: {
-        list: "/smartAssessmentMission/smartAssessmentMission/teamMissionList",
-        departmentMissionList: "/smartAssessmentMission/smartAssessmentMission/departmentMissionList",
-        teamMissionList: "/smartAssessmentMission/smartAssessmentMission/teamMissionList",
+        list: "/smartAssessmentMission/smartAssessmentMission/list",
         delete: "/smartAssessmentMission/smartAssessmentMission/delete",
         publish: "/smartAssessmentMission/smartAssessmentMission/publish",
         deleteBatch: "/smartAssessmentMission/smartAssessmentMission/deleteBatch",
@@ -187,41 +151,12 @@ export default {
   created() {
     this.getSuperFieldList();
   },
-  mounted() {
-    // 由于不同用户不会改变，先每次进入都清空
-    Vue.ls.remove('assessInfo')
-    this.isShowModal = true
-  },
   computed: {
     importExcelUrl: function () {
       return `${window._CONFIG['domianURL']}/${this.url.importExcelUrl}`;
     }
   },
   methods: {
-    handleRoleOk() {
-      if (this.scoreRole === "depart") {
-        this.url.list = this.url.departmentMissionList;
-      } else {
-        this.url.list = this.url.teamMissionList;
-      }
-      if (this.scoreRoleId) {
-        this.loadData(1);
-        this.isShowModal = false;
-      } else {
-        this.$message.warning("请先选择一个具体评分角色！")
-      }
-    },
-    selectRoleInfo(record) {
-      if (this.scoreRole === 'depart') {
-        record.type = 'depart';
-        Vue.ls.set("assessInfo", record);
-        this.scoreRoleId = record.id;
-      } else {
-        record.type = 'team';
-        Vue.ls.set("assessInfo", record);
-        this.scoreRoleId = record.id;
-      }
-    },
     initDictConfig() {
     },
     clickThenSelect(record) {
@@ -254,7 +189,6 @@ export default {
       }
       this.onClearSelected()
       var params = this.getQueryParams();//查询条件
-      params.scoreRoleId = this.scoreRoleId
       this.loading = true;
       getAction(this.url.list, params).then((res) => {
         if (res.success) {

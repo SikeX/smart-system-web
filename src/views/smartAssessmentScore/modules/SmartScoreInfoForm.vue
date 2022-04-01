@@ -58,7 +58,7 @@ export default {
       immediate: true,
       handler(val) {
         if (!this.mainId) {
-          this.clearList()
+          this.model = {}
         } else {
           let assessInfo = Vue.ls.get('assessInfo');
 

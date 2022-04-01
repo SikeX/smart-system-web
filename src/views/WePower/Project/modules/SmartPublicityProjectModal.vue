@@ -1,7 +1,7 @@
 <template>
   <j-modal
     :title="title"
-    :width="1200"
+    :width="1000"
     :visible="visible"
     :maskClosable="false"
     switchFullscreen

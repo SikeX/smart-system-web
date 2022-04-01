@@ -17,10 +17,10 @@
         class='j-table-force-nowrap'
         @change='handleTableChange'>
 
-        <template slot="countDown" slot-scope="text">
+        <template slot="countDown" slot-scope="text, record">
           <a-statistic-countdown
             format="D 天 H 时 m 分 s 秒"
-            :value="text"
+            :value="record.endTime"
             valueStyle="font-size: 14px"
           />
         </template>
@@ -135,7 +135,7 @@ export default {
         {
           title: '距离截止时间倒计时',
           align: 'center',
-          dataIndex: 'endTime',
+          dataIndex: '',
           scopedSlots: { customRender: 'countDown' }
         },
         {

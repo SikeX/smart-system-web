@@ -15,7 +15,8 @@
           </a-col>
           <a-col :span="24">
             <a-form-model-item label="应用范围" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="location">
-              <j-select-depart v-model="model.location" multi />
+              <select-village-depart v-model="model.location" multi/>
+              <!-- <j-select-depart v-model="model.location" multi /> -->
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
@@ -35,11 +36,13 @@
 import { httpAction, getAction } from '@/api/manage'
 import { validateDuplicateValue } from '@/utils/util'
 import EloamModal from '@views/eloam/modules/EloamModal'
+import SelectVillageDepart from '../../../../components/common/SelectVillageDepart.vue'
 
 export default {
   name: 'SmartPublicityBenifitForm',
   components: {
-    EloamModal
+    EloamModal,
+    SelectVillageDepart
   },
   props: {
     //表单禁用
