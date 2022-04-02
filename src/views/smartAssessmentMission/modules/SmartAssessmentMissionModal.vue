@@ -36,7 +36,7 @@
               <a-input v-model="model.missionStatus" placeholder="请输入任务状态" disabled></a-input>
             </a-form-model-item>
           </a-col>
-          <a-col :span="24">
+          <a-col v-if="model.missionStatus !== '未发布'" :span="24">
             <a-form-model-item label="考核要点总数" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="keyPointsAmount">
               <a-input-number v-model="model.keyPointsAmount" placeholder="请输入考核要点总数" style="width: 100%" disabled/>
             </a-form-model-item>

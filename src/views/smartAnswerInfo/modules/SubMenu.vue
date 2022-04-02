@@ -5,15 +5,15 @@
         </span>
     <template v-for="item in menuInfo.children">
       <a-menu-item v-if="item.isKey === 1" :key="item.id + ',' + item.assContentId">
-        <div v-if='item.contentStatus'>
+        <div v-if='item.uploadCount'>
           <a-icon type='check-square' theme='twoTone' />
           <span>{{ item.assContentId_dictText }}</span>
-          <el-badge :value="item.contentStatus" :max="99" type="primary"/>
+          <el-badge :value="item.uploadCount" :max="99" type="primary"/>
         </div>
         <div v-else>
           <a-icon type="edit" theme="twoTone" />
           <span>{{ item.assContentId_dictText }}</span>
-          <el-badge :value="item.contentStatus" :max="99" />
+          <el-badge :value="item.uploadCount" :max="99" />
         </div>
       </a-menu-item>
       <sub-menu v-else :key="item.id + ',' + item.assContentId" :menu-info="item"/>

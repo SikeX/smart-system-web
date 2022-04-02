@@ -21,15 +21,15 @@
           >
             <template v-for='item in dataSource'>
               <a-menu-item v-if="item.isKey === 1" :key="item.id + ',' + item.assContentId">
-                <div v-if='item.contentStatus'>
+                <div v-if='item.uploadCount'>
                   <a-icon type='check-square' theme='twoTone' />
                   <span>{{ item.assContentId_dictText }}</span>
-                  <el-badge :value="item.contentStatus" :max="99" type="primary"/>
+                  <el-badge :value="item.uploadCount" :max="99" type="primary"/>
                 </div>
                 <div v-else>
                   <a-icon type="edit" theme="twoTone" />
                   <span>{{ item.assContentId_dictText }}</span>
-                  <el-badge :value="item.contentStatus" :max="99" />
+                  <el-badge :value="item.uploadCount" :max="99" />
                 </div>
 
               </a-menu-item>
@@ -388,6 +388,7 @@ export default {
       fieldList.push({ type: 'string', value: 'hasChild', text: '是否有子节点', dictCode: '' })
       fieldList.push({ type: 'string', value: 'assContentId', text: '考核内容节点', dictCode: '' })
       fieldList.push({ type: 'int', value: 'contentStatus', text: '要点状态', dictCode: '' })
+      fieldList.push({ type: 'int', value: 'uploadCount', text: '要点上传附件数目', dictCode: '' })
       fieldList.push({ type: 'double', value: 'lowestScore', text: '最低得分', dictCode: '' })
       fieldList.push({ type: 'double', value: 'highestScore', text: '最高得分', dictCode: '' })
       fieldList.push({ type: 'double', value: 'averageScore', text: '平均得分', dictCode: '' })

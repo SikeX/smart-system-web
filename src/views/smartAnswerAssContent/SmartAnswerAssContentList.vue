@@ -90,13 +90,6 @@
         <SmartAnswerAssScoreList :mainId="selectedMainId" />
       </a-tab-pane>
     </a-tabs>
-    <a-tree
-      :treeData="dataSource"
-      :replaceFields="fields"
-      :defaultExpandAll="true"
-      style="height: 500px;overflow-y: auto;"
-    >w
-    </a-tree>
 
     <smartAnswerAssContent-modal ref="modalForm" @ok="modalFormOk"></smartAnswerAssContent-modal>
   </a-card>
