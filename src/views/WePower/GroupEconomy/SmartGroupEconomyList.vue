@@ -71,16 +71,13 @@
           <a v-else @click="showMeeting(record)">查看会议信息</a>
         </span>
       </a-table>
-      <smart-group-economy-meeting-modal ref="meetingModal"></smart-group-economy-meeting-modal>
+      <smart-group-economy-meeting-modal ref="meetingModal" @ok="modalFormOk"></smart-group-economy-meeting-modal>
     </div>
 
     <a-tabs defaultActiveKey="1">
       <a-tab-pane tab="集体经济组织人员" key="1" >
         <SmartGroupEconomyPeopleList :mainId="selectedMainId" />
       </a-tab-pane>
-      <!-- <a-tab-pane tab="集体经济组织会议" key="2" forceRender>
-        <SmartGroupEconomyMeetingList :mainId="selectedMainId" />
-      </a-tab-pane> -->
     </a-tabs>
 
     <smartGroupEconomy-modal ref="modalForm" @ok="modalFormOk"></smartGroupEconomy-modal>

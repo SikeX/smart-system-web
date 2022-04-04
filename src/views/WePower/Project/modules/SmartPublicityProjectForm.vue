@@ -17,7 +17,8 @@
             </a-col>
             <a-col :span="24">
               <a-form-model-item label="建设单位" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="location">
-                <j-select-depart v-model="model.location" multi />
+                <select-village-depart v-model="model.location" />
+                <!-- <j-select-depart v-model="model.location" multi /> -->
               </a-form-model-item>
             </a-col>
             <a-col :span="24">
@@ -51,7 +52,13 @@
               </a-form-model-item>
             </a-col>
             <a-col :span="24">
-              <a-form-model-item v-if="model.type !== '1493964824436678658'" label="合同截止日期" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="signEndTime">
+              <a-form-model-item
+                v-if="model.type !== '1493964824436678658'"
+                label="合同截止日期"
+                :labelCol="labelCol"
+                :wrapperCol="wrapperCol"
+                prop="signEndTime"
+              >
                 <j-date placeholder="请选择合同截止日期" v-model="model.signEndTime" style="width: 100%" />
               </a-form-model-item>
             </a-col>
@@ -81,99 +88,46 @@
           </a-card>
           <a-card title="四议两公开内容" style="width: 100%">
             <a-row>
-            <a-card title="村党支部提议文件" style="width: 100%">
-              <a-col :span="24">
-                <a-form-model-item label="会议材料" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="meetFile1">
-                  <j-upload v-model="model.meetFile1"></j-upload>
-                  <a-button icon="camera" @click="eloamScan(4)">高拍仪拍照</a-button>
-                </a-form-model-item>
-              </a-col>
-              <a-col :span="24">
-                <a-form-model-item label="参会人员" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="people1">
-                  <j-multi-select-tag
-                    type="list_multi"
-                    v-model="model.people1"
-                    dictCode="smart_village_lead,name,id"
-                    placeholder="请选择参会人员"
-                  />
-                </a-form-model-item>
-              </a-col>
-              <a-col :span="24">
-                <a-form-model-item label="会议照片" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="video1">
-                  <j-image-upload isMultiple v-model="model.video1"></j-image-upload>
-                </a-form-model-item>
-              </a-col>
-            </a-card>
-            <a-card title="村两委会议商议" style="width: 100%">
-              <a-col :span="24">
-                <a-form-model-item label="会议材料" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="meetFile2">
-                  <j-upload v-model="model.meetFile2"></j-upload>
-                  <a-button icon="camera" @click="eloamScan(5)">高拍仪拍照</a-button>
-                </a-form-model-item>
-              </a-col>
-              <a-col :span="24">
-                <a-form-model-item label="参会人员" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="people2">
-                  <j-multi-select-tag
-                    type="list_multi"
-                    v-model="model.people2"
-                    dictCode="smart_village_lead,name,id"
-                    placeholder="请选择参会人员"
-                  />
-                </a-form-model-item>
-              </a-col>
-              <a-col :span="24">
-                <a-form-model-item label="会议照片" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="video1">
-                  <j-image-upload isMultiple v-model="model.video2"></j-image-upload>
-                </a-form-model-item>
-              </a-col>
-            </a-card>
-            <a-card title="党员大会审议" style="width: 100%">
-              <a-col :span="24">
-                <a-form-model-item label="会议材料" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="meetFile3">
-                  <j-upload v-model="model.meetFile3"></j-upload>
-                  <a-button icon="camera" @click="eloamScan(6)">高拍仪拍照</a-button>
-                </a-form-model-item>
-              </a-col>
-              <a-col :span="24">
-                <a-form-model-item label="参会人员" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="people3">
-                  <j-multi-select-tag
-                    type="list_multi"
-                    v-model="model.people3"
-                    dictCode="smart_village_lead,name,id"
-                    placeholder="请选择参会人员"
-                  />
-                </a-form-model-item>
-              </a-col>
-              <a-col :span="24">
-                <a-form-model-item label="会议照片" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="video3">
-                  <j-image-upload isMultiple v-model="model.video3"></j-image-upload>
-                </a-form-model-item>
-              </a-col>
-            </a-card>
-            <a-card title="村民会议或者村民代表会议" style="width: 100%">
-              <a-col :span="24">
-                <a-form-model-item label="会议材料" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="meetFile4">
-                  <j-upload v-model="model.meetFile4"></j-upload>
-                  <a-button icon="camera" @click="eloamScan(7)">高拍仪拍照</a-button>
-                </a-form-model-item>
-              </a-col>
-              <a-col :span="24">
-                <a-form-model-item label="参会人员" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="people4">
-                  <j-multi-select-tag
-                    type="list_multi"
-                    v-model="model.people4"
-                    dictCode="smart_village_lead,name,id"
-                    placeholder="请选择参会人员"
-                  />
-                </a-form-model-item>
-              </a-col>
-              <a-col :span="24">
-                <a-form-model-item label="会议照片" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="video4">
-                  <j-image-upload isMultiple v-model="model.video4"></j-image-upload>
-                    <a-button type="primary">人脸识别</a-button>
-                </a-form-model-item>
-              </a-col>
-            </a-card>
+              <meeting-card
+                name="村党支部提议文件"
+                peopleType="villageLead"
+                peopleDict="smart_village_lead, name, id"
+                :file.sync="model.meetFile1"
+                :people.sync="model.people1"
+                :video.sync="model.video1"
+                :videoPeople.sync="model.videoPeople1"
+                :disableSubmit="formDisabled"
+              />
+              <meeting-card
+                name="村两委会议商议"
+                peopleType="villageLead"
+                peopleDict="smart_village_lead, name, id"
+                :file.sync="model.meetFile2"
+                :people.sync="model.people2"
+                :video.sync="model.video2"
+                :videoPeople.sync="model.videoPeople2"
+                :disableSubmit="formDisabled"
+              />
+              <meeting-card
+                name="党员大会审议"
+                peopleType="villageLead2"
+                peopleDict="smart_village_lead2, name, id"
+                :file.sync="model.meetFile3"
+                :people.sync="model.people3"
+                :video.sync="model.video3"
+                :videoPeople.sync="model.videoPeople3"
+                :disableSubmit="formDisabled"
+              />
+              <meeting-card
+                name="村民会议或者村民代表会议决议"
+                peopleType="villageLead2"
+                peopleDict="smart_village_lead2, name, id"
+                :file.sync="model.meetFile4"
+                :people.sync="model.people4"
+                :video.sync="model.video4"
+                :videoPeople.sync="model.videoPeople4"
+                :disableSubmit="formDisabled"
+              />
             </a-row>
           </a-card>
         </a-row>
@@ -199,9 +153,9 @@
     <eloam-modal ref="modalForm2" @ok="scanOk2" biz-path="before"></eloam-modal>
     <eloam-modal ref="modalForm3" @ok="scanOk3" biz-path="before"></eloam-modal>
     <eloam-modal ref="modalForm4" @ok="scanOk4" biz-path="before"></eloam-modal>
-    <eloam-modal ref="modalForm5" @ok="scanOk5" biz-path="before"></eloam-modal>
+    <!-- <eloam-modal ref="modalForm5" @ok="scanOk5" biz-path="before"></eloam-modal>
     <eloam-modal ref="modalForm6" @ok="scanOk6" biz-path="before"></eloam-modal>
-    <eloam-modal ref="modalForm7" @ok="scanOk7" biz-path="before"></eloam-modal>
+    <eloam-modal ref="modalForm7" @ok="scanOk7" biz-path="before"></eloam-modal> -->
   </a-spin>
 </template>
 
@@ -211,16 +165,20 @@ import { FormTypes, getRefPromise, VALIDATE_NO_PASSED } from '@/utils/JEditableT
 import { JEditableTableModelMixin } from '@/mixins/JEditableTableModelMixin'
 import { validateDuplicateValue } from '@/utils/util'
 import EloamModal from '@views/eloam/modules/EloamModal'
+import MeetingCard from './MeetingCard.vue'
+import SelectVillageDepart from '../../../../components/common/SelectVillageDepart.vue'
 
 export default {
   name: 'SmartPublicityProjectForm',
   mixins: [JEditableTableModelMixin],
   components: {
     EloamModal,
+    MeetingCard,
+    SelectVillageDepart
   },
   data() {
     return {
-      labelCol: {
+       labelCol: {
         xs: { span: 24 },
         sm: { span: 6 },
       },
@@ -240,6 +198,9 @@ export default {
       // 新增时子表默认添加几行空数据
       addDefaultRowNum: 1,
       validatorRules: {
+        title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
+        type: [{ required: true, message: '请选择项目分类', trigger: 'change' }],
+        location: [{ required: true, message: '请选择建设单位', trigger: 'change' }],
         money: [
           { required: false },
           { pattern: /^(([1-9][0-9]*)|([0]\.\d{0,2}|[1-9][0-9]*\.\d{0,2}))$/, message: '请输入正确的金额!' },

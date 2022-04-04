@@ -5,8 +5,9 @@
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
-            <a-form-item label="所属村">
-              <j-select-depart placeholder="请选择所属村" v-model="queryParam.location"/>
+            <a-form-item label="所属村镇">
+              <select-village-depart placeholder="请选择所属村镇" v-model="queryParam.location"/>
+              <!-- <j-select-depart placeholder="请选择所属村" v-model="queryParam.location"/> -->
             </a-form-item>
           </a-col>
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
@@ -136,6 +137,7 @@
   import {filterMultiDictText} from '@/components/dict/JDictSelectUtil'
   import SmartVillageLead2Modal from './modules/SmartVillageLead2Modal'
   import SmartVillageLead2List from './SmartVillageLead2List'
+  import SelectVillageDepart from '../../../components/common/SelectVillageDepart.vue'
 
 
   export default {
@@ -144,7 +146,8 @@
     components: {
       SmartVillageLeadModal,
       SmartVillageLead2Modal,
-      SmartVillageLead2List
+      SmartVillageLead2List,
+      SelectVillageDepart
     },
     data () {
       return {
@@ -164,7 +167,7 @@
           {
             title:'职务',
             align:"center",
-            dataIndex: 'job'
+            dataIndex: 'job_dictText'
           },
           {
             title:'照片',
@@ -236,7 +239,7 @@
       getSuperFieldList(){
         let fieldList=[];
         fieldList.push({type:'string',value:'people',text:'人员选择',dictCode:'smart_village_home,home_surname,idnumber'})
-        fieldList.push({type:'string',value:'job',text:'职务',dictCode:''})
+        fieldList.push({type:'string',value:'job',text:'职务',dictCode:'lead_job'})
         fieldList.push({type:'string',value:'picture',text:'照片',dictCode:''})
         fieldList.push({type:'string',value:'createBy',text:'上传人',dictCode:''})
         fieldList.push({type:'string',value:'title',text:'标题',dictCode:''})
