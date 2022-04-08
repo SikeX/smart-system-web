@@ -90,20 +90,9 @@
             dataIndex: 'homeCode'
           },
           {
-            title: '户籍关系',
+            title: '亲属关系',
             align: 'center',
-            dataIndex: 'homeRole',
-            customRender: function (text) {
-              if (text === 1) {
-                return '户主'
-              } else if (text === 2) {
-                return '家庭成员'
-              } else if (text === 0) {
-                return '待添加'
-              } else {
-                return text
-              }
-            }
+            dataIndex: 'relation_dictText'
           },
           {
             title: '姓名',
