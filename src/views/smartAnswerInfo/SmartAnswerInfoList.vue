@@ -149,16 +149,6 @@ export default {
           dataIndex: 'completionDegree'
         },
         {
-          title: '总分',
-          align: 'center',
-          dataIndex: 'totalPoints'
-        },
-        {
-          title: '排名',
-          align: 'center',
-          dataIndex: 'ranking'
-        },
-        {
           title: '操作',
           dataIndex: 'action',
           align: 'center',
