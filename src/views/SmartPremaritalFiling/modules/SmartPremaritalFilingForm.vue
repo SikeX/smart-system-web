@@ -328,6 +328,7 @@ import { validateDuplicateValue } from '@/utils/util'
 import JSelectUserByDep from '../../../components/jeecgbiz/JSelectUserByDep.vue'
 import SelectUserByDep from '../../../components/jeecgbiz/modal/SelectUserByDep'
 import EloamModal from '@views/eloam/modules/EloamModal'
+import { mapActions, mapGetters,mapState } from 'vuex'
 
 export default {
   name: 'SmartPremaritalFilingForm',
@@ -335,14 +336,7 @@ export default {
   components: { SelectUserByDep, EloamModal },
   data() {
     return {
-      model: {
-        peopleId: '',
-        peopleName: '',
-        contactNumber: '',
-        politicCou: '',
-        postRank: '',
-        post: '',
-      },
+      model: {},
       value: 1,
       rootUrl: '/smartPremaritalFiling/smartPremaritalFiling/',
       labelCol: {
@@ -467,8 +461,13 @@ export default {
   created() {
     //备份model原始值
     this.modelDefault = JSON.parse(JSON.stringify(this.model))
+
+    this.getUser(this.userInfo().id)
+
+    tmp.peopleId = userInfo.id
   },
   methods: {
+     ...mapGetters(["userInfo"]),
     //人员注释
     getUser(back) {
       getAction('/sys/user/queryById', { id: back }).then((res) => {

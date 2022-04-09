@@ -14,8 +14,9 @@
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
-            <a-form-model-item label="单位" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="location">
-              <j-select-depart v-model="model.location" multi />
+            <a-form-model-item label="村镇" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="location">
+              <select-village-depart v-model="model.location" />
+              <!-- <j-select-depart v-model="model.location" multi /> -->
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
@@ -40,11 +41,13 @@
 import { httpAction, getAction } from '@/api/manage'
 import { validateDuplicateValue } from '@/utils/util'
 import EloamModal from '@views/eloam/modules/EloamModal'
+import SelectVillageDepart from '@/components/common/SelectVillageDepart'
 
 export default {
   name: 'SmartPublicityPartyForm',
   components: {
     EloamModal,
+    SelectVillageDepart
   },
   props: {
     //表单禁用
@@ -66,7 +69,11 @@ export default {
         sm: { span: 16 },
       },
       confirmLoading: false,
-      validatorRules: {},
+      validatorRules: {
+        type: [{ required: true, message: '请选择类型' }],
+        location: [{ required: true, message: '请选择村镇' }],
+        title: [{ required: true, message: '请输入标题' }],
+      },
       url: {
         add: '/smartPublicityParty/smartPublicityParty/add',
         edit: '/smartPublicityParty/smartPublicityParty/edit',

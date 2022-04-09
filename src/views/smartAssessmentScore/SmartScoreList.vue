@@ -18,8 +18,15 @@
           </a-select>
         </a-form-item>
       </a-form>
+      <smart-assessment-user-team-list :score-role="scoreRole" @select="selectRoleInfo"></smart-assessment-user-team-list>
     </a-modal>
     <a-card :title='description' :bordered="false">
+      <a-tooltip slot="extra">
+        <template slot="title">
+          切换评分角色
+        </template>
+        <a-button type="primary" @click="isShowModal = true" ghost><a-icon type="swap" /></a-button>
+      </a-tooltip>
       <!-- table区域-begin -->
       <div>
 
@@ -97,11 +104,14 @@ import SmartAssessmentContentList from '@views/smartAssessmentContent/SmartAsses
 import '@/assets/less/TableExpand.less'
 import SmartScorePage from '@views/smartAssessmentScore/modules/SmartScorePage'
 import SmartScoreInfoModal from '@views/smartAssessmentScore/modules/SmartScoreInfoModal'
+import Vue from "vue";
+import SmartAssessmentUserTeamList from "@views/smartAssessmentScore/modules/SmartAssessmentUserTeamList";
 
 export default {
   name: "SmartScoreList",
   mixins: [JeecgListMixin],
   components: {
+    SmartAssessmentUserTeamList,
     SmartScoreInfoModal,
     SmartScorePage,
     SmartAssessmentContentList,
@@ -110,8 +120,10 @@ export default {
     return {
       description: '考核任务列表',
       disableMixinCreated: true,
-      isShowModal: true,
+      isShowModal: false,
       scoreRole: 'team',
+      // 评分角色信息
+      scoreRoleId: '',
       // 表头
       columns: [
         {
@@ -175,6 +187,11 @@ export default {
   created() {
     this.getSuperFieldList();
   },
+  mounted() {
+    // 由于不同用户不会改变，先每次进入都清空
+    Vue.ls.remove('assessInfo')
+    this.isShowModal = true
+  },
   computed: {
     importExcelUrl: function () {
       return `${window._CONFIG['domianURL']}/${this.url.importExcelUrl}`;
@@ -187,8 +204,23 @@ export default {
       } else {
         this.url.list = this.url.teamMissionList;
       }
-      this.loadData(1)
-      this.isShowModal = false;
+      if (this.scoreRoleId) {
+        this.loadData(1);
+        this.isShowModal = false;
+      } else {
+        this.$message.warning("请先选择一个具体评分角色！")
+      }
+    },
+    selectRoleInfo(record) {
+      if (this.scoreRole === 'depart') {
+        record.type = 'depart';
+        Vue.ls.set("assessInfo", record);
+        this.scoreRoleId = record.id;
+      } else {
+        record.type = 'team';
+        Vue.ls.set("assessInfo", record);
+        this.scoreRoleId = record.id;
+      }
     },
     initDictConfig() {
     },
@@ -222,6 +254,7 @@ export default {
       }
       this.onClearSelected()
       var params = this.getQueryParams();//查询条件
+      params.scoreRoleId = this.scoreRoleId
       this.loading = true;
       getAction(this.url.list, params).then((res) => {
         if (res.success) {

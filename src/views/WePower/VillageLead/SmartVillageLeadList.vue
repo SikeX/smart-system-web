@@ -5,8 +5,9 @@
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
-            <a-form-item label="所属村">
-              <j-select-depart placeholder="请选择所属村" v-model="queryParam.location"/>
+            <a-form-item label="所属村镇">
+              <select-village-depart placeholder="请选择所属村镇" v-model="queryParam.location"/>
+              <!-- <j-select-depart placeholder="请选择所属村" v-model="queryParam.location"/> -->
             </a-form-item>
           </a-col>
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
@@ -42,7 +43,8 @@
 
     <!-- 操作按钮区域 -->
     <div class="table-operator">
-      <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
+      <a-button @click="handleAdd" type="primary" icon="plus">村两委新增</a-button>
+      <!-- <a-button @click="handlePeopleAdd" type="primary" icon="plus">党员、村民代表新增</a-button> -->
       <a-button type="primary" icon="download" @click="handleExportXls('村（社区）领导班子')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
@@ -120,7 +122,9 @@
       </a-table>
     </div>
 
+    <smart-village-lead-2-list></smart-village-lead-2-list>
     <smart-village-lead-modal ref="modalForm" @ok="modalFormOk"></smart-village-lead-modal>
+    <smart-village-lead-2-modal ref="peopleForm" @ok="modalFormOk"></smart-village-lead-2-modal>
   </a-card>
 </template>
 
@@ -131,12 +135,19 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import SmartVillageLeadModal from './modules/SmartVillageLeadModal'
   import {filterMultiDictText} from '@/components/dict/JDictSelectUtil'
+  import SmartVillageLead2Modal from './modules/SmartVillageLead2Modal'
+  import SmartVillageLead2List from './SmartVillageLead2List'
+  import SelectVillageDepart from '../../../components/common/SelectVillageDepart.vue'
+
 
   export default {
     name: 'SmartVillageLeadList',
     mixins:[JeecgListMixin, mixinDevice],
     components: {
-      SmartVillageLeadModal
+      SmartVillageLeadModal,
+      SmartVillageLead2Modal,
+      SmartVillageLead2List,
+      SelectVillageDepart
     },
     data () {
       return {
@@ -156,7 +167,7 @@
           {
             title:'职务',
             align:"center",
-            dataIndex: 'job'
+            dataIndex: 'job_dictText'
           },
           {
             title:'照片',
@@ -170,7 +181,7 @@
             dataIndex: 'createBy'
           },
           {
-            title:'标题',
+            title:'职能',
             align:"center",
             dataIndex: 'title'
           },
@@ -219,12 +230,16 @@
       },
     },
     methods: {
+      handlePeopleAdd() {
+        this.$refs.peopleForm.add()
+        this.$refs.peopleForm.title = '党员、村民代表新增'
+      },
       initDictConfig(){
       },
       getSuperFieldList(){
         let fieldList=[];
         fieldList.push({type:'string',value:'people',text:'人员选择',dictCode:'smart_village_home,home_surname,idnumber'})
-        fieldList.push({type:'string',value:'job',text:'职务',dictCode:''})
+        fieldList.push({type:'string',value:'job',text:'职务',dictCode:'lead_job'})
         fieldList.push({type:'string',value:'picture',text:'照片',dictCode:''})
         fieldList.push({type:'string',value:'createBy',text:'上传人',dictCode:''})
         fieldList.push({type:'string',value:'title',text:'标题',dictCode:''})

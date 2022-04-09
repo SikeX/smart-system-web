@@ -45,10 +45,10 @@
         :customRow='clickThenSelect'
         @change='handleTableChange'>
 
-        <template slot="countDown" slot-scope="text">
+        <template slot="countDown" slot-scope="text, record">
           <a-statistic-countdown
             format="D 天 H 时 m 分 s 秒"
-            :value="text"
+            :value="record.assessmentTime"
             valueStyle="font-size: 14px"
           />
         </template>
@@ -165,7 +165,7 @@ export default {
         {
           title: '距离截止时间倒计时',
           align: 'center',
-          dataIndex: 'assessmentTime',
+          dataIndex: 'endTime',
           scopedSlots: { customRender: 'countDown' }
         },
         {
@@ -177,11 +177,6 @@ export default {
           title: '任务状态',
           align: 'center',
           dataIndex: 'missionStatus'
-        },
-        {
-          title: '考核要点总数',
-          align: 'center',
-          dataIndex: 'keyPointsAmount'
         },
         {
           title: '操作',
@@ -286,6 +281,7 @@ export default {
         this.$message.error("请设置url.reset属性!")
         return
       }
+      this.loading = true
       var that = this;
       putAction(that.url.reset, record).then((res) => {
         if (res.success) {
@@ -294,6 +290,8 @@ export default {
         } else {
           that.$message.warning(res.message);
         }
+      }).finally(() => {
+        this.loading = false;
       });
     },
     publishMission(record) {

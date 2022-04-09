@@ -13,7 +13,7 @@
         <a-row>
           <a-col :span="24">
             <a-form-model-item label="被考核单位" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="assessmentDepart">
-              <j-select-depart v-model="model.assessmentDepart" :multi="false" :disabled="isDisabled"/>
+              <j-select-depart v-model="model.assessmentDepart" :multi="false" :disabled="false"/>
             </a-form-model-item>
           </a-col>
           <a-col :span="24" v-if="model.assessmentDepart">
@@ -101,7 +101,7 @@
     },
     computed: {
       isDisabled() {
-        return this.model.id;
+        return !!this.model.id;
       },
     },
     created () {

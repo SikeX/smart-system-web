@@ -57,6 +57,7 @@ import { getAction, putAction } from '@api/manage'
 import SmartAssessmentContentForm from '@views/smartAnswerInfo/modules/SmartAssessmentContentForm'
 import SmartAnswerPage from '@views/smartAnswerInfo/modules/SmartAnswerPage'
 import SmartScoreInfoModal from '@views/smartAssessmentScore/modules/SmartScoreInfoModal'
+import Vue from "vue";
 
 export default {
   name: 'SmartScoreDepartList',
@@ -92,7 +93,13 @@ export default {
           this.clearList()
         }else{
           this.queryParam['missionId'] = this.missionId
-          this.loadData(1);
+          let assessInfo = Vue.ls.get("assessInfo")
+          if (assessInfo) {
+            this.queryParam['depart'] = assessInfo.departs || assessInfo.responsibleDepart;
+            this.loadData(1);
+          } else {
+            this.$message.warning('没有评分权限!')
+          }
         }
       }
     }
@@ -119,24 +126,9 @@ export default {
           dataIndex: 'depart_dictText'
         },
         {
-          title: '任务状态',
+          title: '状态',
           align: 'center',
           dataIndex: 'missionStatus'
-        },
-        {
-          title: '完成要点个数',
-          align: 'center',
-          dataIndex: 'finishedPoint'
-        },
-        {
-          title: '完成度',
-          align: 'center',
-          dataIndex: 'completionDegree'
-        },
-        {
-          title: '总分',
-          align: 'center',
-          dataIndex: 'totalPoints'
         },
         {
           title: '操作',
@@ -148,7 +140,7 @@ export default {
         }
       ],
       url: {
-        list: '/smartAnswerInfo/smartAnswerInfo/list',
+        list: '/smartAnswerInfo/smartAnswerInfo/listAll',
         delete: '/smartAnswerInfo/smartAnswerInfo/delete',
         sign: '/smartAnswerInfo/smartAnswerInfo/sign',
         deleteBatch: '/smartAnswerInfo/smartAnswerInfo/deleteBatch',

@@ -42,7 +42,7 @@ import SmartScoreDepartList from '@views/smartAssessmentScore/modules/SmartScore
 
 
 export default {
-  name: 'SmartAnswerPage',
+  name: 'SmartScorePage',
   mixins: [JeecgListMixin],
   components: {
     SmartScoreDepartList,
