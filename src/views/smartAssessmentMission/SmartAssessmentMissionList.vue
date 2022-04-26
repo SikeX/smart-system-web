@@ -179,11 +179,6 @@ export default {
           dataIndex: 'missionStatus'
         },
         {
-          title: '考核要点总数',
-          align: 'center',
-          dataIndex: 'keyPointsAmount'
-        },
-        {
           title: '操作',
           dataIndex: 'action',
           align: 'center',
