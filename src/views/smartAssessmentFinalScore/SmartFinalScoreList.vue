@@ -1,5 +1,34 @@
 <template>
   <a-card :title='description' :bordered="false">
+    <!-- 查询区域 -->
+    <div class='table-page-search-wrapper'>
+      <a-form layout='inline' @keyup.enter.native='searchQuery'>
+        <a-row :gutter='24'>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="任务名称">
+              <a-input placeholder="请输入任务名称" v-model="queryParam.missionName"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="考核年份">
+              <a-input placeholder="请输入考核年份" v-model="queryParam.assessmentYear"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+              <a @click="handleToggleSearch" style="margin-left: 8px">
+                {{ toggleSearchStatus ? '收起' : '展开' }}
+                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+              </a>
+            </span>
+          </a-col>
+        </a-row>
+      </a-form>
+    </div>
+    <!-- 查询区域-END -->
+
     <!-- table区域-begin -->
     <div>
 
@@ -124,12 +153,7 @@ export default {
         }
       ],
       url: {
-        list: "/smartAssessmentMission/smartAssessmentMission/list",
-        delete: "/smartAssessmentMission/smartAssessmentMission/delete",
-        publish: "/smartAssessmentMission/smartAssessmentMission/publish",
-        deleteBatch: "/smartAssessmentMission/smartAssessmentMission/deleteBatch",
-        exportXlsUrl: "/smartAssessmentMission/smartAssessmentMission/exportXls",
-        importExcelUrl: "smartAssessmentMission/smartAssessmentMission/importExcel",
+        list: "/smartAssessmentMission/smartAssessmentMission/finalScoreList"
       },
       dictOptions: {},
       /* 分页参数 */
