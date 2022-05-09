@@ -4,6 +4,37 @@
     <div class='table-page-search-wrapper'>
       <a-form layout='inline' @keyup.enter.native='searchQuery'>
         <a-row :gutter='24'>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="任务名称">
+              <a-input placeholder="请输入任务名称" v-model="queryParam.missionName"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="考核年份">
+              <a-input placeholder="请输入考核年份" v-model="queryParam.assessmentYear"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="任务状态">
+              <a-select
+                placeholder="全部"
+                v-model:value="queryParam.missionStatus">
+                <a-select-option value="未发布">未发布</a-select-option>
+                <a-select-option value="已发布">已发布</a-select-option>
+                <a-select-option value="发布评分结果">发布评分结果</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+              <a @click="handleToggleSearch" style="margin-left: 8px">
+                {{ toggleSearchStatus ? '收起' : '展开' }}
+                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+              </a>
+            </span>
+          </a-col>
         </a-row>
       </a-form>
     </div>
