@@ -11,6 +11,27 @@
             </a-form-item>
           </a-col>
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="任务名称">
+              <a-input placeholder="请输入任务名称" v-model="queryParam.missionName"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="考核年份">
+              <a-input placeholder="请输入考核年份" v-model="queryParam.assessmentYear"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="任务状态">
+              <a-select
+                placeholder="全部"
+                v-model:value="queryParam.missionStatus">
+                <a-select-option value="未发布">未发布</a-select-option>
+                <a-select-option value="已发布">已发布</a-select-option>
+                <a-select-option value="发布评分结果">发布评分结果</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
               <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
@@ -24,28 +45,6 @@
       </a-form>
     </div>
     <!-- 查询区域-END -->
-
-    <a-row>
-      <a-card :bordered='false' title="统计信息">
-        <a-row>
-          <a-col :span="4">
-            <a-statistic title="职能" :value="33" style="margin-right: 50px"/>
-          </a-col>
-          <a-col :span="4">
-            <a-statistic title="党员数" :precision="2" :value="dangyuanCount"/>
-          </a-col>
-          <a-col :span="4">
-            <a-statistic title="执行第一种形态人员数" :precision="2" :value="firstCount"/>
-          </a-col>
-          <a-col :span="4">
-            <a-statistic title="处分人员数" :precision="2" :value="chufenCount"/>
-          </a-col>
-          <a-col :span="4">
-            <a-statistic title="单位重要领导是否被处分" :precision="2" value="？？？"/>
-          </a-col>
-        </a-row>
-      </a-card>
-    </a-row>
 
     <!-- table区域-begin -->
     <div>
@@ -95,11 +94,28 @@
 
         <span slot='action' slot-scope='text, record'>
           <a @click='handleDetail(record)'>详情</a>
-          <a-divider v-if='record.missionStatus === "未签收"' type='vertical'/>
-          <a v-if='record.missionStatus === "未签收"' @click='signMission(record)'>签收</a>
         </span>
       </a-table>
     </div>
+
+    <a-row v-if="selectedMainId">
+      <a-card :bordered='false' title="单位统计信息">
+        <a-row>
+          <a-col :span="6">
+            <a-statistic title="党员数" :value="dangYuanCount"/>
+          </a-col>
+          <a-col :span="6">
+            <a-statistic title="执行第一种形态人员数" :value="firstCount"/>
+          </a-col>
+          <a-col :span="6">
+            <a-statistic title="处分人员数" :value="chuFenRenYuanCount"/>
+          </a-col>
+          <a-col :span="6">
+            <a-statistic title="单位重要领导是否被处分" :value="mainPeople"/>
+          </a-col>
+        </a-row>
+      </a-card>
+    </a-row>
 
     <smart-answer-info-modal ref='modalForm' @ok='modalFormOk'></smart-answer-info-modal>
   </a-card>
@@ -193,9 +209,11 @@ export default {
       selectionRows: [],
       superFieldList: [],
 
-      dangyuanCount: 2,
-      firstCount: 2,
-      chufenCount: 3,
+      dangYuanCount: 0,
+      firstCount: 0,
+      chuFenRenYuanCount: 0,
+      mainPeople: '否',
+      selectedDepartName: ''
     }
   },
   created() {
@@ -210,15 +228,30 @@ export default {
     initDictConfig() {
     },
     loadCountData() {
-      // 第一形态人
-      let params = {
-        intervieweeDept: this.queryParam.depart || this.selectionRows[0].depart
+      // 党员
+      params = {
+        departId: this.selectionRows[0].depart
       }
       this.loading = true;
-      getAction('/SmartFirstFormPeople/smartFirstFormPeople/list', params).then((res) => {
+      getAction('/sys/user/countByPoliticalStatus', params).then((res) => {
         if (res.success) {
           let result = res.result
-          this.firstCount = result.total
+          this.dangYuanCount = result.count
+        }
+        if (res.code === 510) {
+          this.$message.warning(res.message)
+        }
+      })
+
+      // 第一形态人
+      let params = {
+        departId: this.selectionRows[0].depart
+      }
+      this.loading = true;
+      getAction('/SmartFirstFormPeople/smartFirstFormPeople/countByDepartId', params).then((res) => {
+        if (res.success) {
+          let result = res.result
+          this.firstCount = result.count
         }
         if (res.code === 510) {
           this.$message.warning(res.message)
@@ -227,13 +260,14 @@ export default {
 
       // 处分人员
       params = {
-        departCode: this.queryParam.depart || this.selectionRows[0].depart
+        departId: this.selectionRows[0].depart
       }
       this.loading = true;
-      getAction('/SmartPunishPeople/smartPunishPeople/list', params).then((res) => {
+      getAction('/SmartPunishPeople/smartPunishPeople/countByDepartId', params).then((res) => {
         if (res.success) {
           let result = res.result
-          this.chufenCount = result.total
+          this.chuFenRenYuanCount = result.count
+          this.mainPeople = result.mainPeopleCount > 0 ? '是' : '否'
         }
         if (res.code === 510) {
           this.$message.warning(res.message)
@@ -260,6 +294,7 @@ export default {
       this.selectedMainId = selectedRowKeys[0]
       this.selectedRowKeys = selectedRowKeys
       this.selectionRows = selectionRows
+      this.selectedDepartName = selectionRows[0].depart_dictText
       this.loadCountData()
       console.log(selectionRows)
     },
