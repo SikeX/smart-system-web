@@ -177,11 +177,11 @@ export default {
           align: "center",
           dataIndex: 'missionStatus'
         },
-        {
-          title: '考核要点总数',
-          align: "center",
-          dataIndex: 'keyPointsAmount'
-        }
+        // {
+        //   title: '考核要点总数',
+        //   align: "center",
+        //   dataIndex: 'keyPointsAmount'
+        // }
       ],
       url: {
         list: "/smartAssessmentMission/smartAssessmentMission/teamMissionList",
