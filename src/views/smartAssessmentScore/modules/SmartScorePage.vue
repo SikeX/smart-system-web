@@ -159,6 +159,7 @@ export default {
       this.dataSource = []
       this.selectedRowKeys = []
       this.expandedKeys = []
+      this.expandedRowKeys = []
       this.ipagination.current = 1
     },
     showDetail(selectedKeys, e) {

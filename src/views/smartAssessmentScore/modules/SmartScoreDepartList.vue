@@ -66,7 +66,7 @@
         </template>
 
         <span slot='action' slot-scope='text, record'>
-          <a v-if="record.missionStatus==='未签收'" @click='signMission(record)'>签收</a>
+          <a v-if="record.missionStatus==='未签收'" @click='signMission(record)'>代替签收</a>
           <a v-else @click='handleMark(record)'>评分</a>
         </span>
 
