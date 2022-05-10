@@ -1,78 +1,87 @@
 <template>
-  <a-card :bordered='false'>
-    <!-- 查询区域 -->
-    <div class='table-page-search-wrapper'>
-      <a-form layout='inline' @keyup.enter.native='searchQuery'>
-        <a-row :gutter='24'>
-        </a-row>
-      </a-form>
-    </div>
-    <!-- 查询区域-END -->
+  <div>
+    <a-card v-has="'mission:listAll'" :bordered='false' style="margin-bottom: 20px">
+      <!-- 查询区域 -->
+      <div class='table-page-search-wrapper'>
+        <a-form layout='inline' @keyup.enter.native='searchQuery'>
+          <a-row :gutter='24'>
+            <a-col :xl="6" :lg="7" :md="8" :sm="24">
+              <a-form-item label="任务名称">
+                <a-input placeholder="请输入任务名称" v-model="queryParam.missionName"></a-input>
+              </a-form-item>
+            </a-col>
+            <a-col :xl="6" :lg="7" :md="8" :sm="24">
+              <a-form-item label="考核年份">
+                <a-input placeholder="请输入考核年份" v-model="queryParam.assessmentYear"></a-input>
+              </a-form-item>
+            </a-col>
+            <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+              <a @click="handleToggleSearch" style="margin-left: 8px">
+                {{ toggleSearchStatus ? '收起' : '展开' }}
+                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+              </a>
+            </span>
+            </a-col>
+          </a-row>
+        </a-form>
+      </div>
+      <!-- 查询区域-END -->
 
-    <!-- 操作按钮区域 -->
-    <div class='table-operator'>
-      <a-button @click='handleAdd' type='primary' icon='plus'>新增</a-button>
-      <a-button type='primary' icon='download' @click="handleExportXls('考核任务表')">导出</a-button>
-      <a-upload name='file' :showUploadList='false' :multiple='false' :headers='tokenHeader' :action='importExcelUrl'
-                @change='handleImportExcel'>
-        <a-button type='primary' icon='import'>导入</a-button>
-      </a-upload>
-      <!-- 高级查询区域 -->
-      <j-super-query :fieldList='superFieldList' ref='superQueryModal'
-                     @handleSuperQuery='handleSuperQuery'></j-super-query>
-    </div>
-
-    <!-- table区域-begin -->
-    <div>
-      <div class='ant-alert ant-alert-info' style='margin-bottom: 16px;'>
-        <i class='anticon anticon-info-circle ant-alert-icon'></i> 已选择 <a
-        style='font-weight: 600'>{{ selectedRowKeys.length }}</a>项
-        <a style='margin-left: 24px' @click='onClearSelected'>清空</a>
+      <!-- 操作按钮区域 -->
+      <div class='table-operator'>
+        <!-- 高级查询区域 -->
+        <j-super-query :fieldList='superFieldList' ref='superQueryModal'
+                       @handleSuperQuery='handleSuperQuery'></j-super-query>
       </div>
 
-      <a-table
-        ref='table'
-        size='middle'
-        bordered
-        rowKey='id'
-        class='j-table-force-nowrap'
-        :scroll='{x:true}'
-        :columns='columns'
-        :dataSource='dataSource'
-        :pagination='ipagination'
-        :loading='loading'
-        @change='handleTableChange'>
+      <!-- table区域-begin -->
+      <div>
+        <a-table
+          ref='table'
+          size='middle'
+          bordered
+          rowKey='id'
+          class='j-table-force-nowrap'
+          :scroll='{x:true}'
+          :columns='columns'
+          :dataSource='dataSource'
+          :pagination='ipagination'
+          :loading='loading'
+          @change='handleTableChange'>
 
-        <template slot="countDown" slot-scope="text, record">
-          <a-statistic-countdown
-            format="D 天 H 时 m 分 s 秒"
-            :value="record.assessmentTime"
-            valueStyle="font-size: 14px"
-          />
-        </template>
+          <template slot="countDown" slot-scope="text, record">
+            <a-statistic-countdown
+              format="D 天 H 时 m 分 s 秒"
+              :value="record.assessmentTime"
+              valueStyle="font-size: 14px"
+            />
+          </template>
 
-        <template slot='htmlSlot' slot-scope='text'>
-          <div v-html='text'></div>
-        </template>
-        <template slot='imgSlot' slot-scope='text'>
-          <span v-if='!text' style='font-size: 12px;font-style: italic;'>无图片</span>
-          <img v-else :src='getImgView(text)' height='25px' alt=''
-               style='max-width:80px;font-size: 12px;font-style: italic;' />
-        </template>
-        <template slot='fileSlot' slot-scope='text'>
-          <span v-if='!text' style='font-size: 12px;font-style: italic;'>无文件</span>
-          <a-button
-            v-else
-            :ghost='true'
-            type='primary'
-            icon='download'
-            size='small'
-            @click='downloadFile(text)'>
-            下载
-          </a-button>
-        </template>
+          <template slot='htmlSlot' slot-scope='text'>
+            <div v-html='text'></div>
+          </template>
+          <template slot='imgSlot' slot-scope='text'>
+            <span v-if='!text' style='font-size: 12px;font-style: italic;'>无图片</span>
+            <img v-else :src='getImgView(text)' height='25px' alt=''
+                 style='max-width:80px;font-size: 12px;font-style: italic;' />
+          </template>
+          <template slot='fileSlot' slot-scope='text'>
+            <span v-if='!text' style='font-size: 12px;font-style: italic;'>无文件</span>
+            <a-button
+              v-else
+              :ghost='true'
+              type='primary'
+              icon='download'
+              size='small'
+              @click='downloadFile(text)'>
+              下载
+            </a-button>
+          </template>
 
-        <span slot='action' slot-scope='text, record'>
+          <span slot='action' slot-scope='text, record'>
           <a @click='handleEdit(record)'>编辑</a>
 
           <a-divider v-if='record.missionStatus === "未发布"' type='vertical' />
@@ -97,11 +106,13 @@
           </a-dropdown>
         </span>
 
-      </a-table>
-    </div>
+        </a-table>
+      </div>
 
-    <smartAssessmentMission-modal ref='modalForm' @ok='modalFormOk'></smartAssessmentMission-modal>
-  </a-card>
+      <smartAssessmentMission-modal ref='modalForm' @ok='modalFormOk'></smartAssessmentMission-modal>
+    </a-card>
+    <smart-answer-info-list/>
+  </div>
 </template>
 
 <script>
@@ -112,11 +123,13 @@ import { deleteAction, getAction, postAction, putAction } from '@/api/manage'
 import SmartAssessmentDepartList from './SmartAssessmentDepartList'
 import SmartAssessmentContentList from '@views/smartAssessmentContent/SmartAssessmentContentList'
 import '@/assets/less/TableExpand.less'
+import SmartAnswerInfoList from "@views/smartAnswerInfo/SmartAnswerInfoList";
 
 export default {
   name: 'SmartAssessmentMissionList',
   mixins: [JeecgListMixin],
   components: {
+    SmartAnswerInfoList,
     SmartAssessmentMissionModal
   },
   data() {
@@ -156,7 +169,7 @@ export default {
           scopedSlots: { customRender: 'countDown' }
         },
         {
-          title: '考核完成度',
+          title: '总分',
           align: 'center',
           dataIndex: 'totalPoint'
         },
