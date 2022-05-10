@@ -1,5 +1,5 @@
 <template>
-  <a-card :bordered='false'>
+  <a-card :bordered='false' title="本单位正在考核">
     <!-- table区域-begin -->
     <div>
       <a-table
@@ -48,8 +48,9 @@
 
         <span slot='action' slot-scope='text, record'>
           <a @click='handleDetail(record)'>详情</a>
-          <a-divider v-if='record.missionStatus === "未签收"' type='vertical' />
+          <a-divider type='vertical' />
           <a v-if='record.missionStatus === "未签收"' @click='signMission(record)'>签收</a>
+          <a v-else @click='updateCompletionDegree(record)'>更新完成度</a>
         </span>
 
       </a-table>
@@ -138,16 +139,21 @@ export default {
           dataIndex: '',
           scopedSlots: { customRender: 'countDown' }
         },
-        // {
-        //   title: '完成要点个数',
-        //   align: 'center',
-        //   dataIndex: 'finishedPoint'
-        // },
-        // {
-        //   title: '完成度',
-        //   align: 'center',
-        //   dataIndex: 'completionDegree'
-        // },
+        {
+          title: '完成要点个数',
+          align: 'center',
+          dataIndex: 'finishedKeyPointAmount'
+        },
+        {
+          title: '总要点个数',
+          align: 'center',
+          dataIndex: 'totalKeyPointAmount'
+        },
+        {
+          title: '完成度',
+          align: 'center',
+          dataIndex: 'completionDegree'
+        },
         {
           title: '操作',
           dataIndex: 'action',
@@ -160,6 +166,7 @@ export default {
       url: {
         list: '/smartAnswerInfo/smartAnswerInfo/list',
         delete: '/smartAnswerInfo/smartAnswerInfo/delete',
+        updateCompletionDegree: '/smartAnswerInfo/smartAnswerInfo/updateCompletionDegree',
         sign: '/smartAnswerInfo/smartAnswerInfo/sign',
         deleteBatch: '/smartAnswerInfo/smartAnswerInfo/deleteBatch',
         exportXlsUrl: '/smartAnswerInfo/smartAnswerInfo/exportXls',
@@ -213,7 +220,8 @@ export default {
       fieldList.push({ type: 'sel_depart', value: 'depart', text: '单位' })
       fieldList.push({ type: 'string', value: 'missionStatus', text: '任务状态', dictCode: '' })
       fieldList.push({ type: 'date', value: 'endTime', text: '任务状态', dictCode: '' })
-      fieldList.push({ type: 'int', value: 'finishedPoint', text: '完成要点个数', dictCode: '' })
+      fieldList.push({ type: 'int', value: 'finishedKeyPointAmount', text: '完成要点个数', dictCode: '' })
+      fieldList.push({ type: 'int', value: 'totalKeyPointAmount', text: '总要点个数', dictCode: '' })
       fieldList.push({ type: 'double', value: 'completionDegree', text: '完成度', dictCode: '' })
       fieldList.push({ type: 'int', value: 'totalPoints', text: '总分', dictCode: '' })
       fieldList.push({ type: 'int', value: 'ranking', text: '排名', dictCode: '' })
@@ -234,8 +242,20 @@ export default {
         this.loading = false;
       })
     },
-    startMission(record) {
-
+    updateCompletionDegree(record) {
+      // 签收任务，并生成答题要点记录
+      this.loading = true
+      putAction(this.url.updateCompletionDegree, record).then((res) => {
+        if (res.success) {
+          this.$message.success(res.message);
+          this.onClearSelected()
+          this.loadData(1)
+        }else{
+          this.$message.warning(res.message);
+        }
+      }).finally(() => {
+        this.loading = false;
+      })
     }
   }
 }
