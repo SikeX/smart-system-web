@@ -158,17 +158,17 @@ export default {
           dataIndex: 'lowestScore'
         },
         {
-          title: '最高得分',
+          title: '要点最高得分',
           align: 'center',
           dataIndex: 'highestScore'
         },
         {
-          title: '平均得分',
+          title: '要点平均得分',
           align: 'center',
           dataIndex: 'averageScore'
         },
         {
-          title: '最终得分',
+          title: '要点最终得分',
           align: 'center',
           dataIndex: 'finalScore'
         },
