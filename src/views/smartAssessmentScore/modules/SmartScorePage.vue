@@ -38,6 +38,7 @@ import { filterObj } from '@/utils/util'
 import SmartAssessmentContentForm from '@views/smartAnswerInfo/modules/SmartAssessmentContentForm'
 import SubMenu from '@views/smartAssessmentScore/modules/SubMenu'
 import SmartScoreDepartList from '@views/smartAssessmentScore/modules/SmartScoreDepartList'
+import Vue from "vue";
 
 
 

@@ -119,11 +119,10 @@ export default {
     contentId:{
       immediate: true,
       handler(val) {
-        if(!this.missionId){
-          this.clearList()
-        }else{
-          this.queryParam['missionId'] = this.missionId
-          this.loadData(1)
+        if (val && this.missionId) {
+          this.loadData(1);
+        } else {
+          this.clearList();
         }
       }
     }
@@ -198,6 +197,9 @@ export default {
       this.$refs.modalForm.disableSubmit = false;
       this.$refs.modalForm.edit(this.contentId, record.id);
     },
+    clearList() {
+      this.dataSource = [];
+    },
     loadData(arg) {
       if(!this.url.list){
         this.$message.error("请设置url.list属性!")
@@ -208,6 +210,7 @@ export default {
         this.ipagination.current = 1;
       }
       var params = this.getQueryParams();//查询条件
+      params['missionId'] = this.missionId;
       let assessInfo = Vue.ls.get("assessInfo")
       if (assessInfo) {
         params['depart'] = assessInfo.departs || assessInfo.responsibleDepart;
@@ -230,6 +233,7 @@ export default {
           }
           //update-end---author:zhangyafei    Date:20201118  for：适配不分页的数据列表------------
         }else{
+          this.dataSource = []
           this.$message.warning(res.message)
         }
       }).finally(() => {
