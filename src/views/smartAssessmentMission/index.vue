@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-card v-has="'mission:listAll'" :bordered='false' style="margin-bottom: 20px">
+    <a-card v-has="'mission:listAll'" :bordered='false' title="全区考核任务" style="margin-bottom: 20px">
       <!-- 查询区域 -->
       <div class='table-page-search-wrapper'>
         <a-form layout='inline' @keyup.enter.native='searchQuery'>
@@ -82,29 +82,8 @@
           </template>
 
           <span slot='action' slot-scope='text, record'>
-          <a @click='handleEdit(record)'>编辑</a>
-
-          <a-divider v-if='record.missionStatus === "未发布"' type='vertical' />
-          <a-popconfirm v-if='record.missionStatus === "未发布"' title='确定发布吗?' @confirm='() => publishMission(record)'>
-            <a>发布任务</a>
-          </a-popconfirm>
-          <a-divider type='vertical' />
-          <a-dropdown>
-            <a class='ant-dropdown-link'>更多 <a-icon type='down' /></a>
-            <a-menu slot='overlay'>
-              <a-menu-item v-if='record.missionStatus === "已发布"'>
-                <a-popconfirm title='撤销发布将删除所有单位的记录,确定取消发布吗?' @confirm='() => handleReset(record)'>
-                  <a>撤销发布</a>
-                </a-popconfirm>
-              </a-menu-item>
-              <a-menu-item v-if='record.missionStatus === "未发布"'>
-                <a-popconfirm title='确定删除吗?' @confirm='() => handleDelete(record.id)'>
-                  <a>删除</a>
-                </a-popconfirm>
-              </a-menu-item>
-            </a-menu>
-          </a-dropdown>
-        </span>
+            <a @click='updateCompletionDegree(record)'>更新完成度</a>
+          </span>
 
         </a-table>
       </div>
@@ -174,13 +153,32 @@ export default {
           dataIndex: 'totalPoint'
         },
         {
+          title: '考核要点总数',
+          align: 'center',
+          dataIndex: 'keyPointsAmount'
+        },
+        {
+          title: '全区完成度',
+          align: 'center',
+          dataIndex: 'completionDegree'
+        },
+        {
           title: '任务状态',
           align: 'center',
           dataIndex: 'missionStatus'
         },
+        {
+          title: '操作',
+          dataIndex: 'action',
+          align: 'center',
+          fixed: 'right',
+          width: 147,
+          scopedSlots: { customRender: 'action' }
+        }
       ],
       url: {
         list: '/smartAssessmentMission/smartAssessmentMission/indexList',
+        updateCompletionDegree: '/smartAssessmentMission/smartAssessmentMission/updateCompletionDegree',
         exportXlsUrl: '/smartAssessmentMission/smartAssessmentMission/exportXls',
         importExcelUrl: 'smartAssessmentMission/smartAssessmentMission/importExcel'
       },
@@ -233,6 +231,21 @@ export default {
           this.$message.warning(res.message)
         }
         this.loading = false
+      })
+    },
+    updateCompletionDegree(record) {
+      // 签收任务，并生成答题要点记录
+      this.loading = true
+      putAction(this.url.updateCompletionDegree, record).then((res) => {
+        if (res.success) {
+          this.$message.success(res.message);
+          this.onClearSelected()
+          this.loadData(1)
+        }else{
+          this.$message.warning(res.message);
+        }
+      }).finally(() => {
+        this.loading = false;
       })
     },
     getSuperFieldList() {
