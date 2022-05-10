@@ -121,6 +121,11 @@
                   <a>撤销发布</a>
                 </a-popconfirm>
               </a-menu-item>
+              <a-menu-item v-if='record.missionStatus === "发布评分结果"'>
+                <a-popconfirm title='确定取消发布评分结果吗?' @confirm='() => cancelPublishScoreResult(record)'>
+                  <a>取消发布评分结果</a>
+                </a-popconfirm>
+              </a-menu-item>
               <a-menu-item v-if='record.missionStatus === "未发布"'>
                 <a-popconfirm title='确定删除吗?' @confirm='() => handleDelete(record.id)'>
                   <a>删除</a>
@@ -221,6 +226,7 @@ export default {
       url: {
         list: '/smartAssessmentMission/smartAssessmentMission/list',
         reset: '/smartAssessmentMission/smartAssessmentMission/reset',
+        recallScoreResult: '/smartAssessmentMission/smartAssessmentMission/recallScoreResult',
         delete: '/smartAssessmentMission/smartAssessmentMission/delete',
         publish: '/smartAssessmentMission/smartAssessmentMission/publish',
         deleteBatch: '/smartAssessmentMission/smartAssessmentMission/deleteBatch',
@@ -337,7 +343,20 @@ export default {
       }).finally(() => {
         this.loading = false;
       })
-    }
+    },
+    cancelPublishScoreResult(record) {
+      this.loading = true
+      putAction(this.url.recallScoreResult, record).then((res) => {
+        if (res.success) {
+          this.$message.success(res.message);
+          this.loadData(1)
+        }else{
+          this.$message.warning(res.message);
+        }
+      }).finally(() => {
+        this.loading = false;
+      })
+    },
   }
 }
 </script>
