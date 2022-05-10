@@ -4,37 +4,6 @@
     <div class='table-page-search-wrapper'>
       <a-form layout='inline' @keyup.enter.native='searchQuery'>
         <a-row :gutter='24'>
-          <a-col :xl="6" :lg="7" :md="8" :sm="24">
-            <a-form-item label="任务名称">
-              <a-input placeholder="请输入任务名称" v-model="queryParam.missionName"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :xl="6" :lg="7" :md="8" :sm="24">
-            <a-form-item label="考核年份">
-              <a-input placeholder="请输入考核年份" v-model="queryParam.assessmentYear"></a-input>
-            </a-form-item>
-          </a-col>
-          <a-col :xl="6" :lg="7" :md="8" :sm="24">
-            <a-form-item label="任务状态">
-              <a-select
-                placeholder="全部"
-                v-model:value="queryParam.missionStatus">
-                <a-select-option value="未发布">未发布</a-select-option>
-                <a-select-option value="已发布">已发布</a-select-option>
-                <a-select-option value="发布评分结果">发布评分结果</a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <a-col :xl="6" :lg="7" :md="8" :sm="24">
-            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
-              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
-              <a @click="handleToggleSearch" style="margin-left: 8px">
-                {{ toggleSearchStatus ? '收起' : '展开' }}
-                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-              </a>
-            </span>
-          </a-col>
         </a-row>
       </a-form>
     </div>
@@ -72,8 +41,6 @@
         :dataSource='dataSource'
         :pagination='ipagination'
         :loading='loading'
-        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange, type:'radio'}"
-        :customRow='clickThenSelect'
         @change='handleTableChange'>
 
         <template slot="countDown" slot-scope="text, record">
@@ -133,15 +100,6 @@
       </a-table>
     </div>
 
-    <a-tabs defaultActiveKey='1'>
-      <a-tab-pane tab='考核任务被考核单位' key='1'>
-        <SmartAssessmentDepartList :mainId='selectedMainId' :main-info='selectionRows[0]' />
-      </a-tab-pane>
-      <a-tab-pane tab='考核内容' key='2'>
-        <SmartAssessmentContentList :mainId='selectedMainId' :main-info='selectionRows[0]' @ok='loadData(1)' />
-      </a-tab-pane>
-    </a-tabs>
-
     <smartAssessmentMission-modal ref='modalForm' @ok='modalFormOk'></smartAssessmentMission-modal>
   </a-card>
 </template>
@@ -159,8 +117,6 @@ export default {
   name: 'SmartAssessmentMissionList',
   mixins: [JeecgListMixin],
   components: {
-    SmartAssessmentDepartList,
-    SmartAssessmentContentList,
     SmartAssessmentMissionModal
   },
   data() {
@@ -200,7 +156,7 @@ export default {
           scopedSlots: { customRender: 'countDown' }
         },
         {
-          title: '总分',
+          title: '考核完成度',
           align: 'center',
           dataIndex: 'totalPoint'
         },
@@ -209,21 +165,9 @@ export default {
           align: 'center',
           dataIndex: 'missionStatus'
         },
-        {
-          title: '操作',
-          dataIndex: 'action',
-          align: 'center',
-          fixed: 'right',
-          width: 147,
-          scopedSlots: { customRender: 'action' }
-        }
       ],
       url: {
-        list: '/smartAssessmentMission/smartAssessmentMission/list',
-        reset: '/smartAssessmentMission/smartAssessmentMission/reset',
-        delete: '/smartAssessmentMission/smartAssessmentMission/delete',
-        publish: '/smartAssessmentMission/smartAssessmentMission/publish',
-        deleteBatch: '/smartAssessmentMission/smartAssessmentMission/deleteBatch',
+        list: '/smartAssessmentMission/smartAssessmentMission/indexList',
         exportXlsUrl: '/smartAssessmentMission/smartAssessmentMission/exportXls',
         importExcelUrl: 'smartAssessmentMission/smartAssessmentMission/importExcel'
       },
@@ -254,25 +198,6 @@ export default {
   },
   methods: {
     initDictConfig() {
-    },
-    clickThenSelect(record) {
-      return {
-        on: {
-          click: () => {
-            this.onSelectChange(record.id.split(','), [record])
-          }
-        }
-      }
-    },
-    onClearSelected() {
-      this.selectedRowKeys = []
-      this.selectionRows = []
-      this.selectedMainId = ''
-    },
-    onSelectChange(selectedRowKeys, selectionRows) {
-      this.selectedMainId = selectedRowKeys[0]
-      this.selectedRowKeys = selectedRowKeys
-      this.selectionRows = selectionRows
     },
     loadData(arg) {
       if (!this.url.list) {
@@ -307,37 +232,6 @@ export default {
       fieldList.push({ type: 'int', value: 'keyPointsAmount', text: '考核要点总数', dictCode: '' })
       this.superFieldList = fieldList
     },
-    handleReset: function (record) {
-      if(!this.url.reset){
-        this.$message.error("请设置url.reset属性!")
-        return
-      }
-      this.loading = true
-      var that = this;
-      putAction(that.url.reset, record).then((res) => {
-        if (res.success) {
-          that.$message.success(res.message);
-          that.loadData(1);
-        } else {
-          that.$message.warning(res.message);
-        }
-      }).finally(() => {
-        this.loading = false;
-      });
-    },
-    publishMission(record) {
-      this.loading = true
-      putAction(this.url.publish, record).then((res) => {
-        if (res.success) {
-          this.$message.success(res.message);
-          this.loadData(1)
-        }else{
-          this.$message.warning(res.message);
-        }
-      }).finally(() => {
-        this.loading = false;
-      })
-    }
   }
 }
 </script>
