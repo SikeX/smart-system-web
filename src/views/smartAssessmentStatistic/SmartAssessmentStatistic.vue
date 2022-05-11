@@ -179,7 +179,7 @@ export default {
         {
           title: '完成要点个数',
           align: 'center',
-          dataIndex: 'finishedPoint'
+          dataIndex: 'finishedKeyPointAmount'
         },
         {
           title: '总分',

@@ -69,21 +69,9 @@
         </template>
 
         <span slot="action" slot-scope="text, record">
-          <a @click="handleEdit(record)">编辑</a>
-
-          <a-divider type="vertical"/>
-          <a @click="publishMission(record)">发布</a>
-          <a-divider type="vertical"/>
-          <a-dropdown>
-            <a class="ant-dropdown-link">更多 <a-icon type="down"/></a>
-            <a-menu slot="overlay">
-              <a-menu-item>
-                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
-                  <a>删除</a>
-                </a-popconfirm>
-              </a-menu-item>
-            </a-menu>
-          </a-dropdown>
+          <a-popconfirm title="确定发布评分结果吗?" @confirm="() => publishScoreResult(record)">
+            <a @click="">发布评分结果</a>
+          </a-popconfirm>
         </span>
 
       </a-table>
@@ -150,10 +138,19 @@ export default {
           title: '考核要点总数',
           align: "center",
           dataIndex: 'keyPointsAmount'
+        },
+        {
+          title: '操作',
+          dataIndex: 'action',
+          align: 'center',
+          fixed: 'right',
+          width: 147,
+          scopedSlots: { customRender: 'action' }
         }
       ],
       url: {
-        list: "/smartAssessmentMission/smartAssessmentMission/finalScoreList"
+        list: "/smartAssessmentMission/smartAssessmentMission/finalScoreList",
+        publish: "/smartAssessmentMission/smartAssessmentMission/publishScore",
       },
       dictOptions: {},
       /* 分页参数 */
@@ -235,7 +232,7 @@ export default {
       fieldList.push({type: 'int', value: 'keyPointsAmount', text: '考核要点总数', dictCode: ''})
       this.superFieldList = fieldList
     },
-    publishMission(record) {
+    publishScoreResult(record) {
       putAction(this.url.publish, record).then((res) => {
         if (res.success) {
           this.loadData(1)

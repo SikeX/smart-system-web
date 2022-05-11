@@ -1,11 +1,6 @@
 <template>
   <div>
-    <a-modal v-model="isShowModal" title="请选择参与评分的角色" :maskClosable="false" :closable="false">
-      <template slot="footer">
-        <a-button key="submit" type="primary" @click="handleRoleOk">
-          确 定
-        </a-button>
-      </template>
+    <a-modal v-model="isShowModal" title="请选择参与评分的角色" @ok="handleRoleOk">
       <a-form layout="inline">
         <a-form-item label="评分角色">
           <a-select v-model="scoreRole" style="width: 200px">
@@ -285,7 +280,12 @@ export default {
       }
       this.onClearSelected()
       var params = this.getQueryParams();//查询条件
-      params.scoreRoleId = this.scoreRoleId
+      if (this.scoreRoleId) {
+        params.scoreRoleId = this.scoreRoleId;
+      } else {
+        this.$message.warning('没有权限！')
+        return
+      }
       this.loading = true;
       getAction(this.url.list, params).then((res) => {
         if (res.success) {

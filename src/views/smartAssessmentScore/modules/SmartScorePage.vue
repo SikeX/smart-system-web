@@ -38,6 +38,7 @@ import { filterObj } from '@/utils/util'
 import SmartAssessmentContentForm from '@views/smartAnswerInfo/modules/SmartAssessmentContentForm'
 import SubMenu from '@views/smartAssessmentScore/modules/SubMenu'
 import SmartScoreDepartList from '@views/smartAssessmentScore/modules/SmartScoreDepartList'
+import Vue from "vue";
 
 
 
@@ -159,6 +160,7 @@ export default {
       this.dataSource = []
       this.selectedRowKeys = []
       this.expandedKeys = []
+      this.expandedRowKeys = []
       this.ipagination.current = 1
     },
     showDetail(selectedKeys, e) {
