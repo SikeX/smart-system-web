@@ -1,5 +1,34 @@
 <template>
   <a-card :title='description' v-if='contentId' :bordered='false'>
+    <!-- 查询区域 -->
+    <div class='table-page-search-wrapper'>
+      <a-form layout='inline' @keyup.enter.native='searchQuery'>
+        <a-row :gutter='24'>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="评分状态">
+              <a-select
+                placeholder="全部"
+                v-model:value="queryParam.markedContent">
+                <a-select-option :value="'!' + contentId">未评分</a-select-option>
+                <a-select-option :value="contentId">已评分</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+              <a @click="handleToggleSearch" style="margin-left: 8px">
+                {{ toggleSearchStatus ? '收起' : '展开' }}
+                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+              </a>
+            </span>
+          </a-col>
+        </a-row>
+      </a-form>
+    </div>
+    <!-- 查询区域-END -->
+
     <!-- table区域-begin -->
     <div>
       <a-table
@@ -37,7 +66,8 @@
         </template>
 
         <span slot='action' slot-scope='text, record'>
-          <a @click='handleMark(record)'>评分</a>
+          <a v-if="record.missionStatus==='未签收'" @click='signMission(record)'>签收</a>
+          <a v-else @click='handleMark(record)'>评分</a>
         </span>
 
       </a-table>
@@ -93,13 +123,7 @@ export default {
           this.clearList()
         }else{
           this.queryParam['missionId'] = this.missionId
-          let assessInfo = Vue.ls.get("assessInfo")
-          if (assessInfo) {
-            this.queryParam['depart'] = assessInfo.departs || assessInfo.responsibleDepart;
-            this.loadData(1);
-          } else {
-            this.$message.warning('没有评分权限!')
-          }
+          this.loadData(1)
         }
       }
     }
@@ -131,19 +155,9 @@ export default {
           dataIndex: 'missionStatus'
         },
         {
-          title: '完成要点个数',
+          title: '评分状态',
           align: 'center',
-          dataIndex: 'finishedPoint'
-        },
-        {
-          title: '完成度',
-          align: 'center',
-          dataIndex: 'completionDegree'
-        },
-        {
-          title: '总分',
-          align: 'center',
-          dataIndex: 'totalPoints'
+          dataIndex: 'markedContent',
         },
         {
           title: '操作',
@@ -155,7 +169,7 @@ export default {
         }
       ],
       url: {
-        list: '/smartAnswerInfo/smartAnswerInfo/listAll',
+        list: '/smartAnswerInfo/smartAnswerInfo/listInCharge',
         delete: '/smartAnswerInfo/smartAnswerInfo/delete',
         sign: '/smartAnswerInfo/smartAnswerInfo/sign',
         deleteBatch: '/smartAnswerInfo/smartAnswerInfo/deleteBatch',
@@ -184,7 +198,60 @@ export default {
       this.$refs.modalForm.disableSubmit = false;
       this.$refs.modalForm.edit(this.contentId, record.id);
     },
+    loadData(arg) {
+      if(!this.url.list){
+        this.$message.error("请设置url.list属性!")
+        return
+      }
+      //加载数据 若传入参数1则加载第一页的内容
+      if (arg === 1) {
+        this.ipagination.current = 1;
+      }
+      var params = this.getQueryParams();//查询条件
+      let assessInfo = Vue.ls.get("assessInfo")
+      if (assessInfo) {
+        params['depart'] = assessInfo.departs || assessInfo.responsibleDepart;
+        params['contentId'] = this.contentId;
+        params['type'] = assessInfo.type
+      } else {
+        this.$message.warning('没有评分权限!')
+        return
+      }
+      this.loading = true;
+      getAction(this.url.list, params).then((res) => {
+        if (res.success) {
+          //update-begin---author:zhangyafei    Date:20201118  for：适配不分页的数据列表------------
+          this.dataSource = res.result.records||res.result;
+          if(res.result.total)
+          {
+            this.ipagination.total = res.result.total;
+          }else{
+            this.ipagination.total = 0;
+          }
+          //update-end---author:zhangyafei    Date:20201118  for：适配不分页的数据列表------------
+        }else{
+          this.$message.warning(res.message)
+        }
+      }).finally(() => {
+        this.loading = false
+      })
+    },
     initDictConfig() {
+    },
+    signMission(record) {
+      // 签收任务，并生成答题要点记录
+      this.loading = true
+      putAction(this.url.sign, record).then((res) => {
+        if (res.success) {
+          this.$message.success(res.message);
+          this.onClearSelected()
+          this.loadData(1)
+        }else{
+          this.$message.warning(res.message);
+        }
+      }).finally(() => {
+        this.loading = false;
+      })
     },
     getSuperFieldList() {
       let fieldList = []

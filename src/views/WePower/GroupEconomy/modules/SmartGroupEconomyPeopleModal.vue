@@ -14,7 +14,8 @@
         <a-row>
           <a-col :span="24">
             <a-form-model-item label="所在村" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="depart">
-              <j-select-depart v-model="model.depart" multi />
+              <select-village-depart v-model="model.depart" />
+              <!-- <j-select-depart v-model="model.depart" multi /> -->
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
@@ -66,11 +67,13 @@ import { httpAction } from '@/api/manage'
 import moment from 'moment'
 import JDate from '@/components/jeecg/JDate'
 import { validateDuplicateValue } from '@/utils/util'
+import SelectVillageDepart from '@/components/common/SelectVillageDepart'
 
 export default {
   name: 'SmartGroupEconomyPeopleModal',
   components: {
-    JDate
+    JDate,
+    SelectVillageDepart,
   },
   props: {
     mainId: {
@@ -95,6 +98,7 @@ export default {
       },
 
       confirmLoading: false,
+      // TODO 先放开必填项
       validatorRules: {
         depart: [{ required: true, message: '请输入所在村!' }],
         name: [{ required: true, message: '请输入姓名!' }],
@@ -110,8 +114,8 @@ export default {
           },
         ],
         pic: [{ required: true, message: '请输入照片!' }],
-        termEndDate: [{ required: true, message: '请选择任期开始时间!' }, { validator: this.endTimeValidate }],
-        termStartDate: [{ required: true, message: '请选择任期结束时间!' }, { validator: this.startTimeValidate }],
+        termEndDate: [{ required: false, message: '请选择任期开始时间!' }, { validator: this.endTimeValidate }],
+        termStartDate: [{ required: false, message: '请选择任期结束时间!' }, { validator: this.startTimeValidate }],
       },
       url: {
         add: '/smartGroupEconomy/smartGroupEconomy/addSmartGroupEconomyPeople',
@@ -178,7 +182,7 @@ export default {
                 that.$message.success(res.message)
                 that.$emit('ok')
               } else {
-                that.$message.warning(res.message)
+                that.$message.error(res.message)
               }
             })
             .finally(() => {

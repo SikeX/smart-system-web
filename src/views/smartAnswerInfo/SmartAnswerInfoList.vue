@@ -138,26 +138,16 @@ export default {
           dataIndex: '',
           scopedSlots: { customRender: 'countDown' }
         },
-        {
-          title: '完成要点个数',
-          align: 'center',
-          dataIndex: 'finishedPoint'
-        },
-        {
-          title: '完成度',
-          align: 'center',
-          dataIndex: 'completionDegree'
-        },
-        {
-          title: '总分',
-          align: 'center',
-          dataIndex: 'totalPoints'
-        },
-        {
-          title: '排名',
-          align: 'center',
-          dataIndex: 'ranking'
-        },
+        // {
+        //   title: '完成要点个数',
+        //   align: 'center',
+        //   dataIndex: 'finishedPoint'
+        // },
+        // {
+        //   title: '完成度',
+        //   align: 'center',
+        //   dataIndex: 'completionDegree'
+        // },
         {
           title: '操作',
           dataIndex: 'action',

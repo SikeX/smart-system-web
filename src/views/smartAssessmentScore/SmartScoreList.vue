@@ -18,7 +18,9 @@
           </a-select>
         </a-form-item>
       </a-form>
+      <smart-assessment-user-team-list :score-role="scoreRole" @select="selectRoleInfo"></smart-assessment-user-team-list>
     </a-modal>
+
     <a-card :title='description' :bordered="false">
       <a-tooltip slot="extra">
         <template slot="title">
@@ -26,6 +28,36 @@
         </template>
         <a-button type="primary" @click="isShowModal = true" ghost><a-icon type="swap" /></a-button>
       </a-tooltip>
+
+      <!-- 查询区域 -->
+      <div class='table-page-search-wrapper'>
+        <a-form layout='inline' @keyup.enter.native='searchQuery'>
+          <a-row :gutter='24'>
+            <a-col :xl="6" :lg="7" :md="8" :sm="24">
+              <a-form-item label="任务名称">
+                <a-input placeholder="请输入任务名称" v-model="queryParam.missionName"></a-input>
+              </a-form-item>
+            </a-col>
+            <a-col :xl="6" :lg="7" :md="8" :sm="24">
+              <a-form-item label="考核年份">
+                <a-input placeholder="请输入考核年份" v-model="queryParam.assessmentYear"></a-input>
+              </a-form-item>
+            </a-col>
+            <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+              <a @click="handleToggleSearch" style="margin-left: 8px">
+                {{ toggleSearchStatus ? '收起' : '展开' }}
+                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+              </a>
+            </span>
+            </a-col>
+          </a-row>
+        </a-form>
+      </div>
+      <!-- 查询区域-END -->
+
       <!-- table区域-begin -->
       <div>
 
@@ -104,18 +136,20 @@ import '@/assets/less/TableExpand.less'
 import SmartScorePage from '@views/smartAssessmentScore/modules/SmartScorePage'
 import SmartScoreInfoModal from '@views/smartAssessmentScore/modules/SmartScoreInfoModal'
 import Vue from "vue";
+import SmartAssessmentUserTeamList from "@views/smartAssessmentScore/modules/SmartAssessmentUserTeamList";
 
 export default {
   name: "SmartScoreList",
   mixins: [JeecgListMixin],
   components: {
+    SmartAssessmentUserTeamList,
     SmartScoreInfoModal,
     SmartScorePage,
     SmartAssessmentContentList,
   },
   data() {
     return {
-      description: '考核任务列表',
+      description: '待评分的考核任务列表',
       disableMixinCreated: true,
       isShowModal: false,
       scoreRole: 'team',
@@ -148,11 +182,11 @@ export default {
           align: "center",
           dataIndex: 'missionStatus'
         },
-        {
-          title: '考核要点总数',
-          align: "center",
-          dataIndex: 'keyPointsAmount'
-        }
+        // {
+        //   title: '考核要点总数',
+        //   align: "center",
+        //   dataIndex: 'keyPointsAmount'
+        // }
       ],
       url: {
         list: "/smartAssessmentMission/smartAssessmentMission/teamMissionList",
@@ -197,58 +231,27 @@ export default {
   methods: {
     handleRoleOk() {
       if (this.scoreRole === "depart") {
-        this.loadMyDepartment();
         this.url.list = this.url.departmentMissionList;
       } else {
-        this.loadMyTeamInfo();
         this.url.list = this.url.teamMissionList;
       }
-      // this.loadData(1)
-      this.isShowModal = false;
+      if (this.scoreRoleId) {
+        this.loadData(1);
+        this.isShowModal = false;
+      } else {
+        this.$message.warning("请先选择一个具体评分角色！")
+      }
     },
-    // 查询考核组信息
-    loadMyTeamInfo() {
-      let that = this
-      getAction('/smartAssessmentTeam/smartAssessmentTeam/listMyTeam').then((res) => {
-        if (res.success && res.result.length > 0) {
-          console.log(res)
-          // 前端存储查询到的考核组信息
-          let assessInfo = res.result[0]
-          assessInfo.type = 'team'
-          Vue.ls.set("assessInfo", assessInfo)
-          // 然后加载考核任务
-          this.scoreRoleId = res.result[0].id
-          this.loadData(1)
-        } else {
-          this.$message.warning(res.message)
-          this.isShowModal = true;
-        }
-      }).finally(() => {
-        this.loading = false;
-      });
-    },
-    // 查询考核单位信息
-    loadMyDepartment() {
-      let that = this
-      getAction('/smartAssessmentDepartment/smartAssessmentDepartment/listMyDepartment').then((res) => {
-        if (res.success) {
-          if (res.result.length === 0) {
-            this.$message.warning('无考核单位权限！');
-          } else {
-            // 前端存储查询到的考核单位信息
-            let assessInfo = res.result[0];
-            assessInfo.type = 'depart'
-            Vue.ls.set("assessInfo", assessInfo)
-            this.scoreRoleId = res.result[0].id
-            this.loadData(1)
-          }
-        } else {
-          this.$message.warning(res.message)
-          this.isShowModal = true;
-        }
-      }).finally(() => {
-        this.loading = false;
-      });
+    selectRoleInfo(record) {
+      if (this.scoreRole === 'depart') {
+        record.type = 'depart';
+        Vue.ls.set("assessInfo", record);
+        this.scoreRoleId = record.id;
+      } else {
+        record.type = 'team';
+        Vue.ls.set("assessInfo", record);
+        this.scoreRoleId = record.id;
+      }
     },
     initDictConfig() {
     },

@@ -6,7 +6,8 @@
         <a-row :gutter="24">
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
             <a-form-item label="建设单位">
-              <j-select-depart placeholder="请选择建设单位" v-model="queryParam.location"/>
+              <select-village-depart placeholder="请选择建设单位" v-model="queryParam.location" />
+              <!-- <j-select-depart placeholder="请选择建设单位" v-model="queryParam.location"/> -->
             </a-form-item>
           </a-col>
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
@@ -131,12 +132,14 @@
   import { loadCategoryData } from '@/api/api'
   import {filterMultiDictText} from '@/components/dict/JDictSelectUtil'
   import '@/assets/less/TableExpand.less'
+import SelectVillageDepart from '../../../components/common/SelectVillageDepart.vue'
 
   export default {
     name: "SmartPublicityProjectList",
     mixins:[JeecgListMixin],
     components: {
-      SmartPublicityProjectModal
+      SmartPublicityProjectModal,
+      SelectVillageDepart
     },
     data () {
       return {
