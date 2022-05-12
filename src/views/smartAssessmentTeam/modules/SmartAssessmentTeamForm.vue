@@ -5,7 +5,7 @@
         <a-row>
           <a-col :span="24">
             <a-form-model-item label="名称" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="teamName">
-              <a-input v-model="model.teamName" placeholder="请输入名称"  ></a-input>
+              <a-input v-model="model.teamName" placeholder="请输入名称" v-decorator="['teamName', validatorRules.teamName]" ></a-input>
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
@@ -43,6 +43,7 @@
 
   import { httpAction, getAction } from '@/api/manage'
   import { validateDuplicateValue } from '@/utils/util'
+  import { duplicateCheck } from '@/api/api'
 
   export default {
     name: 'SmartAssessmentTeamForm',
@@ -72,6 +73,7 @@
         validatorRules: {
           teamName: [
             { required: true, message: '请输入考核组名称!'},
+            {validator: this.validateTeamName}
           ],
           teamLeader: [
             { required: true, message: '请选择组长!'},
@@ -109,6 +111,23 @@
       edit (record) {
         this.model = Object.assign({}, record);
         this.visible = true;
+      },
+      validateTeamName(rule, value, callback){
+        if(value){
+          var params = {
+            tableName: "smart_assessment_team",
+            fieldName: "team_name",
+            fieldVal: value,
+            dataId: this.model.id,
+          };
+          getAction("/sys/duplicate/checkWithDelFlag",params).then((res)=>{
+            if(res.success){
+              callback();
+            }else{
+              callback(res.message);
+            }
+          });
+        }
       },
       submitForm () {
         const that = this;

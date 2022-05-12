@@ -5,7 +5,7 @@
         <a-row>
           <a-col :span="24">
             <a-form-model-item label="评分单位" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="departId">
-              <j-select-depart v-model="model.departId"  />
+              <j-select-depart v-model="model.departId" v-decorator="['departId', validatorRules.departId]" />
             </a-form-model-item>
           </a-col>
           <a-col :span="24" v-if="model.departId">
@@ -38,6 +38,7 @@
 
   import { httpAction, getAction } from '@/api/manage'
   import { validateDuplicateValue } from '@/utils/util'
+  import { duplicateCheck } from '@/api/api'
   import MySelectUserByDep from "@views/smartAssessmentMission/modules/MySelectUserByDep";
 
   export default {
@@ -69,6 +70,7 @@
         validatorRules: {
           departId: [
             { required: true, message: '请选择要参与评分的单位!'},
+            {validator: this.validateDepartId}
           ],
           departUser: [
             { required: true, message: '请选择负责该要点评分的考核单位评分人员!'},
@@ -100,6 +102,23 @@
       edit (record) {
         this.model = Object.assign({}, record);
         this.visible = true;
+      },
+      validateDepartId(rule, value, callback){
+        if(value){
+          var params = {
+            tableName: "smart_assessment_department",
+            fieldName: "depart_id",
+            fieldVal: value,
+            dataId: this.model.id,
+          };
+          getAction("/sys/duplicate/checkWithDelFlag",params).then((res)=>{
+            if(res.success){
+              callback();
+            }else{
+              callback(res.message);
+            }
+          });
+        }
       },
       submitForm () {
         const that = this;
