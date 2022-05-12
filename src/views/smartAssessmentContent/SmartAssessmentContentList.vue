@@ -10,40 +10,25 @@
     <!-- 查询区域-END -->
 
     <!-- 操作按钮区域 -->
-    <div class='table-operator'>
-      <a-button  v-if='mainId && mainInfo.missionStatus === isShowText' @click='handleAdd' type='primary' icon='plus'>新增</a-button>
-      <a-popconfirm v-if='mainId && mainInfo.missionStatus === isShowText' title='确定校正吗?' @confirm='checkPoint' placement='topLeft'>
+    <div v-if='mainId' class='table-operator'>
+      <a-button  v-if='mainInfo.missionStatus === isShowText' @click='handleAddLevel1' type='primary' icon='plus'>新增考核内容</a-button>
+      <a-button  v-if='mainInfo.missionStatus === isShowText' @click='handleAddLevel2' type='primary' icon='plus'>新增考核指标</a-button>
+      <a-button  v-if='mainInfo.missionStatus === isShowText' @click='handleAddLevel3' type='primary' icon='plus'>新增考核要点</a-button>
+      <a-popconfirm title='确定校正吗?' @confirm='checkPoint' placement='topLeft'>
         <a-button type='primary' icon='tool'>校正分数</a-button>
       </a-popconfirm>
       <a-button type='primary' icon='download' @click="handleExportXls('考核节点表')">导出</a-button>
-      <a-upload v-if='mainId && mainInfo.missionStatus === isShowText' name='file' :showUploadList='false' :multiple='false' :headers='tokenHeader' :action='importExcelUrl'
+      <a-upload v-if='mainInfo.missionStatus === isShowText' name='file' :showUploadList='false' :multiple='false' :headers='tokenHeader' :action='importExcelUrl'
                 @change='handleImportExcel'>
         <a-button type='primary' icon='import'>导入</a-button>
       </a-upload>
       <!-- 高级查询区域 -->
       <j-super-query :fieldList='superFieldList' ref='superQueryModal'
                      @handleSuperQuery='handleSuperQuery'></j-super-query>
-      <a-dropdown v-if='selectedRowKeys.length > 0'>
-        <a-menu slot='overlay'>
-          <a-menu-item key='1' @click='batchDel'>
-            <a-icon type='delete'/>
-            删除
-          </a-menu-item>
-        </a-menu>
-        <a-button style='margin-left: 8px'> 批量操作
-          <a-icon type='down'/>
-        </a-button>
-      </a-dropdown>
     </div>
 
     <!-- table区域-begin -->
     <div>
-      <div class='ant-alert ant-alert-info' style='margin-bottom: 16px;'>
-        <i class='anticon anticon-info-circle ant-alert-icon'></i> 已选择 <a
-        style='font-weight: 600'>{{ selectedRowKeys.length }}</a>项
-        <a style='margin-left: 24px' @click='onClearSelected'>清空</a>
-      </div>
-
       <a-table
         ref='table'
         size='middle'
@@ -56,8 +41,7 @@
         :loading='loading'
         :expandedRowKeys='expandedRowKeys'
         @change='handleTableChange'
-        @expand='handleExpand'
-        v-bind='tableProps'>
+        @expand='handleExpand'>
 
         <template slot='nameSlot' slot-scope='text, record'>
           <span v-if='record.isKey === 0'>{{ text }}</span>
@@ -229,6 +213,55 @@ export default {
       this.selectedRowKeys = []
       this.ipagination.current = 1
     },
+    handleAddLevel1: function () {
+      this.$refs.modalForm.title = "新增考核内容";
+      this.$refs.modalForm.curLevel = 1;
+      let obj = {}
+      obj['isKey'] = 0
+      this.$refs.modalForm.add(obj)
+      this.$refs.modalForm.disableSubmit = false;
+    },
+    handleAddLevel2: function () {
+      this.$refs.modalForm.title = "新增考核指标";
+      this.$refs.modalForm.curLevel = 2;
+      let obj = {}
+      obj['isKey'] = 0
+      this.$refs.modalForm.add(obj)
+      this.$refs.modalForm.disableSubmit = false;
+    },
+    handleAddLevel3: function () {
+      this.$refs.modalForm.title = "新增考核要点";
+      this.$refs.modalForm.curLevel = 3;
+      let obj = {}
+      obj['isKey'] = 1
+      this.$refs.modalForm.add(obj)
+      this.$refs.modalForm.disableSubmit = false;
+    },
+    handleEdit: function (record) {
+      if (record['isKey'] == 1) {
+        this.$refs.modalForm.curLevel = 3;
+      } else if (record['pid'] == 0) {
+        this.$refs.modalForm.curLevel = 1
+      } else {
+        this.$refs.modalForm.curLevel = 2
+      }
+      this.$refs.modalForm.edit(record);
+      this.$refs.modalForm.title = "编辑";
+      this.$refs.modalForm.disableSubmit = false;
+    },
+    handleDetail:function(record){
+      // console.log(record)
+      if (record['isKey'] == 1) {
+        this.$refs.modalForm.curLevel = 3;
+      } else if (record['pid'] == 0) {
+        this.$refs.modalForm.curLevel = 1
+      } else {
+        this.$refs.modalForm.curLevel = 2
+      }
+      this.$refs.modalForm.edit(record);
+      this.$refs.modalForm.title="详情";
+      this.$refs.modalForm.disableSubmit = true;
+    },
     checkPoint() {
       this.loading = true
       getAction(this.url.checkPoint, {missionId: this.mainId}).then(res => {
@@ -379,6 +412,13 @@ export default {
       this.loadParent = true
       let obj = {}
       obj[this.pidField] = record['id']
+      if (record['pid'] == 0) {
+        obj['isKey'] = 0
+        this.$refs.modalForm.curLevel = 2
+      } else {
+        this.$refs.modalForm.curLevel = 3
+        obj['isKey'] = 1
+      }
       this.$refs.modalForm.add(obj)
     },
     handleDeleteNode(id) {
