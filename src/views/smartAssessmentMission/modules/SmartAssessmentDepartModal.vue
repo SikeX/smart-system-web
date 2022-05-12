@@ -38,7 +38,7 @@
           </a-col>
           <a-col :span="24">
             <a-form-model-item v-if='model.signUser' label="签收人" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="signUser">
-              <a-input v-model="model.signUser"placeholder="请输入签收人" disabled></a-input>
+              <j-select-user-by-dep v-model="model.signUser" placeholder="请输入签收人" store="id" text="realname" disabled />
             </a-form-model-item>
           </a-col>
         </a-row>
