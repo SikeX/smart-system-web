@@ -10,13 +10,13 @@
     <!-- 查询区域-END -->
 
     <!-- 操作按钮区域 -->
-    <div class='table-operator' v-if='mainId && mainInfo.missionStatus === isShowText'>
-      <a-button @click='handleAdd' type='primary' icon='plus'>新增</a-button>
-      <a-popconfirm title='确定校正吗?' @confirm='checkPoint' placement='topLeft'>
+    <div class='table-operator'>
+      <a-button  v-if='mainId && mainInfo.missionStatus === isShowText' @click='handleAdd' type='primary' icon='plus'>新增</a-button>
+      <a-popconfirm v-if='mainId && mainInfo.missionStatus === isShowText' title='确定校正吗?' @confirm='checkPoint' placement='topLeft'>
         <a-button type='primary' icon='tool'>校正分数</a-button>
       </a-popconfirm>
       <a-button type='primary' icon='download' @click="handleExportXls('考核节点表')">导出</a-button>
-      <a-upload name='file' :showUploadList='false' :multiple='false' :headers='tokenHeader' :action='importExcelUrl'
+      <a-upload v-if='mainId && mainInfo.missionStatus === isShowText' name='file' :showUploadList='false' :multiple='false' :headers='tokenHeader' :action='importExcelUrl'
                 @change='handleImportExcel'>
         <a-button type='primary' icon='import'>导入</a-button>
       </a-upload>

@@ -1,10 +1,11 @@
 <template>
   <a-card :bordered="false" :class="'cust-erp-sub-tab'">
     <!-- 操作按钮区域 -->
-    <div class="table-operator" v-if="mainId && mainInfo.missionStatus === isShowText">
-      <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
+    <div class="table-operator">
+      <a-button v-if="mainId && mainInfo.missionStatus === isShowText" @click="handleAdd" type="primary" icon="plus">新增</a-button>
       <a-button type="primary" icon="download" @click="handleExportXls('考核任务被考核单位')">导出</a-button>
       <a-upload
+        v-if="mainId && mainInfo.missionStatus === isShowText"
         name="file"
         :showUploadList="false"
         :multiple="false"
@@ -15,7 +16,7 @@
       </a-upload>
       <!-- 高级查询区域 -->
       <j-super-query :fieldList="superFieldList" ref="superQueryModal" @handleSuperQuery="handleSuperQuery"></j-super-query>
-      <a-dropdown v-if="selectedRowKeys.length > 0">
+      <a-dropdown v-if="mainId && mainInfo.missionStatus === isShowText && selectedRowKeys.length > 0" >
         <a-menu slot="overlay">
           <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
         </a-menu>
