@@ -19,6 +19,7 @@
               <a-select
                 placeholder="全部"
                 v-model:value="queryParam.missionStatus">
+                <a-select-option value="">全部</a-select-option>
                 <a-select-option value="未发布">未发布</a-select-option>
                 <a-select-option value="已发布">已发布</a-select-option>
                 <a-select-option value="发布评分结果">发布评分结果</a-select-option>
@@ -326,7 +327,7 @@ export default {
       putAction(that.url.reset, record).then((res) => {
         if (res.success) {
           that.$message.success(res.message);
-          that.loadData(1);
+          that.loadData();
         } else {
           that.$message.warning(res.message);
         }
@@ -339,7 +340,7 @@ export default {
       putAction(this.url.publish, record).then((res) => {
         if (res.success) {
           this.$message.success(res.message);
-          this.loadData(1)
+          this.loadData()
         }else{
           this.$message.warning(res.message);
         }
@@ -352,7 +353,7 @@ export default {
       putAction(this.url.recallScoreResult, record).then((res) => {
         if (res.success) {
           this.$message.success(res.message);
-          this.loadData(1)
+          this.loadData()
         }else{
           this.$message.warning(res.message);
         }
