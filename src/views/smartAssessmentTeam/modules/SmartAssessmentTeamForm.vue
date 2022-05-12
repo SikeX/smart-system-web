@@ -25,7 +25,7 @@
           </a-col>
           <a-col :span="24">
             <a-form-model-item label="负责单位" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="departs">
-              <j-select-depart v-model="model.departs" multi  />
+              <j-select-depart v-model="model.departs" multi v-decorator="['departs', validatorRules.departs]" />
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
@@ -86,6 +86,7 @@
           ],
           departs: [
             { required: true, message: '请选择负责的单位!'},
+            {validator: this.validateDeparts}
           ],
         },
         url: {
@@ -121,6 +122,21 @@
             dataId: this.model.id,
           };
           getAction("/sys/duplicate/checkWithDelFlag",params).then((res)=>{
+            if(res.success){
+              callback();
+            }else{
+              callback(res.message);
+            }
+          });
+        }
+      },
+      validateDeparts(rule, value, callback){
+        if(value){
+          var params = {
+            departIds: this.model.departs,
+            dataId: this.model.id
+          };
+          getAction("/smartAssessmentTeam/smartAssessmentTeam/duplicateCheck",params).then((res)=>{
             if(res.success){
               callback();
             }else{
