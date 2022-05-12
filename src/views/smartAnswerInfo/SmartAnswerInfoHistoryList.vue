@@ -1,5 +1,41 @@
 <template>
-  <a-card :bordered='false' title="本单位正在考核">
+  <a-card :bordered='false' title="历史考核任务">
+    <!-- 查询区域 -->
+    <div class="table-page-search-wrapper">
+      <a-form layout="inline" @keyup.enter.native="searchQuery">
+        <a-row :gutter="24">
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="任务名称">
+              <a-input placeholder="请输入任务名称" v-model="queryParam.missionName"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="考核年份">
+              <a-input placeholder="请输入考核年份" v-model="queryParam.assessmentYear"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+              <a @click="handleToggleSearch" style="margin-left: 8px">
+                {{ toggleSearchStatus ? '收起' : '展开' }}
+                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+              </a>
+            </span>
+          </a-col>
+        </a-row>
+      </a-form>
+    </div>
+    <!-- 查询区域-END -->
+
+    <!-- 操作按钮区域 -->
+    <div class='table-operator'>
+      <!-- 高级查询区域 -->
+      <j-super-query :fieldList='superFieldList' ref='superQueryModal'
+                     @handleSuperQuery='handleSuperQuery'></j-super-query>
+    </div>
+
     <!-- table区域-begin -->
     <div>
       <a-table
@@ -16,14 +52,6 @@
         :customRow='clickThenSelect'
         class='j-table-force-nowrap'
         @change='handleTableChange'>
-
-        <template slot="countDown" slot-scope="text, record">
-          <a-statistic-countdown
-            format="D 天 H 时 m 分 s 秒"
-            :value="record.endTime"
-            valueStyle="font-size: 14px"
-          />
-        </template>
 
         <template slot='htmlSlot' slot-scope='text'>
           <div v-html='text'></div>
@@ -49,8 +77,14 @@
         <span slot='action' slot-scope='text, record'>
           <a @click='handleDetail(record)'>详情</a>
           <a-divider type='vertical' />
-          <a v-if='record.missionStatus === "未签收"' @click='signMission(record)'>签收</a>
-          <a v-else @click='updateCompletionDegree(record)'>更新完成度</a>
+          <a-dropdown>
+            <a class='ant-dropdown-link'>更多 <a-icon type='down' /></a>
+            <a-menu slot='overlay'>
+              <a-menu-item>
+                <a @click='updateCompletionDegree(record)'>更新完成度</a>
+              </a-menu-item>
+            </a-menu>
+          </a-dropdown>
         </span>
 
       </a-table>
@@ -58,19 +92,7 @@
 
     <div>
       <a-row v-if='selectedMainId'>
-        <a-empty
-          v-if='selectionRows[0].missionStatus === "未签收"'
-          image='https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original'
-          :image-style="{
-            height: '60px',
-          }"
-        >
-          <span slot='description'> 请签收任务后查看 </span>
-          <a-button type='primary' @click='signMission(selectionRows[0])'>
-            签收
-          </a-button>
-        </a-empty>
-        <smart-answer-page v-else :main-id='selectedMainId' :main-info='selectionRows[0]'></smart-answer-page>
+        <smart-answer-page :main-id='selectedMainId' :main-info='selectionRows[0]'></smart-answer-page>
       </a-row>
     </div>
 
@@ -90,7 +112,7 @@ import SmartAssessmentContentForm from '@views/smartAnswerInfo/modules/SmartAsse
 import SmartAnswerPage from "./modules/SmartAnswerPage";
 
 export default {
-  name: 'SmartAnswerInfoList',
+  name: 'SmartAnswerInfoHistoryList',
   mixins: [JeecgListMixin, mixinDevice],
   components: {
     SmartAnswerPage,
@@ -134,12 +156,6 @@ export default {
           dataIndex: 'endTime'
         },
         {
-          title: '距离截止时间倒计时',
-          align: 'center',
-          dataIndex: '',
-          scopedSlots: { customRender: 'countDown' }
-        },
-        {
           title: '完成要点个数',
           align: 'center',
           dataIndex: 'finishedKeyPointAmount'
@@ -158,6 +174,16 @@ export default {
           }
         },
         {
+          title: '总分',
+          align: 'center',
+          dataIndex: 'totalPoints'
+        },
+        {
+          title: '排名',
+          align: 'center',
+          dataIndex: 'ranking'
+        },
+        {
           title: '操作',
           dataIndex: 'action',
           align: 'center',
@@ -167,7 +193,7 @@ export default {
         }
       ],
       url: {
-        list: '/smartAnswerInfo/smartAnswerInfo/list',
+        list: '/smartAssessmentMission/smartAssessmentMission/historyList',
         delete: '/smartAnswerInfo/smartAnswerInfo/delete',
         updateCompletionDegree: '/smartAnswerInfo/smartAnswerInfo/updateCompletionDegree',
         sign: '/smartAnswerInfo/smartAnswerInfo/sign',
@@ -179,7 +205,13 @@ export default {
       dictOptions: {},
       selectedMainId: '',
       selectionRows: [],
-      superFieldList: []
+      superFieldList: [],
+
+      /* 排序参数 */
+      isorter:{
+        column: '',
+        order: '',
+      },
     }
   },
   created() {
@@ -192,6 +224,53 @@ export default {
   },
   methods: {
     initDictConfig() {
+    },
+    searchQuery() {
+      this.queryParam.hasQuery = true
+      this.loadData(1);
+    },
+    handleSuperQuery(params, matchType) {
+      //高级查询方法
+      if(!params){
+        this.superQueryParams=''
+        this.superQueryFlag = false
+      }else{
+        this.superQueryFlag = true
+        this.queryParam.hasQuery = true
+        this.superQueryParams=JSON.stringify(params)
+        this.superQueryMatchType = matchType
+      }
+      this.loadData(1)
+    },
+    loadData(arg) {
+      if(!this.url.list){
+        this.$message.error("请设置url.list属性!")
+        return
+      }
+      //加载数据 若传入参数1则加载第一页的内容
+      if (arg === 1) {
+        this.ipagination.current = 1;
+      }
+      var params = this.getQueryParams();//查询条件
+      this.loading = true;
+      getAction(this.url.list, params).then((res) => {
+        if (res.success) {
+          //update-begin---author:zhangyafei    Date:20201118  for：适配不分页的数据列表------------
+          this.dataSource = res.result.records||res.result;
+          if(res.result.total)
+          {
+            this.ipagination.total = res.result.total;
+          }else{
+            this.ipagination.total = 0;
+          }
+          //update-end---author:zhangyafei    Date:20201118  for：适配不分页的数据列表------------
+        }else{
+          this.dataSource = []
+          this.$message.warning(res.message)
+        }
+      }).finally(() => {
+        this.loading = false
+      })
     },
     clickThenSelect(record) {
       return {
@@ -214,18 +293,10 @@ export default {
     },
     getSuperFieldList() {
       let fieldList = []
-      fieldList.push({
-        type: 'string',
-        value: 'missionId',
-        text: '考核任务',
-        dictCode: 'smart_assessment_mission,mission_name,id'
-      })
-      fieldList.push({ type: 'sel_depart', value: 'depart', text: '单位' })
-      fieldList.push({ type: 'string', value: 'missionStatus', text: '任务状态', dictCode: '' })
-      fieldList.push({ type: 'date', value: 'endTime', text: '截止时间', dictCode: '' })
-      fieldList.push({ type: 'int', value: 'finishedKeyPointAmount', text: '完成要点个数', dictCode: '' })
-      fieldList.push({ type: 'int', value: 'totalKeyPointAmount', text: '总要点个数', dictCode: '' })
-      fieldList.push({ type: 'double', value: 'completionDegree', text: '完成度', dictCode: '' })
+      fieldList.push({ type: 'string', value: 'missionName', text: '任务名称', dictCode: '' })
+      fieldList.push({ type: 'string', value: 'assessmentYear', text: '考核年份', dictCode: '' })
+      fieldList.push({ type: 'datetime', value: 'assessmentTime', text: '考核时间' })
+      fieldList.push({ type: 'int', value: 'keyPointsAmount', text: '考核要点总数', dictCode: '' })
       this.superFieldList = fieldList
     },
     signMission(record) {

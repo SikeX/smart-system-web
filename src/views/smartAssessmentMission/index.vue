@@ -90,7 +90,8 @@
 
       <smartAssessmentMission-modal ref='modalForm' @ok='modalFormOk'></smartAssessmentMission-modal>
     </a-card>
-    <smart-answer-info-list/>
+    <smart-answer-info-list style='margin-bottom: 20px'/>
+    <smart-answer-info-history-list/>
   </div>
 </template>
 
@@ -103,11 +104,13 @@ import SmartAssessmentDepartList from './SmartAssessmentDepartList'
 import SmartAssessmentContentList from '@views/smartAssessmentContent/SmartAssessmentContentList'
 import '@/assets/less/TableExpand.less'
 import SmartAnswerInfoList from "@views/smartAnswerInfo/SmartAnswerInfoList";
+import SmartAnswerInfoHistoryList from '@views/smartAnswerInfo/SmartAnswerInfoHistoryList'
 
 export default {
   name: 'SmartAssessmentMissionList',
   mixins: [JeecgListMixin],
   components: {
+    SmartAnswerInfoHistoryList,
     SmartAnswerInfoList,
     SmartAssessmentMissionModal
   },
@@ -160,7 +163,10 @@ export default {
         {
           title: '全区完成度',
           align: 'center',
-          dataIndex: 'completionDegree'
+          dataIndex: 'completionDegree',
+          customRender: function(t, r, index) {
+            return t*100 + ' %'
+          }
         },
         {
           title: '任务状态',
