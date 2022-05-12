@@ -13,7 +13,7 @@
         <a-row>
           <a-col :span="24">
             <a-form-model-item label="被考核单位" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="assessmentDepart">
-              <j-select-depart v-model="model.assessmentDepart" :multi="false" :disabled="false"/>
+              <j-select-depart v-model="model.assessmentDepart" :multi="false" :disabled="false" v-decorator="['assessmentDepart', validatorRules.assessmentDepart ]"/>
             </a-form-model-item>
           </a-col>
           <a-col :span="24" v-if="model.assessmentDepart">
@@ -49,7 +49,7 @@
 
 <script>
 
-  import { httpAction } from '@/api/manage'
+import { getAction, httpAction } from '@/api/manage'
   import { validateDuplicateValue } from '@/utils/util'
   import SelectUserByDep from '@comp/jeecgbiz/modal/SelectUserByDep'
   import MySelectUserByDep from "@views/smartAssessmentMission/modules/MySelectUserByDep";
@@ -87,6 +87,7 @@
         validatorRules: {
            assessmentDepart: [
               { required: true, message: '请选择被考核单位!'},
+             {validator: this.validateAssessmentDepart}
            ],
            departUser: [
               { required: true, message: '请输入被考核单位登录账号!'},
@@ -121,6 +122,22 @@
         this.$emit('close');
         this.visible = false;
         this.$refs.form.clearValidate();
+      },
+      validateAssessmentDepart(rule, value, callback){
+        if(value){
+          var params = {
+            departId: this.model.assessmentDepart,
+            dataId: this.model.id,
+            missionId: this.mainId
+          };
+          getAction("/smartAssessmentMission/smartAssessmentMission/duplicateCheck",params).then((res)=>{
+            if(res.success){
+              callback();
+            }else{
+              callback(res.message);
+            }
+          });
+        }
       },
       handleOk () {
         const that = this;
