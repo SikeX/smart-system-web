@@ -486,8 +486,7 @@ export default {
         dictText: 'team_name',
         dictCode: 'id'
       })
-      fieldList.push({type: 'double', value: 'sortNo', text: '排序', dictCode: ''})
-      fieldList.push({type: 'switch', value: 'isKey', text: '是否考核要点'})
+      fieldList.push({type: 'switch', value: 'isKey', text: '是否考核要点', dictCode: 'yn'})
       this.superFieldList = fieldList
     }
   }
