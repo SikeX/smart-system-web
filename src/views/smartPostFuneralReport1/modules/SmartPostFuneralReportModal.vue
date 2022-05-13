@@ -83,7 +83,7 @@
           }
         })
         this.$nextTick(() => {
-          this.$refs.realForm.model.preId = record.id
+          this.$refs.realForm.modelDefault.preId = record.id
           this.$refs.realForm.add()
         })
       }

@@ -4,80 +4,132 @@
       <!-- 主表单区域 -->
       <a-form-model ref="form" :model="model" :rules="validatorRules" slot="detail">
         <a-row>
-          <a-col :span="24">
-            <a-form-model-item label="项目名称" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="title">
-              <a-input v-model="model.title" placeholder="请输入项目名称"></a-input>
-            </a-form-model-item>
-          </a-col>
-          <a-col :span="24">
-            <a-form-model-item label="项目分类" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="type">
-              <j-category-select v-model="model.type" pcode="B03" placeholder="请选择项目分类" />
-            </a-form-model-item>
-          </a-col>
-          <a-col :span="24">
-            <a-form-model-item label="建设单位" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="location">
-              <j-select-depart v-model="model.location" multi />
-            </a-form-model-item>
-          </a-col>
-          <a-col :span="24">
-            <a-form-model-item label="施工单位" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="constructDep">
-              <a-input v-model="model.constructDep" placeholder="请输入施工单位"></a-input>
-            </a-form-model-item>
-          </a-col>
-          <a-col :span="24">
-            <a-form-model-item label="简要说明" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="projectContent">
-              <a-textarea v-model="model.projectContent" rows="4" placeholder="请输入简要说明" />
-            </a-form-model-item>
-          </a-col>
-          <a-col :span="24">
-            <a-form-model-item label="合同金额" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="money">
-              <a-input v-model="model.money" placeholder="请输入合同金额"></a-input>
-            </a-form-model-item>
-          </a-col>
-          <a-col :span="24">
-            <a-form-model-item label="服务年限" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="period">
-              <a-input v-model="model.period" placeholder="请输入服务年限"></a-input>
-            </a-form-model-item>
-          </a-col>
-          <a-col :span="24">
-            <a-form-model-item label="完成时限" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="endTime">
-              <j-date placeholder="请选择完成时限" v-model="model.endTime" style="width: 100%" />
-            </a-form-model-item>
-          </a-col>
-          <a-col :span="24">
-            <a-form-model-item label="合同签订日期" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="signTime">
-              <j-date placeholder="请选择合同签订日期" v-model="model.signTime" style="width: 100%" />
-            </a-form-model-item>
-          </a-col>
-          <a-col :span="24">
-            <a-form-model-item label="四议两公开内容" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="file1">
-              <j-upload v-model="model.file1"></j-upload>
-              <a-button icon="camera" @click="eloamScan(1)">高拍仪拍照</a-button>
-            </a-form-model-item>
-          </a-col>
-          <a-col :span="24">
-            <a-form-model-item
-              label="村集体经济组织相关材料"
-              :labelCol="labelCol"
-              :wrapperCol="wrapperCol"
-              prop="file2"
-            >
-              <j-upload v-model="model.file2"></j-upload>
-              <a-button icon="camera" @click="eloamScan(2)">高拍仪拍照</a-button>
-            </a-form-model-item>
-          </a-col>
-          <a-col :span="24">
-            <a-form-model-item label="合同" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="file3">
-              <j-upload v-model="model.file3"></j-upload>
-              <a-button icon="camera" @click="eloamScan(3)">高拍仪拍照</a-button>
-            </a-form-model-item>
-          </a-col>
-          <a-col :span="24">
-            <a-form-model-item label="验收材料" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="file4">
-              <j-upload v-model="model.file4"></j-upload>
-              <a-button icon="camera" @click="eloamScan(4)">高拍仪拍照</a-button>
-            </a-form-model-item>
-          </a-col>
+          <a-card title="项目信息" style="width: 100%">
+            <a-col :span="24">
+              <a-form-model-item label="项目名称" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="title">
+                <a-input v-model="model.title" placeholder="请输入项目名称"></a-input>
+              </a-form-model-item>
+            </a-col>
+            <a-col :span="24">
+              <a-form-model-item label="项目分类" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="type">
+                <j-category-select v-model="model.type" pcode="B03" placeholder="请选择项目分类" />
+              </a-form-model-item>
+            </a-col>
+            <a-col :span="24">
+              <a-form-model-item label="建设单位" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="location">
+                <select-village-depart v-model="model.location" />
+                <!-- <j-select-depart v-model="model.location" multi /> -->
+              </a-form-model-item>
+            </a-col>
+            <a-col :span="24">
+              <a-form-model-item label="施工单位" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="constructDep">
+                <a-input v-model="model.constructDep" placeholder="请输入施工单位"></a-input>
+              </a-form-model-item>
+            </a-col>
+            <a-col :span="24">
+              <a-form-model-item label="简要说明" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="projectContent">
+                <a-textarea v-model="model.projectContent" rows="4" placeholder="请输入简要说明" />
+              </a-form-model-item>
+            </a-col>
+            <a-col :span="24">
+              <a-form-model-item label="合同金额" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="money">
+                <a-input v-model="model.money" placeholder="请输入合同金额"></a-input>
+              </a-form-model-item>
+            </a-col>
+            <a-col :span="24">
+              <a-form-model-item label="服务年限" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="period">
+                <a-input v-model="model.period" placeholder="请输入服务年限"></a-input>
+              </a-form-model-item>
+            </a-col>
+            <a-col :span="24">
+              <a-form-model-item label="完成时限" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="endTime">
+                <j-date placeholder="请选择完成时限" v-model="model.endTime" style="width: 100%" />
+              </a-form-model-item>
+            </a-col>
+            <a-col :span="24">
+              <a-form-model-item label="合同签订日期" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="signTime">
+                <j-date placeholder="请选择合同签订日期" v-model="model.signTime" style="width: 100%" />
+              </a-form-model-item>
+            </a-col>
+            <a-col :span="24">
+              <a-form-model-item
+                v-if="model.type !== '1493964824436678658'"
+                label="合同截止日期"
+                :labelCol="labelCol"
+                :wrapperCol="wrapperCol"
+                prop="signEndTime"
+              >
+                <j-date placeholder="请选择合同截止日期" v-model="model.signEndTime" style="width: 100%" />
+              </a-form-model-item>
+            </a-col>
+            <a-col :span="24">
+              <a-form-model-item
+                label="村集体经济组织相关材料"
+                :labelCol="labelCol"
+                :wrapperCol="wrapperCol"
+                prop="file2"
+              >
+                <j-upload v-model="model.file2"></j-upload>
+                <a-button icon="camera" @click="eloamScan(2)">高拍仪拍照</a-button>
+              </a-form-model-item>
+            </a-col>
+            <a-col :span="24">
+              <a-form-model-item label="合同" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="file3">
+                <j-upload v-model="model.file3"></j-upload>
+                <a-button icon="camera" @click="eloamScan(3)">高拍仪拍照</a-button>
+              </a-form-model-item>
+            </a-col>
+            <a-col :span="24">
+              <a-form-model-item label="验收材料" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="file4">
+                <j-upload v-model="model.file4"></j-upload>
+                <a-button icon="camera" @click="eloamScan(4)">高拍仪拍照</a-button>
+              </a-form-model-item>
+            </a-col>
+          </a-card>
+          <a-card title="四议两公开内容" style="width: 100%">
+            <a-row>
+              <meeting-card
+                name="村党支部提议文件"
+                peopleType="villageLead"
+                peopleDict="smart_village_lead, name, id"
+                :file.sync="model.meetFile1"
+                :people.sync="model.people1"
+                :video.sync="model.video1"
+                :videoPeople.sync="model.videoPeople1"
+                :disableSubmit="formDisabled"
+              />
+              <meeting-card
+                name="村两委会议商议"
+                peopleType="villageLead"
+                peopleDict="smart_village_lead, name, id"
+                :file.sync="model.meetFile2"
+                :people.sync="model.people2"
+                :video.sync="model.video2"
+                :videoPeople.sync="model.videoPeople2"
+                :disableSubmit="formDisabled"
+              />
+              <meeting-card
+                name="党员大会审议"
+                peopleType="villageLead2"
+                peopleDict="smart_village_lead2, name, id"
+                :file.sync="model.meetFile3"
+                :people.sync="model.people3"
+                :video.sync="model.video3"
+                :videoPeople.sync="model.videoPeople3"
+                :disableSubmit="formDisabled"
+              />
+              <meeting-card
+                name="村民会议或者村民代表会议决议"
+                peopleType="villageLead2"
+                peopleDict="smart_village_lead2, name, id"
+                :file.sync="model.meetFile4"
+                :people.sync="model.people4"
+                :video.sync="model.video4"
+                :videoPeople.sync="model.videoPeople4"
+                :disableSubmit="formDisabled"
+              />
+            </a-row>
+          </a-card>
         </a-row>
       </a-form-model>
     </j-form-container>
@@ -101,6 +153,9 @@
     <eloam-modal ref="modalForm2" @ok="scanOk2" biz-path="before"></eloam-modal>
     <eloam-modal ref="modalForm3" @ok="scanOk3" biz-path="before"></eloam-modal>
     <eloam-modal ref="modalForm4" @ok="scanOk4" biz-path="before"></eloam-modal>
+    <!-- <eloam-modal ref="modalForm5" @ok="scanOk5" biz-path="before"></eloam-modal>
+    <eloam-modal ref="modalForm6" @ok="scanOk6" biz-path="before"></eloam-modal>
+    <eloam-modal ref="modalForm7" @ok="scanOk7" biz-path="before"></eloam-modal> -->
   </a-spin>
 </template>
 
@@ -110,16 +165,20 @@ import { FormTypes, getRefPromise, VALIDATE_NO_PASSED } from '@/utils/JEditableT
 import { JEditableTableModelMixin } from '@/mixins/JEditableTableModelMixin'
 import { validateDuplicateValue } from '@/utils/util'
 import EloamModal from '@views/eloam/modules/EloamModal'
+import MeetingCard from './MeetingCard.vue'
+import SelectVillageDepart from '../../../../components/common/SelectVillageDepart.vue'
 
 export default {
   name: 'SmartPublicityProjectForm',
   mixins: [JEditableTableModelMixin],
   components: {
     EloamModal,
+    MeetingCard,
+    SelectVillageDepart
   },
   data() {
     return {
-      labelCol: {
+       labelCol: {
         xs: { span: 24 },
         sm: { span: 6 },
       },
@@ -139,6 +198,9 @@ export default {
       // 新增时子表默认添加几行空数据
       addDefaultRowNum: 1,
       validatorRules: {
+        title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
+        type: [{ required: true, message: '请选择项目分类', trigger: 'change' }],
+        location: [{ required: true, message: '请选择建设单位', trigger: 'change' }],
         money: [
           { required: false },
           { pattern: /^(([1-9][0-9]*)|([0]\.\d{0,2}|[1-9][0-9]*\.\d{0,2}))$/, message: '请输入正确的金额!' },
@@ -207,13 +269,19 @@ export default {
   created() {},
   methods: {
     eloamScan(index) {
-      if(index == 1){
+      if (index == 1) {
         this.$refs.modalForm1.open()
-      } else if ( index == 2) {
+      } else if (index == 2) {
         this.$refs.modalForm2.open()
-      } else if ( index == 3) {
+      } else if (index == 3) {
         this.$refs.modalForm3.open()
-      } else if ( index == 4) {
+      } else if (index == 4) {
+        this.$refs.modalForm4.open()
+      } else if (index == 5) {
+        this.$refs.modalForm4.open()
+      } else if (index == 6) {
+        this.$refs.modalForm4.open()
+      } else if (index == 7) {
         this.$refs.modalForm4.open()
       }
     },
@@ -222,12 +290,12 @@ export default {
       if (image) {
         let arr = []
         // 考虑如果存在已经上传的文件，则拼接起来，没有则直接添加
-        if (this.model.file1) {
-          arr.push(this.model.file1)
+        if (this.model.meetFile1) {
+          arr.push(this.model.meetFile1)
         }
         arr.push(image)
         // 更新表单中文件url字段, files 为字段名称
-        this.$set(this.model, 'file1', arr.join())
+        this.$set(this.model, 'meetFile1', arr.join())
       }
     },
     scanOk2(url) {
@@ -267,6 +335,45 @@ export default {
         arr.push(image)
         // 更新表单中文件url字段, files 为字段名称
         this.$set(this.model, 'file4', arr.join())
+      }
+    },
+    scanOk5(url) {
+      let image = url
+      if (image) {
+        let arr = []
+        // 考虑如果存在已经上传的文件，则拼接起来，没有则直接添加
+        if (this.model.meetFile2) {
+          arr.push(this.model.meetFile2)
+        }
+        arr.push(image)
+        // 更新表单中文件url字段, files 为字段名称
+        this.$set(this.model, 'meetFile2', arr.join())
+      }
+    },
+    scanOk6(url) {
+      let image = url
+      if (image) {
+        let arr = []
+        // 考虑如果存在已经上传的文件，则拼接起来，没有则直接添加
+        if (this.model.meetFile3) {
+          arr.push(this.model.meetFile3)
+        }
+        arr.push(image)
+        // 更新表单中文件url字段, files 为字段名称
+        this.$set(this.model, 'meetFile3', arr.join())
+      }
+    },
+    scanOk7(url) {
+      let image = url
+      if (image) {
+        let arr = []
+        // 考虑如果存在已经上传的文件，则拼接起来，没有则直接添加
+        if (this.model.meetFile4) {
+          arr.push(this.model.meetFile4)
+        }
+        arr.push(image)
+        // 更新表单中文件url字段, files 为字段名称
+        this.$set(this.model, 'meetFile4', arr.join())
       }
     },
     addBefore() {

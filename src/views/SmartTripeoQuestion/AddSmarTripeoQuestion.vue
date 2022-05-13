@@ -73,6 +73,8 @@ export default {
         window.location.href="about:blank";
         window.close();
         window.opener.location.reload();
+      } else {
+        window.location.href="/webview/survey"
       }
 
     },

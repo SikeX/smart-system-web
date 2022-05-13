@@ -13,7 +13,7 @@
         <a-row>
           <a-col :span="24">
             <a-form-model-item label="任务名称" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="missionName">
-              <a-input v-model="model.missionName" placeholder="请输入任务名称" ></a-input>
+              <a-input v-model="model.missionName" placeholder="请输入任务名称" v-decorator="['missionName', validatorRules.missionName ]" ></a-input>
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
@@ -36,7 +36,7 @@
               <a-input v-model="model.missionStatus" placeholder="请输入任务状态" disabled></a-input>
             </a-form-model-item>
           </a-col>
-          <a-col :span="24">
+          <a-col v-if="model.missionStatus !== '未发布'" :span="24">
             <a-form-model-item label="考核要点总数" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="keyPointsAmount">
               <a-input-number v-model="model.keyPointsAmount" placeholder="请输入考核要点总数" style="width: 100%" disabled/>
             </a-form-model-item>
@@ -50,6 +50,7 @@
 <script>
 
   import { httpAction } from '@/api/manage'
+  import { duplicateCheck } from '@/api/api'
   import { validateDuplicateValue } from '@/utils/util'
 
   export default {
@@ -75,7 +76,8 @@
         confirmLoading: false,
         validatorRules: {
            missionName: [
-              { required: true, message: '请输入任务名称!'},
+             { required: true, message: '请输入任务名称!'},
+             {validator: this.validateMissionName}
            ],
            assessmentYear: [
               { required: true, message: '请输入考核年份!'},
@@ -141,6 +143,23 @@
       },
       handleCancel () {
         this.close()
+      },
+      validateMissionName(rule, value, callback){
+        if (value) {
+          var params = {
+            tableName: "smart_assessment_mission",
+            fieldName: "mission_name",
+            fieldVal: value,
+            dataId: this.model.id
+          };
+          duplicateCheck(params).then((res)=>{
+            if(res.success){
+              callback();
+            }else{
+              callback(res.message);
+            }
+          })
+        }
       },
 
 

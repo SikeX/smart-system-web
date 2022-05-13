@@ -204,9 +204,8 @@
           list: "/villageHome/villageHome/list",
           delete: "/villageHome/villageHome/delete",
           deleteBatch: "/villageHome/villageHome/deleteBatch",
-          exportXlsUrl: "/villageHome/villageHome/exportXls",
+          exportXlsUrl: "/vHome/vHome/exportXls",
           importExcelUrl: "villageHome/villageHome/importExcel",
-          
         },
         dictOptions:{},
         superFieldList:[],

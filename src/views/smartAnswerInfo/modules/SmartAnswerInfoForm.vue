@@ -15,22 +15,17 @@
           </a-col>
           <a-col :span="24">
             <a-form-model-item label="完成要点个数" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="finishedPoint">
-              <a-input-number v-model="model.finishedPoint" placeholder="请输入完成要点个数" style="width: 100%" disabled/>
+              <a-input-number v-model="model.finishedKeyPointAmount" placeholder="请输入完成要点个数" style="width: 100%" disabled/>
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="24">
+            <a-form-model-item label="总要点个数" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="totalKeyPointAmount">
+              <a-input-number v-model="model.totalKeyPointAmount" placeholder="请输入总要点个数" style="width: 100%" disabled/>
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
             <a-form-model-item label="完成度" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="completionDegree">
               <a-input-number v-model="model.completionDegree" placeholder="请输入完成度" style="width: 100%" disabled/>
-            </a-form-model-item>
-          </a-col>
-          <a-col :span="24">
-            <a-form-model-item label="总分" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="totalPoints">
-              <a-input-number v-model="model.totalPoints" placeholder="请输入总分" style="width: 100%" disabled/>
-            </a-form-model-item>
-          </a-col>
-          <a-col :span="24">
-            <a-form-model-item label="排名" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="ranking">
-              <a-input-number v-model="model.ranking" placeholder="请输入排名" style="width: 100%" />
             </a-form-model-item>
           </a-col>
         </a-row>

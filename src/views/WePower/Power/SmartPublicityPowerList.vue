@@ -6,7 +6,8 @@
         <a-row :gutter="24">
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
             <a-form-item label="主管部门">
-              <j-select-depart placeholder="请选择主管部门" v-model="queryParam.location"/>
+              <select-village-depart placeholder="请选择主管部门" v-model="queryParam.location" />
+              <!-- <j-select-depart placeholder="请选择主管部门" v-model="queryParam.location"/> -->
             </a-form-item>
           </a-col>
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
@@ -131,12 +132,14 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import SmartPublicityPowerModal from './modules/SmartPublicityPowerModal'
   import {filterMultiDictText} from '@/components/dict/JDictSelectUtil'
+import SelectVillageDepart from '../../../components/common/SelectVillageDepart.vue'
 
   export default {
     name: 'SmartPublicityPowerList',
     mixins:[JeecgListMixin, mixinDevice],
     components: {
-      SmartPublicityPowerModal
+      SmartPublicityPowerModal,
+        SelectVillageDepart
     },
     data () {
       return {
