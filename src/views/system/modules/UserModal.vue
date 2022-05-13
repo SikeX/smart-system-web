@@ -64,8 +64,8 @@
 
         <a-form-model-item label="职务" :labelCol="labelCol" :wrapperCol="wrapperCol">
 <!--          <j-select-position placeholder="请选择职务" :multiple="false" v-model="model.post"/>-->
-          <j-search-select-tag placeholder="请选择职务"  v-model="model.post"
-                               dict="sys_position,name,code"></j-search-select-tag>
+          <j-select-multiple placeholder="请选择职务"  v-model="model.post"
+                             dictCode="sys_position,name,code"></j-select-multiple>
         </a-form-model-item>
 
         <a-form-model-item
@@ -92,16 +92,16 @@
         </a-form-model-item>
         <!--部门分配-->
         <a-form-model-item label="单位" :labelCol="labelCol" :wrapperCol="wrapperCol" v-show="!departDisabled" prop="selecteddeparts">
-         <!-- <j-select-depart v-model="model.selecteddeparts" :multi="false" @back="backDepartInfo" :backDepart="true" :treeOpera="true"/>-->
-          <a-tree-select
-            style="width:100%"
-            :dropdownStyle="{maxHeight:'200px',overflow:'auto'}"
-            :treeData="naturalDepartTree"
-            v-model="model.selecteddeparts"
-            placeholder="请选择单位"
-            allow-clear
-            tree-default-expand-all>
-          </a-tree-select>
+          <j-select-depart v-model="model.selecteddeparts" :multi="true" @back="backDepartInfo" :backDepart="true" :treeOpera="true"/>
+<!--          <a-tree-select-->
+<!--            style="width:100%"-->
+<!--            :dropdownStyle="{maxHeight:'200px',overflow:'auto'}"-->
+<!--            :treeData="naturalDepartTree"-->
+<!--            v-model="model.selecteddeparts"-->
+<!--            placeholder="请选择单位"-->
+<!--            allow-clear-->
+<!--            tree-default-expand-all>-->
+<!--          </a-tree-select>-->
         </a-form-model-item>
 
         <!--租户分配-->
