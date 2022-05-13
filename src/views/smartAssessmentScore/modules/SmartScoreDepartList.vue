@@ -66,8 +66,11 @@
         </template>
 
         <span slot='action' slot-scope='text, record'>
-          <a v-if="record.missionStatus==='未签收'" @click='signMission(record)'>代替签收</a>
-          <a v-else @click='handleMark(record)'>评分</a>
+          <span v-if="disableSubmit(record.endTime)">未到截止时间</span>
+          <div v-else>
+            <a v-if="record.missionStatus==='未签收'" @click='signMission(record)'>代替签收</a>
+            <a v-else @click='handleMark(record)'>评分</a>
+          </div>
         </span>
 
       </a-table>
@@ -113,7 +116,12 @@ export default {
       type: Number,
       default:0,
       required:false
-    }
+    },
+    disabled: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
   },
   watch:{
     contentId:{
@@ -154,6 +162,11 @@ export default {
           dataIndex: 'missionStatus'
         },
         {
+          title: '截止时间',
+          align: 'center',
+          dataIndex: 'endTime'
+        },
+        {
           title: '评分状态',
           align: 'center',
           dataIndex: 'markedContent',
@@ -191,6 +204,10 @@ export default {
     }
   },
   methods: {
+    disableSubmit(endTime) {
+      let dateDiff = new Date(endTime).getTime() - new Date().getTime()
+      return dateDiff > 0;
+    },
     handleMark:function(record){
       // console.log(record)
       this.$refs.modalForm.title="评分";

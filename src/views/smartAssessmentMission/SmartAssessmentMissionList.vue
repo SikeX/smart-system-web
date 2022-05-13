@@ -19,6 +19,7 @@
               <a-select
                 placeholder="全部"
                 v-model:value="queryParam.missionStatus">
+                <a-select-option value="">全部</a-select-option>
                 <a-select-option value="未发布">未发布</a-select-option>
                 <a-select-option value="已发布">已发布</a-select-option>
                 <a-select-option value="发布评分结果">发布评分结果</a-select-option>
@@ -143,7 +144,7 @@
         <SmartAssessmentDepartList :mainId='selectedMainId' :main-info='selectionRows[0]' />
       </a-tab-pane>
       <a-tab-pane tab='考核内容' key='2'>
-        <SmartAssessmentContentList :mainId='selectedMainId' :main-info='selectionRows[0]' @ok='loadData(1)' />
+        <SmartAssessmentContentList :mainId='selectedMainId' :main-info='selectionRows[0]' @ok='loadData(2)' />
       </a-tab-pane>
     </a-tabs>
 
@@ -288,8 +289,11 @@ export default {
       //加载数据 若传入参数1则加载第一页的内容
       if (arg === 1) {
         this.ipagination.current = 1
+      } else if (arg === 2) {
+        console.log('刷新分数!')
+      } else {
+        this.onClearSelected()
       }
-      this.onClearSelected()
       var params = this.getQueryParams()//查询条件
       this.loading = true
       getAction(this.url.list, params).then((res) => {
@@ -323,7 +327,7 @@ export default {
       putAction(that.url.reset, record).then((res) => {
         if (res.success) {
           that.$message.success(res.message);
-          that.loadData(1);
+          that.loadData();
         } else {
           that.$message.warning(res.message);
         }
@@ -336,7 +340,7 @@ export default {
       putAction(this.url.publish, record).then((res) => {
         if (res.success) {
           this.$message.success(res.message);
-          this.loadData(1)
+          this.loadData()
         }else{
           this.$message.warning(res.message);
         }
@@ -349,7 +353,7 @@ export default {
       putAction(this.url.recallScoreResult, record).then((res) => {
         if (res.success) {
           this.$message.success(res.message);
-          this.loadData(1)
+          this.loadData()
         }else{
           this.$message.warning(res.message);
         }
