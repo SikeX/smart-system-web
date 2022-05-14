@@ -35,7 +35,7 @@
           required
           label="职级"
         >
-          <j-dict-select-tag
+          <j-select-multiple
             placeholder="请选择职级"
             dictCode="position_rank"
             v-model="model.postRank"

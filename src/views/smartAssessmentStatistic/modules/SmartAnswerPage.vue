@@ -182,7 +182,7 @@ export default {
     },
     disableSubmit() {
       let dateDiff = new Date(this.mainInfo.endTime).getTime() - new Date().getTime()
-      return this.mainInfo['missionStatus'] == '发布评分结果' || dateDiff <= 0;
+      return dateDiff <= 0;
     }
   },
   methods: {

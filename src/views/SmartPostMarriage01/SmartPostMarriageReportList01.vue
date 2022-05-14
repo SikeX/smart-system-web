@@ -112,8 +112,9 @@
 
         <span slot="action" slot-scope="text, record">
           <!-- <a-divider type="vertical"/> -->
-           <a v-show="record.isReport == '0'" @click="postAdd(record)">婚后报备</a>
-          <a v-show="record.isReport == '1' || record.isReport == '15'" @click="postAdd(record)">已婚后报备</a>
+           <a v-show="record.isReport == '0' || record.isReport == '15'" @click="postAdd(record)">婚后报备</a>
+          <!-- <a v-show="record.isReport == '1' || record.isReport == '15'" @click="postAdd(record)">已婚后报备</a> -->
+          <a v-show="record.isReport == '1'" @click="postAdd(record)">已婚后报备</a>
            <!-- <a-divider type="vertical" />  -->
            <!-- <a v-show="record.verifyStatus == '3'" @click="postEdit(record.id)">编辑</a>          -->
            <a-divider type="vertical"/>
@@ -405,7 +406,7 @@ export default {
 
     //婚后添加
     postAdd(record){
-      if(record.isReport == '1' || record.isReport == '15'){
+      if(record.isReport == '1'){
         this.$message.error('该条记录已婚后报备！')
         return
       }
