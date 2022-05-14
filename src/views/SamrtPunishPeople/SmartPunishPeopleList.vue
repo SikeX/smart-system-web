@@ -88,9 +88,9 @@
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
       <a-button type="primary" icon="download" @click="handleExportXls('处分人员表')">导出</a-button>
-      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
-        <a-button type="primary" icon="import">导入</a-button>
-      </a-upload>
+<!--      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">-->
+<!--        <a-button type="primary" icon="import">导入</a-button>-->
+<!--      </a-upload>-->
       <!-- 高级查询区域 -->
 <!--      <j-super-query :fieldList="superFieldList" ref="superQueryModal" @handleSuperQuery="handleSuperQuery"></j-super-query>-->
       <a-dropdown v-if="selectedRowKeys.length > 0">
@@ -323,7 +323,7 @@
           deleteBatch: "/SmartPunishPeople/smartPunishPeople/deleteBatch",
           exportXlsUrl: "/SmartPunishPeople/smartPunishPeople/exportXls",
           importExcelUrl: "SmartPunishPeople/smartPunishPeople/importExcel",
-          
+
         },
         dictOptions:{},
         superFieldList:[],
@@ -385,6 +385,36 @@
         fieldList.push({type:'datetime',value:'updateTime',text:'修改日期'})
         this.superFieldList = fieldList
       },
+      loadData(arg) {
+        if(!this.url.list){
+          this.$message.error("请设置url.list属性!")
+          return
+        }
+        //加载数据 若传入参数1则加载第一页的内容
+        if (arg === 1) {
+          this.ipagination.current = 1;
+        }
+        var params = this.getQueryParams();//查询条件
+        this.loading = true;
+        getAction(this.url.list, params).then((res) => {
+          if (res.success) {
+            //update-begin---author:zhangyafei    Date:20201118  for：适配不分页的数据列表------------
+            this.dataSource = res.result.records||res.result;
+            if(res.result.total)
+            {
+              this.ipagination.total = res.result.total;
+            }else{
+              this.ipagination.total = 0;
+            }
+            //update-end---author:zhangyafei    Date:20201118  for：适配不分页的数据列表------------
+          }else{
+            this.$message.warning(res.message)
+          }
+          this.getTotal()
+        }).finally(() => {
+          this.loading = false
+        })
+      },
     getTotal(){
         let that=this;
         getAction('/SmartPunishPeople/smartPunishPeople/punishPeopleCount').then((res)=>{
@@ -422,6 +452,7 @@
       })
     },
       getCategoryCountSource(data){
+        this.countSource = []
         for (let i = 0; i < data.length; i++) {
             this.countSource.push({
               item: data[i].type,
