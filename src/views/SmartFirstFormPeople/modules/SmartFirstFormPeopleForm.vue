@@ -225,6 +225,11 @@
         },
         confirmLoading: false,
         validatorRules: {
+          intervieweeId:[{required: true, message: '请选择被谈话人!'}],
+          talkerId: [{required: true, message: '请选择谈话人!'}],
+          handlerDepart:[{required: true, message: '请选择办理部门!'}],
+          type:[{required: true, message: '请选择类型!'}],
+          talkTime:[{required: true, message: '请选择谈话时间!'}]
            /*annex: [
               { required: true, message: '请输入附件!'},
            ],*/
@@ -297,7 +302,7 @@
               that.confirmLoading = false;
             })
           }
-         
+
         })
       },
       getInterviewee(back){
