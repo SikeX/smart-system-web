@@ -4,6 +4,11 @@
       <a-form-model ref='form' :model='model' :rules='validatorRules' slot='detail'>
         <a-row>
           <a-col :span='24'>
+            <a-form-model-item label='满分分值' :labelCol='labelCol' :wrapperCol='wrapperCol'>
+              <a-input-number v-model='maxScore' placeholder='满分分值' :min="0" :max="maxScore" style='width: 100%' disabled=''/>
+            </a-form-model-item>
+          </a-col>
+          <a-col :span='24'>
             <a-form-model-item label='评分' :labelCol='labelCol' :wrapperCol='wrapperCol' prop='score'>
               <a-input-number v-model='model.score' placeholder='请输入评分' :min="0" :max="maxScore" style='width: 100%'/>
             </a-form-model-item>
@@ -98,7 +103,9 @@ export default {
         sm: {span: 16}
       },
       confirmLoading: false,
-      validatorRules: {},
+      validatorRules: {
+        score: [{ required: true, message: '请输入评分,本要点满分: ' + this.maxScore + ' 分'},]
+      },
       url: {
         list: "/smartAnswerAssContent/smartAnswerAssContent/listSmartAnswerAssScoreByMainId",
         add: "/smartAnswerAssContent/smartAnswerAssContent/addSmartAnswerAssScore",

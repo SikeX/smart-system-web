@@ -233,10 +233,16 @@ export default {
       this.superFieldList = fieldList
     },
     publishScoreResult(record) {
+      this.loading = true
       putAction(this.url.publish, record).then((res) => {
         if (res.success) {
           this.loadData(1)
+          this.$message.success(res.message)
+        } else {
+          this.$message.warning(res.message)
         }
+      }).finally(()=> {
+        this.loading = false;
       })
     }
   }
