@@ -549,15 +549,11 @@
               return
             }
             if (this.currSelected.departName === "部门类型") {
-                this.$message.warning('该类型不可更改!')
+                this.$message.warning('该部门不可更改!')
                 return
               }
-            if (this.currSelected.departName === "中共哈尔滨市道里区纪律检查委员会" && this.currSelected.businessParentId !== "01c47d4fbf994b34a13237552f2aeec8") {
-              this.$message.warning('上级部门不可更改!')
-              return
-            }
-            if (this.currSelected.departName === "中共哈尔滨市道里区纪律检查委员会" && this.currSelected.parentId !== "") {
-              this.$message.warning('上级业务部门不可更改!')
+            if (this.currSelected.departName === "区纪委") {
+              this.$message.warning('该部门不可更改!')
               return
             }
             httpAction(this.url.edit, this.currSelected, 'put').then((res) => {
