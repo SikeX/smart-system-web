@@ -179,7 +179,7 @@
               <a-input v-model="model.phoneNumber" placeholder="请输入联系电话"></a-input>
             </a-form-model-item>
           </a-col>
-          <a-col :span="24" >
+          <a-col :span="24">
             <a-form-model-item label="附件" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="files">
               <!-- <j-upload v-model="model.files"></j-upload> -->
               <a-button icon="camera" @click="eloamScan">高拍仪拍照</a-button>
@@ -205,7 +205,7 @@
         />
       </a-tab-pane>
     </a-tabs> -->
-    <eloam-modal ref="modalForm" @ok='scanOk' biz-path='eloam'></eloam-modal>
+    <eloam-modal ref="modalForm" @ok="scanOk" biz-path="eloam"></eloam-modal>
   </a-spin>
 </template>
 
@@ -224,7 +224,7 @@ export default {
   components: { SelectUserByDep, EloamModal },
   data() {
     return {
-      preId:'',
+      preId: '',
       rootUrl: '/smartPostMarriage/smartPostMarriageReport',
       labelCol: {
         xs: { span: 24 },
@@ -373,13 +373,14 @@ export default {
   },
   created() {},
   methods: {
-    add(){
-        this.edit(this.modelDefault)
-      },
-      edit(){
-        this.model = Object.assign({}, record)
-        this.visible = true
-      },
+    add() {
+      this.edit(this.modelDefault)
+    },
+    edit() {
+      this.model = Object.assign({}, record)
+      this.visible = true
+      this.editAfter()
+    },
 
     ages(str) {
       var r = str.match(/^(\d{1,4})(-|\/)(\d{1,2})\2(\d{1,2})$/)
@@ -387,7 +388,7 @@ export default {
       var d = new Date(r[1], r[3] - 1, r[4])
       if (d.getFullYear() == r[1] && d.getMonth() + 1 == r[3] && d.getDate() == r[4]) {
         var Y = new Date().getFullYear()
-        return (Y - r[1])
+        return Y - r[1]
       }
       return '输入的日期格式错误！'
     },
@@ -403,9 +404,9 @@ export default {
       that.model.politicsStatus = back[0].politicalStatus_dictText
 
       let birth = back[0].birthday
-      if(birth == "undefined" || birth == null || birth == ""){
+      if (birth == 'undefined' || birth == null || birth == '') {
         that.model.age = 0
-      }else{
+      } else {
         that.model.age = that.$options.methods.ages(birth.slice(0, 11))
       }
 
@@ -474,22 +475,22 @@ export default {
       this.$message.error(msg)
     },
     eloamScan() {
-        this.$refs.modalForm.open()
-      },
-      scanOk(url) {
-        let image = url
-        if (image) {
-          let arr = []
-          // 考虑如果存在已经上传的文件，则拼接起来，没有则直接添加
-          if (this.model.files) {
-            arr.push(this.model.files)
-          }
-          arr.push(image)
-          // 更新表单中文件url字段, files 为字段名称
-          this.$set(this.model, 'files', arr.join())
+      this.$refs.modalForm.open()
+    },
+    scanOk(url) {
+      let image = url
+      if (image) {
+        let arr = []
+        // 考虑如果存在已经上传的文件，则拼接起来，没有则直接添加
+        if (this.model.files) {
+          arr.push(this.model.files)
         }
-      },
-      submitForm() {
+        arr.push(image)
+        // 更新表单中文件url字段, files 为字段名称
+        this.$set(this.model, 'files', arr.join())
+      }
+    },
+    submitForm() {
       const that = this
       // 触发表单验证
       this.$refs.form.validate((valid) => {

@@ -120,8 +120,25 @@ export default {
       this.edit(this.modelDefault)
     },
     edit(record) {
+      console.log(record)
       this.model = Object.assign({}, record)
       this.visible = true
+      this.editAfter()
+    },
+    /** 调用完edit()方法之后会自动调用此方法 */
+    editAfter() {
+      this.$nextTick(() => {})
+      // 加载子表数据
+      if (this.model.id) {
+        console.log(this.model)
+        let params = { id: this.model.id }
+        getAction(this.url.queryById, params).then((res) => {
+          console.log(res)
+          if (res.success) {
+            this.model = res.result
+          }
+        })
+      }
     },
     submitForm() {
       const that = this
