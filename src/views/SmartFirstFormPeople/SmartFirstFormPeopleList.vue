@@ -10,7 +10,7 @@
               <j-input placeholder="请输入年份" v-model="queryParam.year" width='60%'/>
               </a-col>
               <a-col span='8'>
-              <j-select-depart placeholder="请选择单位" v-model="queryParam.departCode" customReturnField='orgCode' width='60%'></j-select-depart>
+              <j-select-depart placeholder="请选择单位" v-model="queryParam.departCode" customReturnField='id' width='60%'></j-select-depart>
               </a-col>
                 <a-button type="primary" @click="search" icon="search">查询</a-button>
                 <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
@@ -37,7 +37,7 @@
           <a-row :gutter="24">
             <a-col :xl="6" :lg="7" :md="8" :sm="24">
               <a-form-item label="被谈话人单位">
-                <j-select-depart placeholder="请输入被谈话人单位" v-model="queryParam.intervieweeDept" customReturnField='orgCode'></j-select-depart>
+                <j-select-depart placeholder="请输入被谈话人单位" v-model="queryParam.intervieweeDept" customReturnField='id'></j-select-depart>
               </a-form-item>
             </a-col>
             <a-col :xl="6" :lg="7" :md="8" :sm="24">
@@ -48,7 +48,7 @@
             <template v-if="toggleSearchStatus">
               <a-col :xl="6" :lg="7" :md="8" :sm="24">
                 <a-form-item label="谈话人单位">
-                  <j-select-depart placeholder="请输入谈话人单位" v-model="queryParam.talkerDept" customReturnField='orgCode'></j-select-depart>
+                  <j-select-depart placeholder="请输入谈话人单位" v-model="queryParam.talkerDept" customReturnField='id'></j-select-depart>
                 </a-form-item>
               </a-col>
               <a-col :xl="6" :lg="7" :md="8" :sm="24">
@@ -377,7 +377,7 @@
         fieldList.push({type:'string',value:'caseName',text:'案件标题',dictCode:''})
         fieldList.push({type:'string',value:'caseSource',text:'案件（线索来源）',dictCode:''})
         fieldList.push({type:'string',value:'intervieweeId',text:'被谈话人',dictCode:''})
-        fieldList.push({type:'string',value:'intervieweeDept',text:'被谈话人单位',dictCode:'sys_depart,depart_name,org_code'})
+        fieldList.push({type:'string',value:'intervieweeDept',text:'被谈话人单位',dictCode:'sys_depart,depart_name,id'})
         fieldList.push({type:'string',value:'intervieweeName',text:'被谈话人姓名',dictCode:''})
         fieldList.push({type:'string',value:'intervieweeSex',text:'被谈话人性别',dictCode:''})
         fieldList.push({type:'string',value:'intervieweeEthnicity',text:'被谈话人民族',dictCode:'ethnicity'})
@@ -390,7 +390,7 @@
         fieldList.push({type:'string',value:'authority',text:'干部管理权限',dictCode:''})
         fieldList.push({type:'string',value:'supervision',text:'是否是纪检监察干部',dictCode:'yn'})
         fieldList.push({type:'string',value:'talkerId',text:'谈话人',dictCode:''})
-        fieldList.push({type:'string',value:'talkerDept',text:'谈话人单位',dictCode:'sys_depart,depart_name,org_code'})
+        fieldList.push({type:'string',value:'talkerDept',text:'谈话人单位',dictCode:'sys_depart,depart_name,id'})
         fieldList.push({type:'string',value:'talkerName',text:'谈话人姓名',dictCode:''})
         fieldList.push({type:'string',value:'talkerPost',text:'谈话人职务',dictCode:'sys_position,name,code'})
         fieldList.push({type:'string',value:'talkerPostrank',text:'谈话人职级',dictCode:'position_rank'})
@@ -401,7 +401,7 @@
         fieldList.push({type:'string',value:'situation',text:'情形',dictCode:''})
         fieldList.push({type:'date',value:'talkTime',text:'谈话时间'})
         fieldList.push({type:'string',value:'measures',text:'组织措施',dictCode:''})
-        fieldList.push({type:'string',value:'decisionOrgan',text:'采取组织措施决定机关',dictCode:''})
+        fieldList.push({type:'string',value:'decisionOrgan',text:'采取组织措施决定机关',dictCode:'sys_depart,depart_name,id'})
         fieldList.push({type:'string',value:'annex',text:'附件',dictCode:''})
         this.superFieldList = fieldList
       }
