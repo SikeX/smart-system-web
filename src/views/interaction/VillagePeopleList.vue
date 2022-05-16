@@ -40,7 +40,7 @@
 
           <!--TODO 按照单位查询 (设置返回值，默认返回ID：customReturnField='orgCode')-->
           <a-col :md="6" :sm="8">
-            <a-form-item label="所在乡镇、村"  hasFeedback>
+            <a-form-item label="所在村"  hasFeedback>
 <!--              <j-select-fuze-depart placeholder="请选择单位"  v-model="queryParam.orgCode" customReturnField='orgCode' :multi="false"   :treeOpera="true"></j-select-fuze-depart>-->
 <!--              <a-form-model-item label="单位分配" :labelCol="labelCol" :wrapperCol="wrapperCol" v-show="!departDisabled">-->
                 <!-- <j-select-depart v-model="model.selecteddeparts" :multi="false" @back="backDepartInfo" :backDepart="true" :treeOpera="true"/>-->
@@ -50,7 +50,7 @@
                   :treeData="departTree"
                   :multi="true"
                   v-model="queryParam.departId"
-                  placeholder="请选择乡镇、村"
+                  placeholder="请选择所在村"
                   allow-clear
                   tree-default-expand-all>
                 </a-tree-select>
@@ -98,9 +98,9 @@
     <div class="table-operator" style="border-top: 5px">
       <a-button @click="handleAdd" type="primary" icon="plus" >添加村民</a-button>
       <a-button type="primary" icon="download" @click="handleExportXls('村民信息')">导出</a-button>
-      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
-        <a-button type="primary" icon="import">导入</a-button>
-      </a-upload>
+<!--      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">-->
+<!--        <a-button type="primary" icon="import">导入</a-button>-->
+<!--      </a-upload>-->
       <j-third-app-button biz-type="user" :selected-row-keys="selectedRowKeys" syncToApp syncToLocal @sync-finally="onSyncFinally"/>
       <a-button type="primary" icon="hdd" @click="recycleBinVisible=true">回收站</a-button>
       <a-dropdown v-if="selectedRowKeys.length > 0">
@@ -267,13 +267,13 @@
             width: 100,
             dataIndex: 'realname',
           },
-          {
-            title: '头像',
-            align: "center",
-            width: 120,
-            dataIndex: 'avatar',
-            scopedSlots: {customRender: "avatarslot"}
-          },
+          // {
+          //   title: '头像',
+          //   align: "center",
+          //   width: 120,
+          //   dataIndex: 'avatar',
+          //   scopedSlots: {customRender: "avatarslot"}
+          // },
 
           {
             title: '性别',
