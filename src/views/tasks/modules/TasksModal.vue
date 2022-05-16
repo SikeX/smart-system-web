@@ -36,13 +36,20 @@
             <a-list-item-meta>
               <a slot="title">审核信息</a>
               <div slot="description">
-                <div><span>审核人：</span><span>{{item.auditPerson}}</span></div>
-                <div><span>审核时间：</span><span>{{item.auditTime}}</span></div>
-                <div><span>审核结论：</span>
-                <span v-if="item.auditStatus==3" >通过</span>
-                <span v-if="item.auditStatus==4" >驳回</span>
+                <div>
+                  <span>审核人：</span><span>{{ item.auditPerson }}</span>
                 </div>
-                <div><span>审核意见：</span><span>{{item.remark}}</span></div>
+                <div>
+                  <span>审核时间：</span><span>{{ item.auditTime }}</span>
+                </div>
+                <div>
+                  <span>审核结论：</span>
+                  <span v-if="item.auditStatus == 3">通过</span>
+                  <span v-if="item.auditStatus == 4">驳回</span>
+                </div>
+                <div>
+                  <span>审核意见：</span><span>{{ item.remark }}</span>
+                </div>
               </div>
             </a-list-item-meta>
           </a-list-item>
@@ -70,11 +77,11 @@ import TestVerifyForm from '@/views/testVerify/modules/TestVerifyForm'
 import SmartSupervisionForm from '../../smartSupervision/modules/SmartSupervisionForm.vue'
 import SmartPostMarriageReportForm from '../../SmartPostMarriage/modules/SmartPostMarriageReportForm.vue'
 import SmartTripleImportanceOneGreatnessForm from '../../SmartTripleImportanceOneGreatness/modules/SmartTripleImportanceOneGreatnessForm.vue'
-import SmartCreateAdviceForm from '../../SmartSuggestion/modules/SmartCreateAdviceForm'
+import SmartCreateAdviceForm from '../../SmartSuggestion/modules/SmartCreateAdviceForm.vue'
 import SplitPanel from '../../jeecg/SplitPanel.vue'
-import SmartOrgMeetingForm from "../../SmartOrgMeeting/modules/SmartOrgMeetingForm";
-import SmartFinanceResultForm from "../../SmartFinanceResult/modules/SmartFinanceResultForm";
-import SmartDemocraticLifeMeetingForm from "../../smartDemocraticLifeMeeting/modules/SmartDemocraticLifeMeetingForm";
+import SmartOrgMeetingForm from '../../SmartOrgMeeting/modules/SmartOrgMeetingForm.vue'
+import SmartFinanceResultForm from '../../SmartFinanceResult/modules/SmartFinanceResultForm.vue'
+import SmartDemocraticLifeMeetingForm from '../../smartDemocraticLifeMeeting/modules/SmartDemocraticLifeMeetingForm.vue'
 import SmartThreeMeetingOneLessonForm from '../../smartThreeMeetingOneLesson/modules/SmartThreeMeetingOneLessonForm.vue'
 import Smart_8regulationsForReceptionForm from '../../Smart_8regulationsForReception/modules/Smart_8regulationsForReceptionForm.vue'
 import SmartInnerPartyTalkForm from '../../SmartInnerPartyTalk/modules/SmartInnerPartyTalkForm.vue'
@@ -102,7 +109,7 @@ export default {
     SmartFirstFormPeopleForm,
     SmartEvaluateMeetingForm,
   },
-  mounted(){
+  mounted() {
     this.getVerigyResult()
   },
   data() {
@@ -172,7 +179,7 @@ export default {
       }
       getAction('/smartVerifyDetail/smartVerifyDetail/queryByflowNo', params).then((res) => {
         if (res.success) {
-          this.$nextTick(()=>{
+          this.$nextTick(() => {
             console.log(res.result)
             this.verifyResult = res.result
             console.log(this.verifyResult)

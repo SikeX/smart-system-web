@@ -22,15 +22,15 @@
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
-            <a-form-model-item label="用餐总人数" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="num">
-              <a-input-number v-model="model.num"placeholder="请输入用餐总人数" style="width: 100%" />
+            <a-form-model-item label="来访用餐人数" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="num">
+              <a-input-number v-model="model.num"placeholder="请输入来访用餐人数" style="width: 100%" />
             </a-form-model-item>
           </a-col>
-          <a-col :span="24">
-            <a-form-model-item label="陪同人数" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="numR">
-              <a-input v-model="model.numR"placeholder="请输入陪同人数" ></a-input>
-            </a-form-model-item>
-          </a-col>
+<!--          <a-col :span="24">-->
+<!--            <a-form-model-item label="陪同人数" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="numR">-->
+<!--              <a-input v-model="model.numR"placeholder="请输入陪同人数" ></a-input>-->
+<!--            </a-form-model-item>-->
+<!--          </a-col>-->
           <a-col :span="24">
 
           </a-col>
@@ -44,18 +44,18 @@
   <!--              <j-date placeholder="请选择创建日期" v-model="model.createTime" style="width: 100%" />-->
   <!--            </a-form-model-item>-->
 <!--            </a-col>-->
-            <a-col :span="24">
-              <a-form-model-item label="更新人" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="updateBy">
-                <a-input v-model="model.updateBy"placeholder="请输入更新人" ></a-input>
-              </a-form-model-item>
-            </a-col>
-            <a-col :span="24">
-              <a-form-model-item label="更新日期" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="updateTime">
-                <j-date placeholder="请选择更新日期" v-model="model.updateTime" style="width: 100%" />
-              </a-form-model-item>
-            </a-col>
-          <a-col :span="24">
-            <a-form-model-item label="陪同用餐人员管理" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="updateTime">
+<!--            <a-col :span="24">-->
+<!--              <a-form-model-item label="更新人" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="updateBy">-->
+<!--                <a-input v-model="model.updateBy"placeholder="请输入更新人" ></a-input>-->
+<!--              </a-form-model-item>-->
+<!--            </a-col>-->
+<!--            <a-col :span="24">-->
+<!--              <a-form-model-item label="更新日期" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="updateTime">-->
+<!--                <j-date placeholder="请选择更新日期" v-model="model.updateTime" style="width: 100%" />-->
+<!--              </a-form-model-item>-->
+<!--            </a-col>-->
+          <a-col :span="24" v-show="status === 'edit'">
+            <a-form-model-item  label="陪同用餐人员管理" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="updateTime">
               <a-button type="primary" @click="showModal">管理</a-button>
             </a-form-model-item>
           </a-col>
@@ -90,6 +90,7 @@
       return {
         title:"操作",
         width:800,
+        status: 'edit',
         visible: false,
         model:{
         },
@@ -111,19 +112,19 @@
               { required: true, message: '请输入用餐时间!'},
            ],
            num: [
-              { required: true, message: '请输入用餐总人数!'},
+              { required: true, message: '请输入来访用餐人数!'},
               { pattern: /^-?\d+$/, message: '请输入整数!'},
            ],
-           numR: [
-              { required: true, message: '请输入陪同人数!'},
-              { pattern: /^-?\d+$/, message: '请输入整数!'},
-           ],
-           createBy: [
-              { required: true, message: '请输入创建人!'},
-           ],
-           createTime: [
-              { required: true, message: '请输入创建日期!'},
-           ],
+           // numR: [
+           //    { required: true, message: '请输入陪同人数!'},
+           //    { pattern: /^-?\d+$/, message: '请输入整数!'},
+           // ],
+           // createBy: [
+           //    { required: true, message: '请输入创建人!'},
+           // ],
+           // createTime: [
+           //    { required: true, message: '请输入创建日期!'},
+           // ],
         },
         url: {
           add: "/smart_reception/smartReception/addSmart_8Dining",
@@ -138,7 +139,7 @@
     },
     methods: {
       showModal() {
-        this.$refs.mealModal.edit();
+        this.$refs.mealModal.edit(this.model);
         this.$refs.mealModal.title = "编辑";
         this.$refs.mealModal.disableSubmit = false;
       },
