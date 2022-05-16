@@ -107,12 +107,16 @@
         },
         confirmLoading: false,
         validatorRules: {
+          punishId:[{required: true, message: '请选择人员!'}],
+          punishType:[{required: true, message: '请选择处分类型!'}],
+          beginTime:[{required: true, message: '请选择处分开始时间!'}],
+          removeTime:[{required: true, message: '请选择处分结束时间!'}],
         },
         url: {
           add: "/SmartPunishPeople/smartPunishPeople/add",
           edit: "/SmartPunishPeople/smartPunishPeople/edit",
           queryById: "/SmartPunishPeople/smartPunishPeople/queryById"
-        }
+        },
       }
     },
     computed: {
@@ -158,7 +162,7 @@
               that.confirmLoading = false;
             })
           }
-         
+
         })
       },
       getUser(back){

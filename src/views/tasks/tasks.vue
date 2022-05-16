@@ -81,7 +81,7 @@
 
         <span slot="action" slot-scope="text, record">
           <a @click="aa(record)">详情</a>
-          
+
           <a-divider type="vertical" />
 
           <a @click="handleVerify(record)">审核</a>
@@ -103,111 +103,113 @@
         </span>
       </a-table>
     </div>
-    <tasks-modal 
-      ref="modalForm" 
-      @ok="modalFormOk">
-    </tasks-modal>
+    <tasks-modal ref="modalForm" @ok="modalFormOk"> </tasks-modal>
   </a-card>
 </template>
 
 <script>
-  import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-  import TasksModal from './modules/TasksModal'
+import { JeecgListMixin } from '@/mixins/JeecgListMixin'
+import TasksModal from './modules/TasksModal'
 //   import SmartPremaritalFilingModal from './modules/SmartPremaritalFilingModal'
-  import '@/assets/less/TableExpand.less'
+import '@/assets/less/TableExpand.less'
 
-  export default {
-    name: "TaskList",
-    mixins:[JeecgListMixin],
-    components: {
-      TasksModal
-    },
-    data () {
-      return {
-        description: '待审核任务列表',
-        // 表头
-        columns: [
-          {
-            title: '#',
-            dataIndex: '',
-            key:'rowIndex',
-            width:60,
-            align:"center",
-            customRender:function (t,r,index) {
-              return parseInt(index)+1;
-            }
+export default {
+  name: 'TaskList',
+  mixins: [JeecgListMixin],
+  components: {
+    TasksModal,
+  },
+  data() {
+    return {
+      description: '待审核任务列表',
+      // 表头
+      columns: [
+        {
+          title: '#',
+          dataIndex: '',
+          key: 'rowIndex',
+          width: 60,
+          align: 'center',
+          customRender: function (t, r, index) {
+            return parseInt(index) + 1
           },
-          {
-            title:'任务类型',
-            align:"center",
-            dataIndex: 'taskType'
-          },
-          {
-            title:'填报单位',
-            align:"center",
-            dataIndex: 'sysOrgCode_dictText'
-          },
-          {
-            title:'单位类型',
-            align:"center",
-            dataIndex: 'departType'
-          },
-          {
-            title:'填报人',
-            align:"center",
-            dataIndex: 'fillPerson'
-          },
-          {
-            title:'审核状态',
-            align:"center",
-            dataIndex: 'flowStatus',
-            customRender: function (text) {
-              if (text == 1) {
-                return '通过'
-              } else if (text == 2) {
-                return '待审核'
-              } else if (text == 0) {
-                return '驳回'
-              }
-            }
-          },
-          {
-            title:'填报日期',
-            align:"center",
-            dataIndex: 'createTime'
-          },
-          {
-            title: '操作',
-            dataIndex: 'action',
-            align:"center",
-            fixed:"right",
-            width:147,
-            scopedSlots: { customRender: 'action' },
-          },
-        ],
-        url: {
-          list: "/tasks/smartVerifyTask/list",
         },
-        dictOptions:{},
-        superFieldList:[],
-      }
-    },
-    created() {
-    this.getSuperFieldList();
-    },
-    methods: {
-      aa(record) {
-        console.log(record.flowNo)
-        
-        this.handleDetail(record)
+        {
+          title: '任务类型',
+          align: 'center',
+          dataIndex: 'taskType',
+        },
+        {
+          title: '填报单位',
+          align: 'center',
+          dataIndex: 'fillDepart_dictText',
+        },
+        {
+          title: '单位类型',
+          align: 'center',
+          dataIndex: 'departType',
+        },
+        {
+          title: '填报人',
+          align: 'center',
+          dataIndex: 'fillPerson',
+        },
+        {
+          title: '审核状态',
+          align: 'center',
+          dataIndex: 'flowStatus',
+          customRender: function (text) {
+            if (text == 1) {
+              return '通过'
+            } else if (text == 2) {
+              return '待审核'
+            } else if (text == 0) {
+              return '驳回'
+            }
+          },
+        },
+        {
+          title: '填报日期',
+          align: 'center',
+          dataIndex: 'createTime',
+        },
+        {
+          title: '操作',
+          dataIndex: 'action',
+          align: 'center',
+          fixed: 'right',
+          width: 147,
+          scopedSlots: { customRender: 'action' },
+        },
+      ],
+      url: {
+        list: '/tasks/smartVerifyTask/list',
       },
-      getSuperFieldList(){
-        let fieldList=[];
-        fieldList.push({type:'string',value:'sysOrgCode',text:'所属部门',dictCode:'sys_depart,depart_name,org_code'})
-        this.superFieldList = fieldList
-      }
+      dictOptions: {},
+      superFieldList: [],
     }
-  }
+  },
+  created() {
+    this.getSuperFieldList()
+  },
+  methods: {
+    aa(record) {
+      console.log(record.flowNo)
+
+      this.handleDetail(record)
+    },
+    getSuperFieldList() {
+      let fieldList = []
+      fieldList.push({
+        type: 'string',
+        value: 'sysOrgCode',
+        text: '所属部门',
+        dictCode: 'sys_depart,depart_name,org_code',
+      })
+      this.superFieldList = fieldList
+    },
+  },
+}
 </script>
 <style scoped>
 @import '~@assets/less/common.less';

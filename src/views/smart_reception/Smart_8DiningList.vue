@@ -206,6 +206,18 @@
       }
     },
     methods: {
+      handleAdd: function () {
+        this.$refs.modalForm.add();
+        this.$refs.modalForm.title = "新增";
+        this.$refs.modalForm.status = 'add';
+        this.$refs.modalForm.disableSubmit = false;
+      },
+      handleEdit: function (record) {
+        this.$refs.modalForm.edit(record);
+        this.$refs.modalForm.title = "编辑";
+        this.$refs.modalForm.status = 'edit';
+        this.$refs.modalForm.disableSubmit = false;
+      },
       clearList(){
         this.dataSource=[]
         this.selectedRowKeys=[]
