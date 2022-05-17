@@ -152,9 +152,7 @@
       </a-table>
     </div>
 
-    <smart-village-lead-2-list></smart-village-lead-2-list>
     <smart-village-lead-modal ref="modalForm" @ok="modalFormOk"></smart-village-lead-modal>
-    <smart-village-lead-2-modal ref="peopleForm" @ok="modalFormOk"></smart-village-lead-2-modal>
   </a-card>
 </template>
 
