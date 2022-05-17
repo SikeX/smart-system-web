@@ -144,7 +144,7 @@ export default {
     this.getVerigyResult()
   },
   beforeCreate() {
-    console.log(record)
+    // console.log(record)
   },
   methods: {
     add() {
