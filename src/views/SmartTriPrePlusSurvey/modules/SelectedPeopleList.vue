@@ -55,6 +55,7 @@ export default {
   components: {},
   data() {
     return {
+      dcId:"",
       dcName:'',
       title:'',
       paperId:'',
@@ -113,7 +114,7 @@ export default {
         {
           title: '户主',
           align: 'center',
-          //dataIndex: 'hostId_dictText',
+          //dataIndex: 'idnumber_dictText',
           dataIndex: 'hostName',
         },
         {
@@ -189,13 +190,15 @@ export default {
         let userName = record.realname
         let userId = record.userId
         let dcName = this.dcName
+        let dcId = this.dcId
+
       /*this.$router.push({
         name: "myTriPrePlusSurvey",
         query: {paperId,userName,userId,dcName}
       });*/
         const { href } = this.$router.resolve({
           name: "myTriPrePlusSurvey",
-          query: {paperId,userName,userId,dcName}
+          query: {paperId,userName,userId,dcName,dcId}
         });
         const win = window.open(href, "_blank");
         const loop = setInterval(item => {
@@ -220,7 +223,11 @@ export default {
         .then((res) => {
           if (res.success) {
             console.log(res.message)
-            this.dcName = res.message
+            let mes = (res.message).split(",")
+            console.log(mes)
+            //调查人ID和姓名
+            this.dcId = mes[0]
+            this.dcName = mes[1]
             this.dataSource = res.result.records || res.result
             let i = 0
             for(i=0;i<this.dataSource.length;i++){
@@ -337,7 +344,8 @@ export default {
         text: '所属部门',
         dictCode: 'sys_depart,depart_name,org_code',
       })
-      fieldList.push({type:'string',value:'hostId',text:'户主',dictCode:'sys_user,realname,id'})
+      fieldList.push({type:'string',value:'idnumber',text:'户主',dictCode:'sys_user,realname,idnumber'})
+      fieldList.push({type:'string',value:'hostName',text:'户主',dictCode:''})
       fieldList.push({type:'string',value:'userId',text:'被访人ID',dictCode:''})
       fieldList.push({type:'string',value:'realname',text:'被访人',dictCode:''})
       fieldList.push({type:'string',value:'phone',text:'手机号',dictCode:''})

@@ -111,22 +111,23 @@
         </template>
 
         <span slot="action" slot-scope="text, record">
-          <a-divider type="vertical"/>
-           <a v-show="record.isReport == '0'" @click="postAdd(record)">婚后报备</a>
-          <a v-show="record.isReport == '1' || record.isReport == '15'" @click="postAdd(record)">已婚后报备</a>
-           <a-divider type="vertical" /> 
-           <a v-show="record.verifyStatus == '3'" @click="postEdit(record.id)">编辑</a>         
+          <!-- <a-divider type="vertical"/> -->
+           <a v-show="record.isReport == '0' || record.isReport == '15'" @click="postAdd(record)">婚后报备</a>
+          <!-- <a v-show="record.isReport == '1' || record.isReport == '15'" @click="postAdd(record)">已婚后报备</a> -->
+          <a v-show="record.isReport == '1'" @click="postAdd(record)">已婚后报备</a>
+           <!-- <a-divider type="vertical" />  -->
+           <!-- <a v-show="record.verifyStatus == '3'" @click="postEdit(record.id)">编辑</a>          -->
            <a-divider type="vertical"/>
            <a @click="postDetail(record.id)">详情</a>        
-           <a-divider type="vertical" />        
+           <!-- <a-divider type="vertical" />         -->
            <a-popconfirm title="确定删除吗?" @confirm="() => postDelete(record)">
-           <a v-show="record.verifyStatus == '3'">删除</a>     
+           <!-- <a v-show="record.verifyStatus == '3'">删除</a>      -->
            </a-popconfirm>
         </span>
       </a-table>
     </div>
     
-    <smart-post-marriage-report-modal ref="modalForm"></smart-post-marriage-report-modal>
+    <smart-post-marriage-report-modal ref="modalForm" @refreshList="refreshList"></smart-post-marriage-report-modal>
     <!-- <smart-premarital-filing-modal ref="modalForm" @ok="modalFormOk" /> -->
   </a-card>
 </template>
@@ -398,9 +399,14 @@ export default {
     },
   },
   methods: {
+    //刷新list
+    refreshList(){
+      this.loadData(1)
+    },
+
     //婚后添加
     postAdd(record){
-      if(record.isReport == '1' || record.isReport == '15'){
+      if(record.isReport == '1'){
         this.$message.error('该条记录已婚后报备！')
         return
       }
@@ -408,7 +414,6 @@ export default {
       this.$refs.modalForm.postAdd(record);
       this.$refs.modalForm.title="添加";
       this.$refs.modalForm.disableSubmit = false;
-
     },
     //婚后编辑
     postEdit(preId){
@@ -518,7 +523,8 @@ export default {
 
       //下载zip文件
       myDownload('/smartPostMarriage/smartPostMarriageReport/exportWord', ids).then((res) => {
-        if (!res) {
+        if (res.size == 0) {
+          this.$message.error('未查询到该条记录的婚后报备数据！')
           return
         }
         // 创建文件临时存储地址

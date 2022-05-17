@@ -2,24 +2,23 @@
   <div class="createTest testPaper">
     <div class="w">
       <!-- 考试信息 -->
-      <div class="title " >
+      <div class="title ">
         <!-- {{testData}} -->
         <ul>
           <!--<li class="test-info">试卷Id: E{{ testData.id }}</li>-->
           <li class="test-info">调查问卷名称: {{ testData.paperName }}</li>
 
           <!--<li class="test-info">出卷者: {{testData.creatorName}}</li>-->
-          <li class="test-info" >调查人: {{ dcName }}</li>
+          <li class="test-info">调查人: {{ dcName }}</li>
           <li class="test-info">户主：{{userName}}</li>
           <li class="test-info">被访人：{{userName}}</li>
-<!--          <li class="test-info">答题时间: {{ testData.time }} 分钟</li>-->
+          <!--          <li class="test-info">答题时间: {{ testData.time }} 分钟</li>-->
           <li class="test-info">题目数量: 共 {{ testData.topicNum }} 道</li>
           <li class="test-info" v-show="testData.isMark == 1">总分: {{ testData.totalScore }} 分</li>
           <li class="test-info" v-if="finishTest">得分: {{ testData.userGrade.grade + '分' }}</li>
-<!--          <li class="test-info" v-else>剩余时间: {{ remainTime }}</li>-->
+          <!--          <li class="test-info" v-else>剩余时间: {{ remainTime }}</li>-->
           <li class="fr">
-            <el-button type="primary" size="mini" @click="supDialog"
-                       :disabled="isRead">交卷</el-button>
+            <el-button type="primary" size="mini" @click="supDialog" :disabled="isRead">交卷</el-button>
           </li>
         </ul>
       </div>
@@ -33,21 +32,21 @@
           <li class="test-info">调查人: {{ dcName }}</li>
           <li class="test-info">户主： {{hostText}}</li>
           <li class="test-info">被访人：{{userName}}</li>
-<!--          <li class="test-info">答题时间: {{ testData.time }} 分钟</li>-->
+          <!--          <li class="test-info">答题时间: {{ testData.time }} 分钟</li>-->
           <li class="test-info">题目数量: 共 {{ testData.topicNum }} 道</li>
           <li class="test-info" v-show="testData.isMark == 1">总分: {{ testData.totalScore }} 分</li>
-<!--          <li class="test-info">答题时间: {{ testData.time }} 分钟</li>-->
+          <!--          <li class="test-info">答题时间: {{ testData.time }} 分钟</li>-->
           <li class="test-info" v-if="finishTest">得分: {{ testData.userGrade.grade + '分' }}</li>
-<!--          <li class="test-info" v-else>剩余时间: {{ remainTime }}</li>-->
+          <!--          <li class="test-info" v-else>剩余时间: {{ remainTime }}</li>-->
           <!-- {{expendTime}} -->
           <li class="fr">
             <el-button type="primary" size="mini" @click="supDialog" :disabled="isRead">交卷</el-button>
           </li>
         </ul>
       </div>
-      <div class="test-content" >
+      <div class="test-content">
         <!-- 题目内容 -->
-        <div class="topics" >
+        <div class="topics">
           <div class="topic" v-for="(topics, index) in sortedTopics" :key="index">
             <div class="topicsType" v-if="topics.topic_content.length != 0 ">
               <h4>{{bigQuestionName_mixin(topics.topicType,index)}}</h4><!-- 题目类型名称 -->
@@ -65,9 +64,7 @@
                 <!-- 单选题 -->
                 <div class="radio" v-if="t.topicType==0">
                   <el-radio v-for="(item, index) in t.choice" :key="index" v-model="t.submitAnswer"
-                            :class="isCorrect(t,index)"
-                            :label="getOption(index)"
-                            :disabled="isRead">
+                    :class="isCorrect(t,index)" :label="getOption(index)" :disabled="isRead">
                     {{String.fromCharCode(65+index)}}、{{ item }}
                   </el-radio>
                   <!-- {{ t.submitAnswer }} -->
@@ -77,8 +74,7 @@
                 <div class="checkbox" v-if="t.topicType == 1">
                   <el-checkbox-group v-model="t.submitAnswer">
                     <el-checkbox :label="getOption(index)" v-for="(item, index) in t.choice" :key="index"
-                                 :disabled="isRead"
-                                 :class="isCheckboxCorrect(t,index)">
+                      :disabled="isRead" :class="isCheckboxCorrect(t,index)">
                       {{String.fromCharCode(65+index)}}、{{ item }}
                     </el-checkbox>
                   </el-checkbox-group>
@@ -89,8 +85,8 @@
                 <div class="TrueOrFalse" v-if="t.topicType == 2">
                   <!--<el-radio v-model="t.submitAnswer" label="T" :disabled="isRead" :class="'T' == t.correctAnswer? 'correct':'error'" >正确</el-radio>
                   <el-radio v-model="t.submitAnswer" label="F" :disabled="isRead" :class="'F'== t.correctAnswer? 'correct':'error'" >错误</el-radio>-->
-                  <el-radio v-model="t.submitAnswer" label="T" :disabled="isRead"  >正确</el-radio>
-                  <el-radio v-model="t.submitAnswer" label="F" :disabled="isRead" >错误</el-radio>
+                  <el-radio v-model="t.submitAnswer" label="T" :disabled="isRead">正确</el-radio>
+                  <el-radio v-model="t.submitAnswer" label="F" :disabled="isRead">错误</el-radio>
                   <!-- {{ t.submitAnswer }} -->
                 </div>
 
@@ -101,10 +97,8 @@
                     </el-input>
                   </div> -->
                   <div v-for="(q, index) in fillSymbolStr(t.question)" :key="index">
-                    <el-input type="textarea" autosize
-                              :disabled="isRead"
-                              v-if="index!=fillSymbolStr(t.question).length-1"
-                              v-model="t.submitAnswer[index]">
+                    <el-input type="textarea" autosize :disabled="isRead"
+                      v-if="index!=fillSymbolStr(t.question).length-1" v-model="t.submitAnswer[index]">
                     </el-input>
                   </div>
                   <!-- {{ t.submitAnswer }} -->
@@ -112,7 +106,8 @@
 
                 <!-- 简答题 -->
                 <div class="text" v-if="t.topicType == 4">
-                  <el-input type="textarea" v-model="t.submitAnswer" :autosize="{ minRows: 3, maxRows: 10 }" :disabled="isRead">
+                  <el-input type="textarea" v-model="t.submitAnswer" :autosize="{ minRows: 3, maxRows: 10 }"
+                    :disabled="isRead">
                   </el-input>
                   <!-- {{ t.submitAnswer }} -->
                 </div>
@@ -131,13 +126,13 @@
     </div>
 
     <!-- 选择满意度及线索-->
-    <el-dialog customClass="customWidth" title="补充调查" :visible.sync="dialogFormVisible"  @closed="handleClose">
+    <el-dialog customClass="customWidth" title="补充调查" :visible.sync="dialogFormVisible" @closed="handleClose">
       <el-form :model="form" ref="form" :rules="rules">
-<!--        <el-form-item label="1、本次调查满意度" prop="satisfaction">
+        <!--        <el-form-item label="1、本次调查满意度" prop="satisfaction">
           <el-rate :style="{fontSize:'30px'}" v-model="form.satisfaction" show-text :texts="['不满意', '基本满意', '满意', '非常满意', '完全满意']"></el-rate>
         </el-form-item>-->
         <el-form-item label="是否发现线索" prop="isReport">
-          <el-radio-group v-model="form.isReport" >
+          <el-radio-group v-model="form.isReport">
             <el-radio :label="1">是</el-radio>
             <el-radio :label="0">否</el-radio>
           </el-radio-group>
@@ -147,7 +142,7 @@
           <el-button style="float:right;margin-right:15px" @click="closeDialog">取 消</el-button>
         </el-form-item>
       </el-form>
-<!--      <div slot="footer" class="dialog-footer">
+      <!--      <div slot="footer" class="dialog-footer">
         <el-button @click="closeDialog">取 消</el-button>
         <el-button type="primary" @click="submitTriSurvey()">确 定</el-button>
       </div>-->
@@ -158,8 +153,17 @@
 <script type="text/javascript">
   import "@/assets/less/testPaper.less";
   import testPaperMixin from "@/mixins/testPaper-mixin";
-  import { mapActions, mapGetters,mapState } from 'vuex'
-  import {postAction, httpAction, getAction ,putAction} from '@/api/manage'
+  import {
+    mapActions,
+    mapGetters,
+    mapState
+  } from 'vuex'
+  import {
+    postAction,
+    httpAction,
+    getAction,
+    putAction
+  } from '@/api/manage'
 
   export default {
     name: "MyTripreAppSurvey",
@@ -173,33 +177,39 @@
         callback();
       };
       var validateIsReport = (rule, value, callback) => {
-        if (value === '' || value == undefined ) {
+        if (value === '' || value == undefined) {
           callback(new Error('请选择是否发现线索'));
         }
         callback();
       };
       return {
-        dcName:'',
+        dcName: '',
         dialogFormVisible: false,
-        form:{
-          satisfaction:'',
-          isReport:''
+        form: {
+          satisfaction: '',
+          isReport: ''
         },
-        rules:{
-          satisfaction:[
-             //{ required: true, message: '请选择满意度', trigger: 'blur' },
-            {validator:validateSatisfaction,trigger: 'change'},
+        rules: {
+          satisfaction: [
+            //{ required: true, message: '请选择满意度', trigger: 'blur' },
+            {
+              validator: validateSatisfaction,
+              trigger: 'change'
+            },
           ],
-          isReport:[
+          isReport: [
             //{ required: true, message: '请选择是否发现线索', trigger: 'blur' },
-            {validator:validateIsReport,trigger: 'change'},
+            {
+              validator: validateIsReport,
+              trigger: 'change'
+            },
           ]
         },
-      //被访人信息
-        userName:'',
-        userId:'',
-        model:{
-         // person_name:'',
+        //被访人信息
+        userName: '',
+        userId: '',
+        model: {
+          // person_name:'',
           //exam_grade:'',
           /*excellent_number:'0',
           good_number:'0',
@@ -209,18 +219,32 @@
 
         //按题目类型分类好的题目数据
         //题目类型==>  0:单选题  1:多选题  2:判断题  3:填空题  4:简答题
-        sortedTopics: [
-          { topicType: 0, topic_content: [] },
-          { topicType: 1, topic_content: [] },
-          { topicType: 2, topic_content: [] },
-          { topicType: 3, topic_content: [] },
-          { topicType: 4, topic_content: [] },
+        sortedTopics: [{
+            topicType: 0,
+            topic_content: []
+          },
+          {
+            topicType: 1,
+            topic_content: []
+          },
+          {
+            topicType: 2,
+            topic_content: []
+          },
+          {
+            topicType: 3,
+            topic_content: []
+          },
+          {
+            topicType: 4,
+            topic_content: []
+          },
         ],
         //试卷数据
         testData: {
-          isMark:'',
-          testName:this.$route.params.examName,
-          examInfo:{},
+          isMark: '',
+          testName: this.$route.params.examName,
+          examInfo: {},
         },
 
         //remainTime: "", //考试剩余时间
@@ -234,10 +258,10 @@
         //侧导航栏是否悬浮
         isFixed: false,
         topic_nav_style: "top:0px",
-        grade:'',
+        grade: '',
       };
     },
-    computed:{
+    computed: {
       //按填空符(三个下划线)划分字符串
       fillSymbolStr() {
         return function (str) {
@@ -253,10 +277,10 @@
       this.dcName = this.$route.query.dcName
       this.getTestPaperData();
     },
-    watch:{
-      remainTime(){
+    watch: {
+      remainTime() {
         //console.log(this.remainTime)
-        if(this.remainTime === "00:00:00"){
+        if (this.remainTime === "00:00:00") {
           this.autoSubmit();
         }
       }
@@ -269,34 +293,34 @@
 
     methods: {
       //满意度分数
-      getGrade(satisfaction){
+      getGrade(satisfaction) {
         let that = this
-        if(satisfaction == 1){
-          that.$set(that.form,'satisfaction','2')
-        }else if(satisfaction == 2){
-          that.$set(that.form,'satisfaction','4')
-        }else if(satisfaction == 3){
-          that.$set(that.form,'satisfaction','6')
-        }else if(satisfaction == 4){
-          that.$set(that.form,'satisfaction','8')
-        }else if(satisfaction == 5){
-          that.$set(that.form,'satisfaction','10')
+        if (satisfaction == 1) {
+          that.$set(that.form, 'satisfaction', '2')
+        } else if (satisfaction == 2) {
+          that.$set(that.form, 'satisfaction', '4')
+        } else if (satisfaction == 3) {
+          that.$set(that.form, 'satisfaction', '6')
+        } else if (satisfaction == 4) {
+          that.$set(that.form, 'satisfaction', '8')
+        } else if (satisfaction == 5) {
+          that.$set(that.form, 'satisfaction', '10')
         }
       },
-      supDialog(){
+      supDialog() {
         this.dialogFormVisible = true
       },
-      handleClose () {
+      handleClose() {
         this.form = {}
         this.$refs.form.resetFields()
         //this.$emit('handleClose')
       },
-      closeDialog(){
-        this.dialogFormVisible  = false
+      closeDialog() {
+        this.dialogFormVisible = false
         this.form = {}
         this.$refs.form.resetFields()
       },
-      submitTriSurvey(){
+      submitTriSurvey() {
         this.$refs.form.validate((valid) => {
           if (valid) {
             this.submitTestsurvey()
@@ -306,19 +330,19 @@
         })
       },
       //获取当前用户信息
-      ...mapGetters(["nickname", "avatar","userInfo"]),
+      ...mapGetters(["nickname", "avatar", "userInfo"]),
       //提交调查问卷
       submitTestsurvey() {
         var topic = [];
-        var grade='';
+        var grade = '';
         console.log(this.testData.smartTopicVoList);
         for (let i = 0; i < this.testData.smartTopicVoList.length; i++) {
           var item = JSON.parse(JSON.stringify(this.testData.smartTopicVoList[i]))
-            console.log(item);
-            if(item.submitAnswer === null || item.submitAnswer.length === 0){
-              this.$message.warning(`第${item.index}题目未作答`);
-              this.dialogFormVisible  = false
-              return
+          console.log(item);
+          if (item.submitAnswer === null || item.submitAnswer.length === 0) {
+            this.$message.warning(`第${item.index}题目未作答`);
+            this.dialogFormVisible = false
+            return
           }
           //处理多选/填空答案
           if (item.topicType == 1 || item.topicType == 3) {
@@ -333,7 +357,7 @@
           topic.push({
             //questionId: item.questionId,
             paperId: this.$route.query.paperId,
-            type:item.topicType,
+            type: item.topicType,
             submitAnswer: item.submitAnswer,
           });
         }
@@ -343,26 +367,25 @@
         let paperId = this.$route.query.paperId
         let isReport = this.form.isReport
         this.getGrade(this.form.satisfaction)
-        console.log(isReport,this.form.satisfaction)
+        console.log(isReport, this.form.satisfaction)
         var request = {
-          examId:paperId,
-          personId:personId,
-          isMark:this.testData.isMark,
+          examId: paperId,
+          personId: personId,
+          isMark: this.testData.isMark,
           smartSubmitList: topic,
-          satisfaction:this.form.satisfaction,
+          satisfaction: this.form.satisfaction,
           isReport: isReport
         };
         console.log(request);
-        postAction('/SmartPaper/smartSubmit/submitTriPreSurvey' ,request).then(res =>{
+        postAction('/SmartPaper/smartSubmit/submitTriPreSurvey', request).then(res => {
           if (res.success) {
-            console.log(res.result);
             let title = ""
             let describe = ""
-            if(this.testData.isMark === 1){
+            if (this.testData.isMark === 1) {
               title = "成绩"
               describe = "本次问卷成绩为"
               grade = res.result;
-            }else {
+            } else {
               title = "结果"
               describe = "本次调查结束！"
               grade = ""
@@ -373,12 +396,14 @@
               title: title,
               message: h('p', null, [
                 h('span', null, describe),
-                h('i', { style: 'color: teal' }, grade)
+                h('i', {
+                  style: 'color: teal'
+                }, grade)
               ]),
               //showCancelButton: true,
               confirmButtonText: '确定',
               //cancelButtonText: '取消',
-              customClass:'customWidth',
+              customClass: 'customWidth',
               beforeClose: (action, instance, done) => {
                 if (action === 'confirm') {
                   instance.confirmButtonLoading = true;
@@ -395,62 +420,71 @@
               },
             }).then(action => {
               this.$elmessage({
-                type:"success",
+                type: "success",
                 message: "本次调查结束！",
                 //onClose: close(),
               });
-              console.log(isReport)
-              if(isReport == "1"){
-                console.log("跳转...")
+              if (isReport == "1") {
+                let surveyId = this.$route.query.paperId
+                //走访人
+                let visiterId = this.$route.query.dcName.split(',')[0]
+                //被走访人
+                let intervieweeId = this.$route.query.userId
+                //问题填报
                 this.$router.push({
-                  name: "InsertReportingInformation",
+                  name: "AddSmarTripeoQuestion",
+                  query: {
+                    surveyId,
+                    visiterId,
+                    intervieweeId
+                  },
                 });
-              }else{
+              } else {
                 this.$router.push({
                   name: "SmartTriSurveyAppList",
                 });
-               /* window.location.href="about:blank";
-                window.close();
-                window.opener.location.reload();*/
+                /* window.location.href="about:blank";
+                 window.close();
+                 window.opener.location.reload();*/
               }
             });
           }
-            //location.reload()
-          else{
+          //location.reload()
+          else {
             this.$message.error(res.message);
           }
         })
 
-       /* postAction('/SmartPaper/smartGradeNumber/excellentCount',this.model).then(res=>{
-          if (res.success) {
-            this.$message.success(res.message);
-          }
-        })
-        postAction('/SmartPaper/smartGradeNumber/goodCount',this.model).then(res=>{
-          if (res.success) {
-            this.$message.success(res.message);
-          }
-        })
-        postAction('/SmartPaper/smartGradeNumber/passCount',this.model).then(res=>{
-          if (res.success) {
-            this.$message.success(res.message);
-          }
-        })
-        postAction('/SmartPaper/smartGradeNumber/failCount',this.model).then(res=>{
-          if (res.success) {
-            this.$message.success(res.message);
-          }
-        })*/
+        /* postAction('/SmartPaper/smartGradeNumber/excellentCount',this.model).then(res=>{
+           if (res.success) {
+             this.$message.success(res.message);
+           }
+         })
+         postAction('/SmartPaper/smartGradeNumber/goodCount',this.model).then(res=>{
+           if (res.success) {
+             this.$message.success(res.message);
+           }
+         })
+         postAction('/SmartPaper/smartGradeNumber/passCount',this.model).then(res=>{
+           if (res.success) {
+             this.$message.success(res.message);
+           }
+         })
+         postAction('/SmartPaper/smartGradeNumber/failCount',this.model).then(res=>{
+           if (res.success) {
+             this.$message.success(res.message);
+           }
+         })*/
 
       },
 
       //获取试卷数据
       getTestPaperData() {
-        let id =this.$route.query.paperId
+        let id = this.$route.query.paperId
         let params = {
-          id:id
+          id: id
         }
-        getAction("/SmartPaper/smartPaper/getPaperById",params).then(res =>{
+        getAction("/SmartPaper/smartPaper/getPaperById", params).then(res => {
           if (res.success) {
             this.processTestPaperData(res.result);
             this.$message.success(res.message);
@@ -463,16 +497,16 @@
       //处理试卷的题目数据
       processTestPaperData(testData) {
         /* 判断试卷是否允许复制文本 */
-       /* if (testData.permitCopy == 0) {
-          this.forbid_copy = true;
-        } else if (testData.permitCopy == 1) {
-          this.forbid_copy = false;
-        }*/
+        /* if (testData.permitCopy == 0) {
+           this.forbid_copy = true;
+         } else if (testData.permitCopy == 1) {
+           this.forbid_copy = false;
+         }*/
 
         /* 处理试卷的题目数据 */
         testData.smartTopicVoList.forEach((item) => {
           //按换行符分割字符串
-          if (item.topicType == 1 || item.topicType == 0){
+          if (item.topicType == 1 || item.topicType == 0) {
             item.choice = item.choice.split(/[\n]/g);
           }
           // item.correct_answer = item.correct_answer.split(/[\n]/g);
@@ -486,7 +520,7 @@
 
         /* 判断用户是否已经完成试卷 */
 
-        if ( !testData.userGrade ) {
+        if (!testData.userGrade) {
           console.log("开始考试");
           this.finishTest = false
           this.isRead = false;
@@ -515,8 +549,7 @@
             item.userScore = testData.smartSubmitList[index].userScore;
           });*/
           /* 判断是否公布答案 */
-          if(testData.examClasses.publishAnswer == 1)
-          {
+          if (testData.examClasses.publishAnswer == 1) {
             this.isPublishAnswer = true;
             testData.smartTopicVoList.forEach((item, index) => {
               //按换行符分割字符串
@@ -576,14 +609,14 @@
           if (time < 0) {
             clearInterval(timer);
             //this.$message("考试结束");
-             //this.submitTestsurvey();
+            //this.submitTestsurvey();
           }
         }, 1000);
       },
       //答题时间到，自动交卷
       autoSubmit() {
         var topic = [];
-        var grade ='';
+        var grade = '';
         console.log(this.testData.smartTopicVoList);
         for (let i = 0; i < this.testData.smartTopicVoList.length; i++) {
           var item = JSON.parse(JSON.stringify(this.testData.smartTopicVoList[i]))
@@ -602,7 +635,7 @@
           topic.push({
             //questionId: item.questionId,
             paperId: this.$route.query.paperId,
-            type:item.topicType,
+            type: item.topicType,
             submitAnswer: item.submitAnswer,
           });
         }
@@ -610,22 +643,22 @@
         console.log(topic);
         let examId = this.$route.query.examId
         var request = {
-          examId:examId,
-          isMark:this.testData.isMark,
+          examId: examId,
+          isMark: this.testData.isMark,
           smartSubmitList: topic,
         };
         console.log(request);
-        postAction('/SmartPaper/smartExam/submitTestSurvey' ,request).then(res =>{
+        postAction('/SmartPaper/smartExam/submitTestSurvey', request).then(res => {
           console.log(res)
           if (res.success) {
             console.log(res.result);
             let title = ""
             let describe = ""
-            if(this.testData.isMark === 1){
+            if (this.testData.isMark === 1) {
               title = "成绩"
               describe = "已到答题时间，自动交卷，本次问卷成绩为"
               grade = res.result;
-            }else {
+            } else {
               title = "结果"
               describe = "本次问卷结束，感谢您的参与！"
               grade = ""
@@ -636,7 +669,9 @@
               title: '提醒',
               message: h('p', null, [
                 h('span', null, title),
-                h('i', { style: 'color: teal' }, grade)
+                h('i', {
+                  style: 'color: teal'
+                }, grade)
               ]),
               showCancelButton: true,
               confirmButtonText: '确定',
@@ -657,11 +692,11 @@
               },
             }).then(action => {
               this.$elmessage({
-                type:"success",
+                type: "success",
                 message: "本次调查完成！",
-                onClose:()=> {
+                onClose: () => {
                   //此处写提示关闭后需要执行的函数
-                  window.location.href="about:blank";
+                  window.location.href = "about:blank";
                   window.close();
                   window.opener.location.reload();
                 }
@@ -669,7 +704,7 @@
             });
           }
           //location.reload()
-          else{
+          else {
             this.$message.error(res.message);
           }
         })
@@ -717,21 +752,22 @@
       },
 
       //点击题号定位到题目位置
-      topicNav(type,index) {
-        var i = this.topicNavIndex_mixin(type,index);
+      topicNav(type, index) {
+        var i = this.topicNavIndex_mixin(type, index);
         console.log(i);
         document
-          .getElementsByClassName("_location")
-          [i - 1].scrollIntoView({ behavior: "smooth", block: "start" });
+          .getElementsByClassName("_location")[i - 1].scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
       },
 
       //题目导航按钮颜色
       emptyAnswer(val) {
         //已完成试卷 与 是否公布答案
         //if(this.finishTest === true && this.testData.examClasses.publishAnswer == 1)
-          if(this.finishTest === true)
-        {
-          if(val.userScore == val.score){
+        if (this.finishTest === true) {
+          if (val.userScore == val.score) {
             console.log(val);
             return "correct";
           } else {
@@ -739,7 +775,7 @@
           }
 
           //未完成试卷
-        }else{
+        } else {
           //多选题
           /*if (val.topicType == 1) {
             if (val.submitAnswer.join("") == "") {
@@ -751,12 +787,12 @@
           if (val.topicType == 3) {
 
             let q = val.question.split("___")
-            if(q.length-1 != val.submitAnswer.length){
+            if (q.length - 1 != val.submitAnswer.length) {
               return ""
             }
 
-            for(let item of val.submitAnswer){
-              if(item == ""){
+            for (let item of val.submitAnswer) {
+              if (item == "") {
                 return ""
               }
             }
@@ -770,39 +806,39 @@
         }
       },
       //转换选项为A,B,C,D
-      getOption(index){
-        let option = String.fromCharCode(65+index);
+      getOption(index) {
+        let option = String.fromCharCode(65 + index);
         return option;
       },
-      isCorrect(topic,val){
-        if(this.finishTest === false ){
+      isCorrect(topic, val) {
+        if (this.finishTest === false) {
           return ''
         }
         let is = false
         let option = this.getOption(val);
-        if(topic.correctAnswer == option){
-          is =true;
+        if (topic.correctAnswer == option) {
+          is = true;
         }
-        if(is){
+        if (is) {
           return "correct";
         } else {
           return "error";
         }
       },
       //判断多选题是否回答正确
-      isCheckboxCorrect(topic,val){
-        if(this.finishTest === false ){
+      isCheckboxCorrect(topic, val) {
+        if (this.finishTest === false) {
           return ''
         }
         let is = false
         let option = this.getOption(val);
-        topic.correctAnswer.forEach(item =>{
-          if(item == option){
+        topic.correctAnswer.forEach(item => {
+          if (item == option) {
             console.log(item);
             is = true
           }
         })
-        if(is){
+        if (is) {
           return "correct";
         } else {
           return "error";
@@ -816,25 +852,27 @@
   .fr {
     float: right;
   }
+
   ul {
     list-style: none;
     padding: 0;
     margin: 0;
   }
+
   .w {
     width: 100%
   }
-  .testPaper
-  .topics {
-    width: 100%
-  }
-  .topics .topic .el-radio, .topics .topic .el-checkbox {
+
+  .testPaper .topics {
     width: 100%
   }
 
-  .customWidth{
-        width:80%;
+  .topics .topic .el-radio,
+  .topics .topic .el-checkbox {
+    width: 100%
   }
 
+  .customWidth {
+    width: 80%;
+  }
 </style>
-

@@ -5,7 +5,7 @@
         <a-row>
           <a-col :span="24">
             <a-form-model-item label="名称" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="teamName">
-              <a-input v-model="model.teamName" placeholder="请输入名称"  ></a-input>
+              <a-input v-model="model.teamName" placeholder="请输入名称" v-decorator="['teamName', validatorRules.teamName]" ></a-input>
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
@@ -20,12 +20,12 @@
           </a-col>
           <a-col :span="24">
             <a-form-model-item label="成员" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="members">
-              <j-select-user-by-dep v-model="model.members" />
+              <j-select-user-by-dep v-model="model.members" store="id" text="realname" />
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
             <a-form-model-item label="负责单位" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="departs">
-              <j-select-depart v-model="model.departs" multi  />
+              <j-select-depart v-model="model.departs" multi v-decorator="['departs', validatorRules.departs]" />
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
@@ -43,6 +43,7 @@
 
   import { httpAction, getAction } from '@/api/manage'
   import { validateDuplicateValue } from '@/utils/util'
+  import { duplicateCheck } from '@/api/api'
 
   export default {
     name: 'SmartAssessmentTeamForm',
@@ -72,6 +73,7 @@
         validatorRules: {
           teamName: [
             { required: true, message: '请输入考核组名称!'},
+            {validator: this.validateTeamName}
           ],
           teamLeader: [
             { required: true, message: '请选择组长!'},
@@ -84,6 +86,7 @@
           ],
           departs: [
             { required: true, message: '请选择负责的单位!'},
+            {validator: this.validateDeparts}
           ],
         },
         url: {
@@ -109,6 +112,38 @@
       edit (record) {
         this.model = Object.assign({}, record);
         this.visible = true;
+      },
+      validateTeamName(rule, value, callback){
+        if(value){
+          var params = {
+            tableName: "smart_assessment_team",
+            fieldName: "team_name",
+            fieldVal: value,
+            dataId: this.model.id,
+          };
+          getAction("/sys/duplicate/checkWithDelFlag",params).then((res)=>{
+            if(res.success){
+              callback();
+            }else{
+              callback(res.message);
+            }
+          });
+        }
+      },
+      validateDeparts(rule, value, callback){
+        if(value){
+          var params = {
+            departIds: this.model.departs,
+            dataId: this.model.id
+          };
+          getAction("/smartAssessmentTeam/smartAssessmentTeam/duplicateCheck",params).then((res)=>{
+            if(res.success){
+              callback();
+            }else{
+              callback(res.message);
+            }
+          });
+        }
       },
       submitForm () {
         const that = this;

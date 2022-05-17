@@ -148,16 +148,6 @@
             dataIndex: 'deputyTeamLeader_dictText'
           },
           {
-            title:'成员',
-            align:"center",
-            dataIndex: 'members_dictText'
-          },
-          {
-            title:'负责单位',
-            align:"center",
-            dataIndex: 'departs_dictText'
-          },
-          {
             title:'负责单位数量',
             align:"center",
             dataIndex: 'departAmount'

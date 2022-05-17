@@ -68,10 +68,11 @@
         </template>
 
         <span slot="action" slot-scope="text, record">
-          <a @click="handleEdit(record)">编辑</a>
+          <!-- <a @click="handleEdit(record)">编辑</a> -->
+          <a @click="handleDetail(record)">详情</a>
 
-          <a-divider type="vertical" />
-          <a-dropdown>
+          <!-- <a-divider type="vertical" /> -->
+          <!-- <a-dropdown>
             <a class="ant-dropdown-link">更多 <a-icon type="down" /></a>
             <a-menu slot="overlay">
               <a-menu-item>
@@ -83,7 +84,7 @@
                 </a-popconfirm>
               </a-menu-item>
             </a-menu>
-          </a-dropdown>
+          </a-dropdown> -->
         </span>
 
       </a-table>
@@ -152,7 +153,28 @@
           {
             title:'发送类型',
             align:"center",
-            dataIndex: 'sendType'
+            dataIndex: 'sendType',
+            customRender: function (text) {
+            if(text == '0'){
+              return '任务下达通知'
+            }else if(text == '1'){
+              return "通知公告通知"
+            }else if(text == '2'){
+              return "审核不通过通知"
+            }else if(text == '3'){
+              return "不通过重新填报通知"
+            }else if(text == '4'){
+              return "入党纪念日通知"
+            }else if(text == '5'){
+              return "解除处分通知"
+            }else if(text == '6'){
+              return "信息更新通知"
+            }else if(text == '7'){
+              return "其他"
+            }else{
+              return "其他"
+            }
+          },
           },
           {
             title:'标题',

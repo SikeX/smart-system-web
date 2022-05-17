@@ -471,14 +471,14 @@ export const constantRouterMap = [
       }
     ]
   },
-/*  {
+  {
     path: '/SmartTriSurveyList',
     name: 'SmartTriSurveyList',
     component: () => import( '@/views/SmartTriPrePlusSurvey/SmartSurveyList.vue'),
     meta: {
       title: '三员+调查问卷list'
     },
-  },*/
+  },
   {
     path: '/SmartTriSurveyAppList',
     name: 'SmartTriSurveyAppList',
@@ -517,6 +517,62 @@ export const constantRouterMap = [
     component: () => import( '@/views/SmartTriPrePlusSurvey/myTriPrePlusAppSurvey.vue'),
     meta: {
       title: '三员+调查问卷小程序页面'
+    }
+  },
+
+  //三员+走村入户问题填报
+  {
+    path: '/AddSmarTripeoQuestion',
+    name:"AddSmarTripeoQuestion",
+    component: () => import('@views/SmartTripeoQuestion/AddSmarTripeoQuestion')
+  },
+  //三员+廉政家访
+  {
+    path: '/SmartTriGovList',
+    name: 'SmartTriGovList',
+    component: () => import( '@/views/SmartTripeoGov/SmartSurveyList.vue'),
+    meta: {
+      title: '三员+廉政家访list'
+    },
+  },
+  {
+    path: '/SmartTriGovAppList',
+    name: 'SmartTriGovAppList',
+    component: () => import( '@/views/SmartTripeoGov/SmartSurveyAppList.vue'),
+    meta: {
+      title: '三员+廉政家访list'
+    },
+  },
+  {
+    path: '/createTriPrePlusGov/:opt',
+    name: 'createTriPrePlusGov',
+    component: () => import( '@/views/SmartTripeoGov/createTriPrePlusSurvey.vue'),
+    meta:{
+      title:'新建三员+廉政家访'
+    },
+  },
+  {
+    path: '/createTriPrePlusGov/:opt/:id',
+    name: 'editTriPrePlusGov',
+    component: () => import( '@/views/SmartTripeoGov/createTriPrePlusSurvey.vue'),
+    meta: {
+      title: '修改三员+廉政家访'
+    }
+  },
+  {
+    path: '/myTriPrePlusGov',
+    name: 'myTriPrePlusGov',
+    component: () => import( '@/views/SmartTripeoGov/myTriPrePlusSurvey.vue'),
+    meta: {
+      title: '三员+廉政家访PC页面'
+    }
+  },
+  {
+    path: '/myTriPrePlusAppGov',
+    name: 'myTriPrePlusAppGov',
+    component: () => import( '@/views/SmartTripeoGov/myTriPrePlusAppSurvey.vue'),
+    meta: {
+      title: '三员+廉政家访小程序页面'
     }
   },
 

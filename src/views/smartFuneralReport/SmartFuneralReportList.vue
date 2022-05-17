@@ -83,8 +83,8 @@
         </template>
 
         <span slot="action" slot-scope="text, record">
-        <a  @click="postAdd(record)">进行事后报备</a>
-           <a-divider type="vertical" />
+<!--        <a  @click="postAdd(record)">进行事后报备</a>-->
+<!--           <a-divider type="vertical" />-->
           <a v-show=" record.verifyStatus == '3' && roleId.indexOf('f6817f48af4fb3af11b9e8bf182f618b') != -1" @click="handleEdit(record)">编辑</a>
           <a-divider v-show="record.verifyStatus == '3' && roleId.indexOf('f6817f48af4fb3af11b9e8bf182f618b') != -1" type="vertical" />
                 <a @click="handleDetail(record)">详情</a>

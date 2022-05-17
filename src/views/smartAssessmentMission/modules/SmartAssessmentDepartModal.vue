@@ -13,12 +13,12 @@
         <a-row>
           <a-col :span="24">
             <a-form-model-item label="被考核单位" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="assessmentDepart">
-              <j-select-depart v-model="model.assessmentDepart"multi />
+              <j-select-depart v-model="model.assessmentDepart" :multi="false" :disabled="false" v-decorator="['assessmentDepart', validatorRules.assessmentDepart ]"/>
             </a-form-model-item>
           </a-col>
-          <a-col :span="24">
+          <a-col :span="24" v-if="model.assessmentDepart">
             <a-form-model-item label="被考核单位登录账号" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="departUser">
-              <j-select-user-by-dep v-model='model.departUser' :multi="false" />
+              <my-select-user-by-dep v-model="model.departUser" :multi="false" :depart-id="model.assessmentDepart" store="id" text="realname" />
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
@@ -38,7 +38,7 @@
           </a-col>
           <a-col :span="24">
             <a-form-model-item v-if='model.signUser' label="签收人" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="signUser">
-              <a-input v-model="model.signUser"placeholder="请输入签收人" disabled></a-input>
+              <j-select-user-by-dep v-model="model.signUser" placeholder="请输入签收人" store="id" text="realname" disabled />
             </a-form-model-item>
           </a-col>
         </a-row>
@@ -49,13 +49,15 @@
 
 <script>
 
-  import { httpAction } from '@/api/manage'
+import { getAction, httpAction } from '@/api/manage'
   import { validateDuplicateValue } from '@/utils/util'
   import SelectUserByDep from '@comp/jeecgbiz/modal/SelectUserByDep'
+  import MySelectUserByDep from "@views/smartAssessmentMission/modules/MySelectUserByDep";
 
   export default {
     name: "SmartAssessmentDepartModal",
     components: {
+      MySelectUserByDep,
       SelectUserByDep
     },
     props:{
@@ -84,7 +86,8 @@
         confirmLoading: false,
         validatorRules: {
            assessmentDepart: [
-              { required: true, message: '请输入被考核单位!'},
+              { required: true, message: '请选择被考核单位!'},
+             {validator: this.validateAssessmentDepart}
            ],
            departUser: [
               { required: true, message: '请输入被考核单位登录账号!'},
@@ -96,6 +99,11 @@
         }
 
       }
+    },
+    computed: {
+      isDisabled() {
+        return !!this.model.id;
+      },
     },
     created () {
     //备份model原始值
@@ -114,6 +122,22 @@
         this.$emit('close');
         this.visible = false;
         this.$refs.form.clearValidate();
+      },
+      validateAssessmentDepart(rule, value, callback){
+        if(value){
+          var params = {
+            departId: this.model.assessmentDepart,
+            dataId: this.model.id,
+            missionId: this.mainId
+          };
+          getAction("/smartAssessmentMission/smartAssessmentMission/duplicateCheck",params).then((res)=>{
+            if(res.success){
+              callback();
+            }else{
+              callback(res.message);
+            }
+          });
+        }
       },
       handleOk () {
         const that = this;

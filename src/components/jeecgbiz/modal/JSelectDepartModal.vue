@@ -48,7 +48,7 @@
 </template>
 
 <script>
-  import { queryDepartTreeList } from '@/api/api'
+  import { queryDepartTreeList,queryNaturalDepartTreeList} from '@/api/api'
   export default {
     name: 'JSelectDepartModal',
     props:['modalWidth','multi','rootOpened','departId', 'store', 'text','treeOpera'],
@@ -108,7 +108,7 @@
       },
       loadDepart(){
         // 这个方法是找到所有的部门信息
-        queryDepartTreeList().then(res=>{
+        queryNaturalDepartTreeList().then(res=>{
           if(res.success){
             let arr = [...res.result]
             this.reWriterWithSlot(arr)
@@ -120,6 +120,20 @@
           }
         })
       },
+      // loadDepart(){
+      //   // 这个方法是找到所有的部门信息
+      //   queryDepartTreeList().then(res=>{
+      //     if(res.success){
+      //       let arr = [...res.result]
+      //       this.reWriterWithSlot(arr)
+      //       this.treeData = arr
+      //       this.initDepartComponent()
+      //       if(this.rootOpened){
+      //         this.initExpandedKeys(res.result)
+      //       }
+      //     }
+      //   })
+      // },
       initDepartComponent(flag){
         let arr = []
         //该方法两个地方用 1.visible改变事件重新设置选中项 2.组件编辑页面回显
@@ -280,7 +294,7 @@
   // 限制部门选择树高度，避免部门太多时点击确定不便
   .my-dept-select-tree{
     height:350px;
-    
+
     &.fullscreen{
       height: calc(100vh - 250px);
     }

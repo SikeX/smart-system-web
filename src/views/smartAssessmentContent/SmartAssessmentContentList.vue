@@ -10,40 +10,25 @@
     <!-- 查询区域-END -->
 
     <!-- 操作按钮区域 -->
-    <div class='table-operator' v-if='mainId && mainInfo.missionStatus === isShowText'>
-      <a-button @click='handleAdd' type='primary' icon='plus'>新增</a-button>
+    <div v-if='mainId' class='table-operator'>
+      <a-button  v-if='mainInfo.missionStatus === isShowText' @click='handleAddLevel1' type='primary' icon='plus'>新增考核内容</a-button>
+      <a-button  v-if='mainInfo.missionStatus === isShowText' @click='handleAddLevel2' type='primary' icon='plus'>新增考核指标</a-button>
+      <a-button  v-if='mainInfo.missionStatus === isShowText' @click='handleAddLevel3' type='primary' icon='plus'>新增考核要点</a-button>
       <a-popconfirm title='确定校正吗?' @confirm='checkPoint' placement='topLeft'>
         <a-button type='primary' icon='tool'>校正分数</a-button>
       </a-popconfirm>
       <a-button type='primary' icon='download' @click="handleExportXls('考核节点表')">导出</a-button>
-      <a-upload name='file' :showUploadList='false' :multiple='false' :headers='tokenHeader' :action='importExcelUrl'
+      <a-upload v-if='mainInfo.missionStatus === isShowText' name='file' :showUploadList='false' :multiple='false' :headers='tokenHeader' :action='importExcelUrl'
                 @change='handleImportExcel'>
         <a-button type='primary' icon='import'>导入</a-button>
       </a-upload>
       <!-- 高级查询区域 -->
       <j-super-query :fieldList='superFieldList' ref='superQueryModal'
                      @handleSuperQuery='handleSuperQuery'></j-super-query>
-      <a-dropdown v-if='selectedRowKeys.length > 0'>
-        <a-menu slot='overlay'>
-          <a-menu-item key='1' @click='batchDel'>
-            <a-icon type='delete' />
-            删除
-          </a-menu-item>
-        </a-menu>
-        <a-button style='margin-left: 8px'> 批量操作
-          <a-icon type='down' />
-        </a-button>
-      </a-dropdown>
     </div>
 
     <!-- table区域-begin -->
     <div>
-      <div class='ant-alert ant-alert-info' style='margin-bottom: 16px;'>
-        <i class='anticon anticon-info-circle ant-alert-icon'></i> 已选择 <a
-        style='font-weight: 600'>{{ selectedRowKeys.length }}</a>项
-        <a style='margin-left: 24px' @click='onClearSelected'>清空</a>
-      </div>
-
       <a-table
         ref='table'
         size='middle'
@@ -56,8 +41,7 @@
         :loading='loading'
         :expandedRowKeys='expandedRowKeys'
         @change='handleTableChange'
-        @expand='handleExpand'
-        v-bind='tableProps'>
+        @expand='handleExpand'>
 
         <template slot='nameSlot' slot-scope='text, record'>
           <span v-if='record.isKey === 0'>{{ text }}</span>
@@ -66,17 +50,17 @@
               <template slot='title'>
                 此为考核要点
               </template>
-              <span> {{ text }} <a-icon slot='count' type='star' theme='twoTone' /></span>
+              <span> {{ text }} <a-icon slot='count' type='star' theme='twoTone'/></span>
             </a-tooltip>
           </a-badge>
           <img v-else :src='getImgView(text)' height='25px' alt=''
-               style='max-width:80px;font-size: 12px;font-style: italic;' />
+               style='max-width:80px;font-size: 12px;font-style: italic;'/>
         </template>
 
         <template slot='imgSlot' slot-scope='text'>
           <span v-if='!text' style='font-size: 12px;font-style: italic;'>无图片</span>
           <img v-else :src='getImgView(text)' height='25px' alt=''
-               style='max-width:80px;font-size: 12px;font-style: italic;' />
+               style='max-width:80px;font-size: 12px;font-style: italic;'/>
         </template>
         <template slot='fileSlot' slot-scope='text'>
           <span v-if='!text' style='font-size: 12px;font-style: italic;'>无文件</span>
@@ -93,10 +77,11 @@
 
         <span v-if='mainId && mainInfo.missionStatus === isShowText' slot='action' slot-scope='text, record'>
           <a @click='handleEdit(record)'>编辑</a>
-
-          <a-divider type='vertical' />
+          <a-divider type='vertical'/>
+          <a @click='handleDetail(record)'>详情</a>
+          <a-divider type='vertical'/>
           <a-dropdown>
-            <a class='ant-dropdown-link'>更多 <a-icon type='down' /></a>
+            <a class='ant-dropdown-link'>更多 <a-icon type='down'/></a>
             <a-menu slot='overlay'>
               <a-menu-item v-if='record.isKey === 0'>
                 <a @click='handleAddChild(record)'>添加下级</a>
@@ -109,6 +94,9 @@
             </a-menu>
           </a-dropdown>
         </span>
+        <span v-else slot='action' slot-scope='text, record'>
+          <a @click='handleDetail(record)'>详情</a>
+        </span>
 
       </a-table>
     </div>
@@ -119,11 +107,11 @@
 
 <script>
 
-import { getAction, deleteAction, putAction } from '@/api/manage'
-import { JeecgListMixin } from '@/mixins/JeecgListMixin'
+import {getAction, deleteAction, putAction} from '@/api/manage'
+import {JeecgListMixin} from '@/mixins/JeecgListMixin'
 import SmartAssessmentContentModal from './modules/SmartAssessmentContentModal'
-import { filterMultiDictText } from '@/components/dict/JDictSelectUtil'
-import { filterObj } from '@/utils/util'
+import {filterMultiDictText} from '@/components/dict/JDictSelectUtil'
+import {filterObj} from '@/utils/util'
 
 export default {
   name: 'SmartAssessmentContentList',
@@ -137,10 +125,10 @@ export default {
       default: '',
       required: false
     },
-    mainInfo:{
-      type:Object,
-      default:Object,
-      required:false
+    mainInfo: {
+      type: Object,
+      default: Object,
+      required: false
     }
   },
   watch: {
@@ -167,7 +155,7 @@ export default {
           title: '名称',
           align: 'left',
           dataIndex: 'name',
-          scopedSlots: { customRender: 'nameSlot' }
+          scopedSlots: {customRender: 'nameSlot'}
         },
         {
           title: '分值',
@@ -177,10 +165,10 @@ export default {
         {
           title: '操作',
           dataIndex: 'action',
-          align:"center",
-          fixed:"right",
-          width:147,
-          scopedSlots: { customRender: 'action' },
+          align: "center",
+          fixed: "right",
+          width: 147,
+          scopedSlots: {customRender: 'action'},
         }
       ],
       url: {
@@ -220,14 +208,63 @@ export default {
     }
   },
   methods: {
-    clearList(){
-      this.dataSource=[]
-      this.selectedRowKeys=[]
+    clearList() {
+      this.dataSource = []
+      this.selectedRowKeys = []
       this.ipagination.current = 1
+    },
+    handleAddLevel1: function () {
+      this.$refs.modalForm.title = "新增考核内容";
+      this.$refs.modalForm.curLevel = 1;
+      let obj = {}
+      obj['isKey'] = 0
+      this.$refs.modalForm.add(obj)
+      this.$refs.modalForm.disableSubmit = false;
+    },
+    handleAddLevel2: function () {
+      this.$refs.modalForm.title = "新增考核指标";
+      this.$refs.modalForm.curLevel = 2;
+      let obj = {}
+      obj['isKey'] = 0
+      this.$refs.modalForm.add(obj)
+      this.$refs.modalForm.disableSubmit = false;
+    },
+    handleAddLevel3: function () {
+      this.$refs.modalForm.title = "新增考核要点";
+      this.$refs.modalForm.curLevel = 3;
+      let obj = {}
+      obj['isKey'] = 1
+      this.$refs.modalForm.add(obj)
+      this.$refs.modalForm.disableSubmit = false;
+    },
+    handleEdit: function (record) {
+      if (record['isKey'] == 1) {
+        this.$refs.modalForm.curLevel = 3;
+      } else if (record['pid'] == 0) {
+        this.$refs.modalForm.curLevel = 1
+      } else {
+        this.$refs.modalForm.curLevel = 2
+      }
+      this.$refs.modalForm.edit(record);
+      this.$refs.modalForm.title = "编辑";
+      this.$refs.modalForm.disableSubmit = false;
+    },
+    handleDetail:function(record){
+      // console.log(record)
+      if (record['isKey'] == 1) {
+        this.$refs.modalForm.curLevel = 3;
+      } else if (record['pid'] == 0) {
+        this.$refs.modalForm.curLevel = 1
+      } else {
+        this.$refs.modalForm.curLevel = 2
+      }
+      this.$refs.modalForm.edit(record);
+      this.$refs.modalForm.title="详情";
+      this.$refs.modalForm.disableSubmit = true;
     },
     checkPoint() {
       this.loading = true
-      getAction(this.url.checkPoint, { missionId: this.mainId }).then(res => {
+      getAction(this.url.checkPoint, {missionId: this.mainId}).then(res => {
         if (res.success) {
           this.$message.success(res.message)
           this.loadData(1)
@@ -266,7 +303,7 @@ export default {
     // 根据已展开的行查询数据（用于保存后刷新时异步加载子级的数据）
     loadDataByExpandedRows(dataList) {
       if (this.expandedRowKeys.length > 0) {
-        return getAction(this.url.getChildListBatch, { parentIds: this.expandedRowKeys.join(',') }).then(res => {
+        return getAction(this.url.getChildListBatch, {parentIds: this.expandedRowKeys.join(',')}).then(res => {
           if (res.success && res.result.records.length > 0) {
             //已展开的数据批量子节点
             let records = res.result.records
@@ -334,7 +371,7 @@ export default {
         return result.map(item => {
           //判断是否标记了带有子节点
           if (item[this.hasChildrenField] == '1') {
-            let loadChild = { id: item.id + '_loadChild', name: 'loading...', isLoading: true }
+            let loadChild = {id: item.id + '_loadChild', name: 'loading...', isLoading: true}
             item.children = [loadChild]
           }
           return item
@@ -375,6 +412,13 @@ export default {
       this.loadParent = true
       let obj = {}
       obj[this.pidField] = record['id']
+      if (record['pid'] == 0) {
+        obj['isKey'] = 0
+        this.$refs.modalForm.curLevel = 2
+      } else {
+        this.$refs.modalForm.curLevel = 3
+        obj['isKey'] = 1
+      }
       this.$refs.modalForm.add(obj)
     },
     handleDeleteNode(id) {
@@ -404,13 +448,13 @@ export default {
       } else {
         let ids = ''
         let that = this
-        that.selectedRowKeys.forEach(function(val) {
+        that.selectedRowKeys.forEach(function (val) {
           ids += val + ','
         })
         that.$confirm({
           title: '确认删除',
           content: '是否删除选中数据?',
-          onOk: function() {
+          onOk: function () {
             that.handleDeleteNode(ids)
             that.onClearSelected()
           }
@@ -429,11 +473,11 @@ export default {
     },
     getSuperFieldList() {
       let fieldList = []
-      fieldList.push({ type: 'string', value: 'pid', text: '父级节点', dictCode: '' })
-      fieldList.push({ type: 'string', value: 'name', text: '名称', dictCode: '' })
-      fieldList.push({ type: 'int', value: 'point', text: '分值', dictCode: '' })
-      fieldList.push({ type: 'Text', value: 'instructions', text: '填报说明', dictCode: '' })
-      fieldList.push({ type: 'sel_user', value: 'assDepartUser', text: '考核单位评分人员' })
+      fieldList.push({type: 'string', value: 'pid', text: '父级节点', dictCode: ''})
+      fieldList.push({type: 'string', value: 'name', text: '名称', dictCode: ''})
+      fieldList.push({type: 'int', value: 'point', text: '分值', dictCode: ''})
+      fieldList.push({type: 'Text', value: 'instructions', text: '填报说明', dictCode: ''})
+      fieldList.push({type: 'sel_user', value: 'assDepartUser', text: '考核单位评分人员'})
       fieldList.push({
         type: 'sel_search',
         value: 'assTeam',
@@ -442,8 +486,7 @@ export default {
         dictText: 'team_name',
         dictCode: 'id'
       })
-      fieldList.push({ type: 'double', value: 'sortNo', text: '排序', dictCode: '' })
-      fieldList.push({ type: 'switch', value: 'isKey', text: '是否考核要点' })
+      fieldList.push({type: 'switch', value: 'isKey', text: '是否考核要点', dictCode: 'yn'})
       this.superFieldList = fieldList
     }
   }

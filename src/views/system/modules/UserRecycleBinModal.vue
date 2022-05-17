@@ -91,7 +91,7 @@
           { title: '#', align: 'center', key: 'rowIndex', width: 80, customRender: (t, r, i) => i + 1 },
           { title: '账号', align: 'center', dataIndex: 'username' },
           { title: '姓名', align: 'center', dataIndex: 'realname', },
-          { title: '头像', align: 'center', dataIndex: 'avatar', scopedSlots: { customRender: 'avatarslot' } },
+          // { title: '头像', align: 'center', dataIndex: 'avatar', scopedSlots: { customRender: 'avatarslot' } },
           { title: '单位', align: 'center', dataIndex: 'orgCode' },
           { title: '操作', align: 'center', dataIndex: 'action', width: 200, scopedSlots: { customRender: 'action' } }
         ],
