@@ -81,6 +81,7 @@
         .header {
           height: 44px;
           line-height: 44px;
+          margin: auto;
 
           .badge {
             position: absolute;

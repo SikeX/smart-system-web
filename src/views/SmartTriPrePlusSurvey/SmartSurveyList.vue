@@ -31,7 +31,7 @@
       <!-- 操作按钮区域 -->
       <div class="table-operator">
         <!--<a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>-->
-        <a-button @click="createTestPaper"  type="primary" icon="plus">创建三员+调查问卷</a-button>
+        <a-button @click="createTestPaper"  type="primary" icon="plus">创建问卷</a-button>
 
       </div>
 
@@ -247,7 +247,7 @@
     },
     methods: {
       searchReset(){
-        this.queryParam = {}
+        this.queryParam = {id:'', paperType:'3'}
         this.searchQuery();
       },
       showPeopleList(record){

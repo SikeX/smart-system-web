@@ -6,7 +6,8 @@
         <a-row :gutter="24">
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
             <a-form-item label="应用范围">
-              <j-select-depart placeholder="请选择应用范围" v-model="queryParam.location"/>
+              <select-village-depart placeholder="请选择应用范围" v-model="queryParam.location"/>
+              <!-- <j-select-depart placeholder="请选择应用范围" v-model="queryParam.location"/> -->
             </a-form-item>
           </a-col>
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
@@ -75,7 +76,6 @@
         :pagination="ipagination"
         :loading="loading"
         :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-        class="j-table-force-nowrap"
         @change="handleTableChange">
 
         <template slot="htmlSlot" slot-scope="text">
@@ -131,12 +131,14 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import SmartPublicityBenifitModal from './modules/SmartPublicityBenifitModal'
   import {filterMultiDictText} from '@/components/dict/JDictSelectUtil'
+import SelectVillageDepart from '../../../components/common/SelectVillageDepart.vue'
 
   export default {
     name: 'SmartPublicityBenifitList',
     mixins:[JeecgListMixin, mixinDevice],
     components: {
-      SmartPublicityBenifitModal
+      SmartPublicityBenifitModal,
+      SelectVillageDepart
     },
     data () {
       return {
@@ -158,6 +160,12 @@
             align:"center",
             dataIndex: 'title',
             width: 250
+          },
+          {
+            title:'类别',
+            align:"center",
+            dataIndex: 'type',
+            ellipsis: true,
           },
           {
             title:'应用范围',

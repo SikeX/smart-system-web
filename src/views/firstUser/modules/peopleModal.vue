@@ -56,16 +56,17 @@
         </a-form-model-item>
 
         <a-form-model-item label="单位分配" :labelCol="labelCol" :wrapperCol="wrapperCol" v-show="!departDisabled" prop="selecteddeparts">
-          <!-- <j-select-depart v-model="model.selecteddeparts" :multi="false" @back="backDepartInfo" :backDepart="true" :treeOpera="true"/>-->
-          <a-tree-select
-            style="width:100%"
-            :dropdownStyle="{maxHeight:'200px',overflow:'auto'}"
-            :treeData="departTree"
-            v-model="model.selecteddeparts"
-            placeholder="请选择部门"
-            allow-clear
-            tree-default-expand-all>
-          </a-tree-select>
+           <j-select-depart v-model="model.selecteddeparts" :multi="true"
+                             @back="backDepartInfo" :backDepart="true" :treeOpera="true"/>
+<!--          <a-tree-select-->
+<!--            style="width:100%"-->
+<!--            :dropdownStyle="{maxHeight:'200px',overflow:'auto'}"-->
+<!--            :treeData="departTree"-->
+<!--            v-model="model.selecteddeparts"-->
+<!--            placeholder="请选择部门"-->
+<!--            allow-clear-->
+<!--            tree-default-expand-all>-->
+<!--          </a-tree-select>-->
         </a-form-model-item>
 
         <a-form-model-item label="身份" :labelCol="labelCol" :wrapperCol="wrapperCol">

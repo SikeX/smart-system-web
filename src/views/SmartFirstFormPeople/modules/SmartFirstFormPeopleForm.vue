@@ -26,7 +26,7 @@
           <a-col :span="24">
             <a-form-model-item label="被谈话人单位" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="intervieweeDept">
               <j-search-select-tag v-model="model.intervieweeDept" placeholder="单位"
-                                   dict="sys_depart,depart_name,org_code"  disabled="true" readOnly unselectable="on">
+                                   dict="sys_depart,depart_name,id"  disabled="true" readOnly unselectable="on">
               </j-search-select-tag>
 <!--              <a-input v-model="model.intervieweeDept" placeholder="被谈话人单位" readOnly
                        unselectable="on" ></a-input>-->
@@ -106,7 +106,7 @@
           <a-col :span="24">
             <a-form-model-item label="谈话人单位" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="talkerDept">
               <j-search-select-tag v-model="model.talkerDept" placeholder="单位"
-                                   dict="sys_depart,depart_name,org_code"  disabled="true" readOnly unselectable="on">
+                                   dict="sys_depart,depart_name,id"  disabled="true" readOnly unselectable="on">
               </j-search-select-tag>
 <!--              <a-input v-model="model.talkerDept" placeholder="谈话人单位" readOnly
                        unselectable="on" ></a-input>-->
@@ -165,7 +165,7 @@
           </a-col>
           <a-col :span="24">
             <a-form-model-item label="采取组织措施决定机关" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="decisionOrgan">
-              <a-input v-model="model.decisionOrgan" placeholder="请输入采取组织措施决定机关"  ></a-input>
+              <j-select-depart v-model="model.decisionOrgan"  />
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
@@ -225,6 +225,18 @@
         },
         confirmLoading: false,
         validatorRules: {
+          caseName:[{required: true,message:'请输入案件标题！'}],
+          caseSource:[{required: true,message:'请输入案件（线索来源）！'}],
+          principal:[{required: true,message:'请选择是否党政正职！'}],
+          country:[{required: true,message:'请选择是否国家检查队形！'}],
+          supervision:[{required: true,message:'请选择是否是纪检监察干部！'}],
+          intervieweeId:[{required: true, message: '请选择被谈话人!'}],
+          talkerId: [{required: true, message: '请选择谈话人!'}],
+          handlerDepart:[{required: true, message: '请选择办理部门!'}],
+          type:[{required: true, message: '请选择类型!'}],
+          talkTime:[{required: true, message: '请选择谈话时间!'}],
+          measures:[{required: true, message: '请输入组织措施!'}],
+          decisionOrgan:[{required: true,message:'请选择采取组织措施决定机关！'}]
            /*annex: [
               { required: true, message: '请输入附件!'},
            ],*/
@@ -297,7 +309,7 @@
               that.confirmLoading = false;
             })
           }
-         
+
         })
       },
       getInterviewee(back){
@@ -306,7 +318,7 @@
         //console.log(this.model)
         this.model.intervieweeId = back[0].id
         this.model.intervieweeName = back[0].realname
-        this.model.intervieweeDept = back[0].orgCode
+        this.model.intervieweeDept = back[0].departId
         this.model.intervieweeSex = back[0].sex
         this.model.intervieweeEthnicity = back[0].ethnicity
         this.model.intervieweePolsta = back[0].politicalStatus
@@ -318,7 +330,7 @@
         console.log(back)
         this.model.talkerId = back[0].id
         this.model.talkerName = back[0].realname
-        this.model.talkerDept = back[0].orgCode
+        this.model.talkerDept = back[0].departId
         this.model.talkerPost = back[0].post
         this.model.talkerPostrank = back[0].positionRank
 

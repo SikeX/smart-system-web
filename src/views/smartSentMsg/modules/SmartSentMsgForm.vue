@@ -25,7 +25,7 @@
           </a-col>
           <a-col :span="24">
             <a-form-model-item label="发送时间" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="sendTime">
-              <j-date placeholder="请选择发送时间" v-model="model.sendTime"  style="width: 100%" />
+              <j-date showTime=true placeholder="请选择发送时间" v-model="model.sendTime"  style="width: 100%" />
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
@@ -64,6 +64,7 @@
     data () {
       return {
         model:{
+          sendType:''
          },
         labelCol: {
           xs: { span: 24 },
@@ -98,6 +99,25 @@
       },
       edit (record) {
         this.model = Object.assign({}, record);
+        if(record.sendType == '0'){
+              this.model.sendType = '任务下达通知'
+            }else if(record.sendType == '1'){
+              this.model.sendType = "通知公告通知"
+            }else if(record.sendType == '2'){
+              this.model.sendType = "审核不通过通知"
+            }else if(record.sendType == '3'){
+              this.model.sendType = "不通过重新填报通知"
+            }else if(record.sendType == '4'){
+              this.model.sendType = "入党纪念日通知"
+            }else if(record.sendType == '5'){
+              this.model.sendType = "解除处分通知"
+            }else if(record.sendType == '6'){
+              this.model.sendType = "信息更新通知"
+            }else if(record.sendType == '7'){
+              this.model.sendType = "其他"
+            }else{
+              this.model.sendType = "其他"
+            }
         this.visible = true;
       },
       submitForm () {

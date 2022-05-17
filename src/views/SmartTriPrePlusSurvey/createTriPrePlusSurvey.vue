@@ -367,11 +367,12 @@
 
       //获取出题者姓名
       getCreatorName:function (){
-        if(this.testData.creatorName){
-          return this.testData.creatorName;
+        let that = this
+        if(that.testData.creatorName){
+          return that.testData.creatorName;
         }else{
-          console.log(this.$store.getters.nickname);
-          return this.$store.getters.nickname;
+          console.log(that.$store.getters.nickname);
+          return that.$store.getters.nickname;
         }
       },
 

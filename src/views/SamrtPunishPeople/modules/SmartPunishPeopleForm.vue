@@ -17,9 +17,9 @@
           </a-col>
           <a-col :span="24">
             <a-form-model-item label="单位" prop="departCode" :labelCol="labelCol" :wrapperCol="wrapperCol">
-              <j-dict-select-tag v-model="model.departCode" placeholder="单位"
-                dictCode="sys_depart,depart_name,org_code"  disabled="true" >
-              </j-dict-select-tag>
+              <j-multi-select-tag v-model="model.departCode" placeholder="单位"
+                dictCode="sys_depart,depart_name,id"  disabled="true" >
+              </j-multi-select-tag>
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
@@ -107,12 +107,16 @@
         },
         confirmLoading: false,
         validatorRules: {
+          punishId:[{required: true, message: '请选择人员!'}],
+          punishType:[{required: true, message: '请选择处分类型!'}],
+          beginTime:[{required: true, message: '请选择处分开始时间!'}],
+          removeTime:[{required: true, message: '请选择处分结束时间!'}],
         },
         url: {
           add: "/SmartPunishPeople/smartPunishPeople/add",
           edit: "/SmartPunishPeople/smartPunishPeople/edit",
           queryById: "/SmartPunishPeople/smartPunishPeople/queryById"
-        }
+        },
       }
     },
     computed: {
@@ -158,16 +162,15 @@
               that.confirmLoading = false;
             })
           }
-         
+
         })
       },
       getUser(back){
         console.log(back)
-        //this.model = back[0]
-        //console.log(this.model)
         this.model.punishId = back[0].id
         this.model.punishName = back[0].realname
-        this.model.departCode = back[0].orgCode
+        //this.model.departCode = back[0].orgCode
+        this.model.departCode = back[0].departId
         this.model.phone = back[0].phone
         this.model.position = back[0].post
         this.model.positionRank = back[0].positionRank
