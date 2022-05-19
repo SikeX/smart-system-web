@@ -351,6 +351,7 @@
             dataIndex: 'action',
             scopedSlots: {customRender: 'action'},
             align: "center",
+            fixed:"right",
             width: 170
           }
 
