@@ -130,10 +130,10 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import SmartExamInformationModal from './modules/SmartExamInformationModal'
   import { httpAction,putAction, postAction,getAction } from '@/api/manage'
-  import TaskDetailModal from './modules/TaskDetailModal.vue'
+  import TaskDetailModal from './modules/TaskDetailModal'
 
   export default {
-    name: 'SmartExamInformationList',
+    name: 'SmartExamInfoList',
     mixins:[JeecgListMixin, mixinDevice],
     components: {
       SmartExamInformationModal,TaskDetailModal
@@ -187,7 +187,7 @@
           deleteBatch: "/SmartPaper/smartMyExam/deleteBatch",
           exportXlsUrl: "/SmartPaper/smartMyExam/exportXls",
           importExcelUrl: "SmartPaper/smartMyExam/importExcel",
-          
+
         },
         dictOptions:{},
         superFieldList:[],
@@ -203,6 +203,16 @@
       },
     },
     methods: {
+      initDictConfig(){
+      },
+      getSuperFieldList(){
+        let fieldList=[];
+        fieldList.push({type:'string',value:'examName',text:'考试名称',dictCode:''})
+        fieldList.push({type:'datetime',value:'examStarttime',text:'考试开始时间'})
+        fieldList.push({type:'datetime',value:'examEndtime',text:'考试结束时间'})
+        fieldList.push({type:'string',value:'paperType',text:''})
+        this.superFieldList = fieldList
+      },
       isDisabled(record){
         //判断考试是否开始
         let nowDate = new Date().getTime();
@@ -251,16 +261,6 @@
         }
 
       },
-      initDictConfig(){
-      },
-      getSuperFieldList(){
-        let fieldList=[];
-        fieldList.push({type:'string',value:'examName',text:'考试名称',dictCode:''})
-        fieldList.push({type:'datetime',value:'examStarttime',text:'考试开始时间'})
-        fieldList.push({type:'datetime',value:'examEndtime',text:'考试结束时间'})
-        fieldList.push({type:'string',value:'paperType',text:''})
-        this.superFieldList = fieldList
-      }
 
   }
 </script>

@@ -88,7 +88,7 @@
         :dataSource="dataSource"
         :pagination="ipagination"
         :loading="loading"
-        @change="handleTableChange"
+        @change="handleTableChange">
 
         <template slot="htmlSlot" slot-scope="text">
           <div v-html="text"></div>
