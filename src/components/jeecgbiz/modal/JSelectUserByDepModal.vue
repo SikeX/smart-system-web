@@ -46,7 +46,7 @@
                   <a-input-search
                       :style="{width:'100%'}"
                       placeholder="请输入姓名"
-                      v-model="queryParam.username"
+                      v-model="queryParam.realname"
                       @search="onSearch"
                   ></a-input-search>
                 </a-col>
