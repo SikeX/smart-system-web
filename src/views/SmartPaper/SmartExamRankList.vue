@@ -299,6 +299,7 @@
           .then((res) => {
             if (res.success) {
               this.deptDataSource = res.result.records || res.result
+              console.log(res)
               this.deptTitle = this.deptDataSource[0].examName +"单位排名"
               let i = 0
               for(i=0;i<this.deptDataSource.length;i++){

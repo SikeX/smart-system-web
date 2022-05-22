@@ -302,9 +302,9 @@
                 h('span', null, describe),
                 h('i', { style: 'color: teal' }, grade)
               ]),
-              showCancelButton: true,
+              showCancelButton: false,
               confirmButtonText: '确定',
-              cancelButtonText: '取消',
+              //cancelButtonText: '取消',
               beforeClose: (action, instance, done) => {
                 if (action === 'confirm') {
                   instance.confirmButtonLoading = true;
