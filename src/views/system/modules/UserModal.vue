@@ -64,8 +64,8 @@
 
         <a-form-model-item label="职务" :labelCol="labelCol" :wrapperCol="wrapperCol">
 <!--          <j-select-position placeholder="请选择职务" :multiple="false" v-model="model.post"/>-->
-          <j-search-select-tag placeholder="请选择职务"  v-model="model.post"
-                               dict="sys_position,name,code"></j-search-select-tag>
+          <j-select-multiple placeholder="请选择职务"  v-model="model.post"
+                             dictCode="sys_position,name,code"></j-select-multiple>
         </a-form-model-item>
 
         <a-form-model-item
@@ -92,16 +92,16 @@
         </a-form-model-item>
         <!--部门分配-->
         <a-form-model-item label="单位" :labelCol="labelCol" :wrapperCol="wrapperCol" v-show="!departDisabled" prop="selecteddeparts">
-         <!-- <j-select-depart v-model="model.selecteddeparts" :multi="false" @back="backDepartInfo" :backDepart="true" :treeOpera="true"/>-->
-          <a-tree-select
-            style="width:100%"
-            :dropdownStyle="{maxHeight:'200px',overflow:'auto'}"
-            :treeData="naturalDepartTree"
-            v-model="model.selecteddeparts"
-            placeholder="请选择单位"
-            allow-clear
-            tree-default-expand-all>
-          </a-tree-select>
+          <j-select-depart v-model="model.selecteddeparts" :multi="true" @back="backDepartInfo" :backDepart="true" :treeOpera="true" @change='change'/>
+<!--          <a-tree-select-->
+<!--            style="width:100%"-->
+<!--            :dropdownStyle="{maxHeight:'200px',overflow:'auto'}"-->
+<!--            :treeData="naturalDepartTree"-->
+<!--            v-model="model.selecteddeparts"-->
+<!--            placeholder="请选择单位"-->
+<!--            allow-clear-->
+<!--            tree-default-expand-all>-->
+<!--          </a-tree-select>-->
         </a-form-model-item>
 
         <!--租户分配-->
@@ -119,23 +119,23 @@
               <a-radio :value="2">单位负责人</a-radio>
             </a-radio-group>
           </a-form-model-item>
-          <a-form-model-item label="负责单位" :labelCol="labelCol" :wrapperCol="wrapperCol"  v-if="departIdShow==true" prop="departIds">
-            <!--<j-select-depart v-model="model.departIds" :multi="true" @back="backDepartInfo" :backDepart="true" :treeOpera="true"></j-select-depart>-->
-            <a-tree-select
-              style="width:100%"
-              :dropdownStyle="{maxHeight:'200px',overflow:'auto'}"
-              :treeData="naturalDepartTree"
-              v-model="model.departIds"
-              placeholder="请选择单位"
-              allow-clear
-              tree-default-expand-all>
-            </a-tree-select>
-            <!--<j-multi-select-tag
+          <a-form-model-item label="负责单位" :labelCol="labelCol" :wrapperCol="wrapperCol" v-if="departIdShow===true" prop="departIds">
+<!--            <j-select-depart v-model="model.departIds" :multi="false" :treeOpera="true"></j-select-depart>-->
+<!--            <a-tree-select-->
+<!--              style="width:100%"-->
+<!--              :dropdownStyle="{maxHeight:'200px',overflow:'auto'}"-->
+<!--              :treeData="naturalDepartTree"-->
+<!--              v-model="model.departIds"-->
+<!--              placeholder="请选择单位"-->
+<!--              allow-clear-->
+<!--              tree-default-expand-all>-->
+<!--            </a-tree-select>-->
+            <j-search-select-tag
               :disabled="disableSubmit"
               v-model="model.departIds"
-              :options="nextDepartOptions"
+              :dictOptions="nextDepartOptions"
               placeholder="请选择负责单位">
-            </j-multi-select-tag>-->
+            </j-search-select-tag>
           </a-form-model-item>
         </template>
 
@@ -259,7 +259,7 @@
           realname:[{ required: true, message: '请输入姓名!' }],
           phone: [{required: true, message: '请输入手机号码!'}, {validator: this.validatePhone}],
           idnumber: [{required: true, message: '请输入身份证号!'}, {validator: this.validateIdnumber}],
-          email: [{validator: this.validateEmail}],
+          //email: [{validator: this.validateEmail}],
           selectedroles:[{required:true,message:'请选择角色',trigger: 'change'}],
           selecteddeparts:[{required:true,message:'请选择部门'}],
           departIds:[{validator:this.validateDepartIds}],
@@ -302,7 +302,7 @@
     },
     created () {
       this.roleId=this.userInfo().roleId
-      console.log(this.roleId)
+      console.log("userInfo"+this.userInfo())
       const token = Vue.ls.get(ACCESS_TOKEN);
       this.headers = {"X-Access-Token":token}
       this.initRoleList()
@@ -342,7 +342,7 @@
         that.userId = record.id;
         that.model = Object.assign({},{selectedroles:'',selecteddeparts:''}, record);
         //身份为上级显示负责部门，否则不显示
-        if(this.model.userIdentity==2){
+        if(this.model.userIdentity===2){
           this.departIdShow=true;
         }else{
           this.departIdShow=false;
@@ -353,6 +353,9 @@
           that.getUserDeparts(record.id);
         }
         //console.log('that.model=',that.model)
+      },
+      change(storeVals){
+        console.log("storeVals"+storeVals)
       },
       isDisabledAuth(code){
         return disabledAuthFilter(code);
@@ -417,21 +420,29 @@
             for (let i = 0; i < res.result.length; i++) {
               selectDepartKeys.push(res.result[i].key);
               //新增负责部门选择下拉框
+              // departOptions.push({
+              //   value: res.result[i].key,
+              //   label: res.result[i].title
+              // })
               departOptions.push({
                 value: res.result[i].key,
-                label: res.result[i].title
+                text: res.result[i].title
               })
             }
             that.model.selecteddeparts = selectDepartKeys.join(",")
             that.nextDepartOptions=departOptions;
-            console.log('that.nextDepartOptions=',that.nextDepartOptions)
+            //console.log('that.nextDepartOptions=',that.nextDepartOptions)
           }
         })
       },
       backDepartInfo(info) {
-        this.model.departIds = this.model.selecteddeparts;
+        //this.model.departIds = this.model.selecteddeparts;
+        // this.nextDepartOptions = info.map((item,index,arr)=>{
+        //   let c = {label:item.text, value: item.value+""}
+        //   return c;
+        // })
         this.nextDepartOptions = info.map((item,index,arr)=>{
-          let c = {label:item.text, value: item.value+""}
+          let c = {text:item.text, value: item.value}
           return c;
         })
       },
@@ -573,22 +584,22 @@
         if(!value){
           callback()
         }else{
-          var checkCode = function (value) {
-            var p = /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
-            var factor = [ 7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2 ];
-            var parity = [ 1, 0, 'X', 9, 8, 7, 6, 5, 4, 3, 2 ];
-            var code = value.substring(17);
-            if(p.test(value)) {
-              var sum = 0;
-              for(var i=0;i<17;i++) {
-                sum += value[i]*factor[i];
-              }
-              if(parity[sum % 11] == code.toUpperCase()) {
-                return true;
-              }
-            }
-            return false;
-          }
+          // var checkCode = function (value) {
+          //   var p = /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
+          //   var factor = [ 7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2 ];
+          //   var parity = [ 1, 0, 'X', 9, 8, 7, 6, 5, 4, 3, 2 ];
+          //   var code = value.substring(17);
+          //   if(p.test(value)) {
+          //     var sum = 0;
+          //     for(var i=0;i<17;i++) {
+          //       sum += value[i]*factor[i];
+          //     }
+          //     if(parity[sum % 11] == code.toUpperCase()) {
+          //       return true;
+          //     }
+          //   }
+          //   return false;
+          // }
           var checkDate = function (value) {
             var pattern = /^(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)$/;
             if(pattern.test(value)) {
@@ -596,30 +607,34 @@
               var month = value.substring(4, 6);
               var date = value.substring(6, 8);
               var date2 = new Date(year+"-"+month+"-"+date);
-              if(date2 && date2.getMonth() == (parseInt(month) - 1)) {
+              if(date2 && date2.getMonth() === (parseInt(month) - 1)) {
                 return true;
               }
             }
             return false;
           }
-          var checkProv = function (value) {
-            var pattern = /^[1-9][0-9]/;
-            var provs = {11:"北京",12:"天津",13:"河北",14:"山西",15:"内蒙古",21:"辽宁",22:"吉林",23:"黑龙江 ",31:"上海",32:"江苏",33:"浙江",34:"安徽",35:"福建",36:"江西",37:"山东",41:"河南",42:"湖北 ",43:"湖南",44:"广东",45:"广西",46:"海南",50:"重庆",51:"四川",52:"贵州",53:"云南",54:"西藏 ",61:"陕西",62:"甘肃",63:"青海",64:"宁夏",65:"新疆",71:"台湾",81:"香港",82:"澳门"};
-            if(pattern.test(value)) {
-              if(provs[value]) {
-                return true;
-              }
-            }
-            return false;
-          }
+          // var checkProv = function (value) {
+          //   var pattern = /^[1-9][0-9]/;
+          //   var provs = {11:"北京",12:"天津",13:"河北",14:"山西",15:"内蒙古",21:"辽宁",22:"吉林",23:"黑龙江 ",31:"上海",32:"江苏",33:"浙江",34:"安徽",35:"福建",36:"江西",37:"山东",41:"河南",42:"湖北 ",43:"湖南",44:"广东",45:"广西",46:"海南",50:"重庆",51:"四川",52:"贵州",53:"云南",54:"西藏 ",61:"陕西",62:"甘肃",63:"青海",64:"宁夏",65:"新疆",71:"台湾",81:"香港",82:"澳门"};
+          //   if(pattern.test(value)) {
+          //     if(provs[value]) {
+          //       return true;
+          //     }
+          //   }
+          //   return false;
+          // }
           var checkID = function (value) {
-            if(checkCode(value)) {
-              var date = value.substring(6,14);
-              if(checkDate(date)) {
-                if(checkProv(value.substring(0,2))) {
-                  return true;
-                }
-              }
+            // if(checkCode(value)) {
+            //   var date = value.substring(6,14);
+            //   if(checkDate(date)) {
+            //     if(checkProv(value.substring(0,2))) {
+            //       return true;
+            //     }
+            //   }
+            // }
+            var date = value.substring(6,14);
+            if(checkDate(date)) {
+                return true;
             }
             return false;
           }
@@ -730,7 +745,7 @@
         }
       },
       validateDepartIds(rule,value,callback){
-        if(this.model.userIdentity == 2){
+        if(this.model.userIdentity === 2){
           if(!value){
             callback('请选择负责单位')
           }else{

@@ -29,10 +29,11 @@
       }
     },
     methods: {
-      add () {
+      add (mainId) {
+        console.log(mainId)
         this.visible=true
         this.$nextTick(()=>{
-          this.$refs.realForm.add();
+          this.$refs.realForm.add(mainId);
         })
       },
       edit (record) {

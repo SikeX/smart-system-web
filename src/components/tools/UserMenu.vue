@@ -46,7 +46,7 @@
       <span class="action action-full ant-dropdown-link user-dropdown-menu">
         <a-avatar class="avatar" size="small" :src="getAvatar()" />
         <!-- @TODO 暂时换成username  -->
-        <span v-if="isDesktop()">欢迎您，{{ this.userInfo().username }}</span>
+        <span v-if="isDesktop()">欢迎您，{{ this.userInfo().realname }}</span>
       </span>
       <a-menu slot="overlay" class="user-dropdown-menu-wrapper">
         <!-- <a-menu-item key="0">

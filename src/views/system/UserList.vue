@@ -16,13 +16,12 @@
               </a-select>
             </a-form-item>
           </a-col>-->
-          <!--TODO 按照单位查询 (设置返回值，默认返回ID：customReturnField='orgCode')-->
-          <a-col :md="6" :sm="8">
+          <!--按照单位查询 (设置返回值，默认返回ID：customReturnField='orgCode'),系统管理员、纪委管理员可按照单位查询-->
+          <a-col :md="6" :sm="8"  v-if="roleId.indexOf('1467143903808229378') !== -1 || roleId.indexOf('1467031291382349825') !== -1">
             <a-form-item label="单位" >
-              <j-select-depart placeholder="请选择单位"  v-model="queryParam.orgCode" customReturnField='orgCode' :multi="true"   :treeOpera="true"></j-select-depart>
+              <j-select-depart placeholder="请选择单位"  v-model="queryParam.departId" customReturnField='id' :multi="true" :treeOpera="true"></j-select-depart>
             </a-form-item>
           </a-col>
-
             <a-col :md="6" :sm="8">
               <a-form-item label="姓名">
                 <j-input placeholder="请输入姓名" v-model="queryParam.realname"></j-input>
@@ -374,7 +373,7 @@
     },
     created(){
       this.roleId=this.userInfo().roleId
-      //console.log(this.$store.getters.user);
+      console.log("roleId:"+this.roleId);
     },
     computed: {
       importExcelUrl: function(){
