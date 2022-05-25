@@ -1,5 +1,6 @@
 <template>
-  <a-card :bordered="false">
+  <div>
+  <a-card :bordered="true" title='评价信息'>
     <!-- 查询区域 -->
     <div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery">
@@ -9,9 +10,15 @@
               <a-input placeholder="请输入主管单位" v-model="queryParam.exeDept"></a-input>
             </a-form-item>
           </a-col>
-          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+          <a-col :xl="7" :lg="7" :md="8" :sm="24">
             <a-form-item label="窗口服务大厅名称">
-              <a-input placeholder="请输入窗口服务大厅名称" v-model="queryParam.windowsName"></a-input>
+<!--              <a-input placeholder="请输入窗口服务大厅名称" v-model="queryParam.windowsName"></a-input>-->
+              <j-search-select-tag
+                placeholder="请选择窗口服务大厅名称"
+                v-model="queryParam.windowsName"
+                dict="smart_window_unit,name,name,del_flag = 0"
+                :async="true" :style="{width:'200px'}">
+              </j-search-select-tag>
             </a-form-item>
           </a-col>
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
@@ -37,21 +44,21 @@
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>-->
       <!-- 高级查询区域 -->
-<!--      <j-super-query :fieldList="superFieldList" ref="superQueryModal" @handleSuperQuery="handleSuperQuery"></j-super-query>
+<!--      <j-super-query :fieldList="superFieldList" ref="superQueryModal" @handleSuperQuery="handleSuperQuery"></j-super-query>-->
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>
         </a-menu>
         <a-button style="margin-left: 8px"> 批量操作 <a-icon type="down" /></a-button>
-      </a-dropdown>-->
+      </a-dropdown>
     </div>
 
     <!-- table区域-begin -->
     <div>
-      <div class="ant-alert ant-alert-info" style="margin-bottom: 16px;">
-        <i class="anticon anticon-info-circle ant-alert-icon"></i> 已选择 <a style="font-weight: 600">{{ selectedRowKeys.length }}</a>项
-        <a style="margin-left: 24px" @click="onClearSelected">清空</a>
-      </div>
+<!--      <div class="ant-alert ant-alert-info" style="margin-bottom: 16px;">-->
+<!--        <i class="anticon anticon-info-circle ant-alert-icon"></i> 已选择 <a style="font-weight: 600">{{ selectedRowKeys.length }}</a>项-->
+<!--        <a style="margin-left: 24px" @click="onClearSelected">清空</a>-->
+<!--      </div>-->
 
       <a-table
         ref="table"
@@ -63,7 +70,6 @@
         :dataSource="dataSource"
         :pagination="ipagination"
         :loading="loading"
-        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
         class="j-table-force-nowrap"
         @change="handleTableChange">
 
@@ -108,13 +114,13 @@
 
       </a-table>
     </div>
-    <div v-if="roleId.indexOf('1467031291382349825') != -1">
-      <h2>不满意评价</h2>
-      <smart-poor-eva-list/>
-    </div>
 
     <smart-evaluate-window-modal ref="modalForm" @ok="modalFormOk"></smart-evaluate-window-modal>
   </a-card>
+    <a-card title='不满意评价' v-if="roleId.indexOf('1467143903808229378') !== -1" :bordered='true' style='margin-top: 20px'>
+      <smart-poor-eva-list/>
+    </a-card>
+  </div>
 </template>
 
 <script>
@@ -211,7 +217,7 @@
           deleteBatch: "/smartEvaluateList/smartEvaluateWindow/deleteBatch",
           exportXlsUrl: "/smartEvaluateList/smartEvaluateWindow/exportXls",
           importExcelUrl: "smartEvaluateList/smartEvaluateWindow/importExcel",
-          
+
         },
         dictOptions:{},
         superFieldList:[],

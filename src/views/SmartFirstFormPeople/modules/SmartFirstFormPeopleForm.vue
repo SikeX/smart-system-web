@@ -20,14 +20,14 @@
           </a-col>
           <a-col :span="24">
             <a-form-model-item label="被谈话人" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="intervieweeId">
-              <select-user-by-dep v-model="model.intervieweeId" @info="getInterviewee"  :flag ="false"/>
+              <select-user-by-dep v-model="model.intervieweeId" @info="getInterviewee"  :flag ="false" :multi='false'/>
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
             <a-form-model-item label="被谈话人单位" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="intervieweeDept">
-              <j-search-select-tag v-model="model.intervieweeDept" placeholder="单位"
-                                   dict="sys_depart,depart_name,id"  disabled="true" readOnly unselectable="on">
-              </j-search-select-tag>
+              <j-multi-select-tag v-model="model.intervieweeDept" placeholder="单位"
+                                   dictCode="sys_depart,depart_name,id"  disabled="true" readOnly unselectable="on">
+              </j-multi-select-tag>
 <!--              <a-input v-model="model.intervieweeDept" placeholder="被谈话人单位" readOnly
                        unselectable="on" ></a-input>-->
             </a-form-model-item>
@@ -100,14 +100,14 @@
           </a-col>
           <a-col :span="24">
             <a-form-model-item label="谈话人" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="talkerId">
-              <select-user-by-dep v-model="model.talkerId" @info="getTalker"  :flag ="false"/>
+              <select-user-by-dep v-model="model.talkerId" @info="getTalker"  :flag ="false" :multi='false'/>
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
             <a-form-model-item label="谈话人单位" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="talkerDept">
-              <j-search-select-tag v-model="model.talkerDept" placeholder="单位"
-                                   dict="sys_depart,depart_name,id"  disabled="true" readOnly unselectable="on">
-              </j-search-select-tag>
+              <j-multi-select-tag v-model="model.talkerDept" placeholder="单位"
+                                   dictCode="sys_depart,depart_name,id"  disabled="true" readOnly unselectable="on">
+              </j-multi-select-tag>
 <!--              <a-input v-model="model.talkerDept" placeholder="谈话人单位" readOnly
                        unselectable="on" ></a-input>-->
             </a-form-model-item>

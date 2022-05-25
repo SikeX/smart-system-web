@@ -52,10 +52,10 @@
 
     <!-- table区域-begin -->
     <div>
-      <div class="ant-alert ant-alert-info" style="margin-bottom: 16px;">
-        <i class="anticon anticon-info-circle ant-alert-icon"></i> 已选择 <a style="font-weight: 600">{{ selectedRowKeys.length }}</a>项
-        <a style="margin-left: 24px" @click="onClearSelected">清空</a>
-      </div>
+<!--      <div class="ant-alert ant-alert-info" style="margin-bottom: 16px;">-->
+<!--        <i class="anticon anticon-info-circle ant-alert-icon"></i> 已选择 <a style="font-weight: 600">{{ selectedRowKeys.length }}</a>项-->
+<!--        <a style="margin-left: 24px" @click="onClearSelected">清空</a>-->
+<!--      </div>-->
 
       <a-table
         ref="table"
@@ -67,7 +67,6 @@
         :dataSource="dataSource"
         :pagination="ipagination"
         :loading="loading"
-        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
         class="j-table-force-nowrap"
         @change="handleTableChange">
 
@@ -130,10 +129,10 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import SmartExamInformationModal from './modules/SmartExamInformationModal'
   import { httpAction,putAction, postAction,getAction } from '@/api/manage'
-  import TaskDetailModal from './modules/TaskDetailModal.vue'
+  import TaskDetailModal from './modules/TaskDetailModal'
 
   export default {
-    name: 'SmartExamInformationList',
+    name: 'SmartExamInfoList',
     mixins:[JeecgListMixin, mixinDevice],
     components: {
       SmartExamInformationModal,TaskDetailModal
@@ -187,7 +186,7 @@
           deleteBatch: "/SmartPaper/smartMyExam/deleteBatch",
           exportXlsUrl: "/SmartPaper/smartMyExam/exportXls",
           importExcelUrl: "SmartPaper/smartMyExam/importExcel",
-          
+
         },
         dictOptions:{},
         superFieldList:[],
@@ -203,6 +202,16 @@
       },
     },
     methods: {
+      initDictConfig(){
+      },
+      getSuperFieldList(){
+        let fieldList=[];
+        fieldList.push({type:'string',value:'examName',text:'考试名称',dictCode:''})
+        fieldList.push({type:'datetime',value:'examStarttime',text:'考试开始时间'})
+        fieldList.push({type:'datetime',value:'examEndtime',text:'考试结束时间'})
+        fieldList.push({type:'string',value:'paperType',text:''})
+        this.superFieldList = fieldList
+      },
       isDisabled(record){
         //判断考试是否开始
         let nowDate = new Date().getTime();
@@ -251,16 +260,6 @@
         }
 
       },
-      initDictConfig(){
-      },
-      getSuperFieldList(){
-        let fieldList=[];
-        fieldList.push({type:'string',value:'examName',text:'考试名称',dictCode:''})
-        fieldList.push({type:'datetime',value:'examStarttime',text:'考试开始时间'})
-        fieldList.push({type:'datetime',value:'examEndtime',text:'考试结束时间'})
-        fieldList.push({type:'string',value:'paperType',text:''})
-        this.superFieldList = fieldList
-      }
 
   }
 </script>
