@@ -26,7 +26,7 @@
           </a-col>
           <a-col :span="24" >
             <a-form-model-item label="主持人姓名" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="hostName" v-show="false">
-              <a-input v-model="model.hostName" />
+              <a-input v-model="model.hostName"/>
             </a-form-model-item>
           </a-col>
           <a-col :span="24" >
@@ -163,6 +163,9 @@
         // 新增时子表默认添加几行空数据
         addDefaultRowNum: 1,
         validatorRules: {
+          meetTime:[{required: true,message:"请输入会议时间！"}],
+          meetLocation:[{required: true,message:"请输入会议地点！"}],
+          meetName:[{required: true,message:"请输入会议名称！"}],
         },
         //refKeys: ['smartInnerPartyPacpa', 'smartInnerPartyAnnex', ],
         //tableKeys:['smartInnerPartyPacpa', 'smartInnerPartyAnnex', ],

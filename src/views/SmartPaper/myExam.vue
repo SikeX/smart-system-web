@@ -267,7 +267,7 @@
           smartSubmitList: topic,
         };
         console.log(request);
-        postAction('/SmartPaper/smartExam/submitTestPaper' ,request).then(res =>{
+        postAction('/SmartPaper/smartSubmit/submitTestPaper' ,request).then(res =>{
           if (res.success) {
             console.log(res.result);
             grade = res.result;
@@ -279,9 +279,9 @@
                 h('span', null, '本次考试成绩为 '),
                 h('i', { style: 'color: teal' }, grade)
               ]),
-              showCancelButton: true,
+              showCancelButton: false,
               confirmButtonText: '确定',
-              cancelButtonText: '取消',
+              //cancelButtonText: '取消',
               beforeClose: (action, instance, done) => {
                 if (action === 'confirm') {
                   instance.confirmButtonLoading = true
@@ -346,9 +346,9 @@
         getAction("/SmartPaper/smartPaper/getPaperById",params).then(res =>{
           if (res.success) {
             this.processTestPaperData(res.result);
-            this.$message.success(res.message);
+            this.$message.success("试卷加载成功");
           } else {
-            this.$message.error(res.message);
+            this.$message.error("error!");
           }
         })
       },

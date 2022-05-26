@@ -4,6 +4,21 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="会议名称">
+              <j-search-select-tag
+                placeholder="请选择会议名称"
+                v-model="queryParam.meetingName"
+                dict="smart_tripeo_meeting,meeting_name,meeting_name,del_flag='0'">
+              </j-search-select-tag>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+            </span>
+          </a-col>
         </a-row>
       </a-form>
     </div>
@@ -154,7 +169,7 @@
           deleteBatch: "/SmartTripeoMeeting/smartTripeoMeeting/deleteBatch",
           exportXlsUrl: "/SmartTripeoMeeting/smartTripeoMeeting/exportXls",
           importExcelUrl: "SmartTripeoMeeting/smartTripeoMeeting/importExcel",
-          
+
         },
         dictOptions:{},
         superFieldList:[],
