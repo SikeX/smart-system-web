@@ -122,7 +122,7 @@
 <!--        <a-button type="primary" icon="import">导入</a-button>-->
 <!--      </a-upload>-->
 <!--      <j-third-app-button biz-type="user" :selected-row-keys="selectedRowKeys" syncToApp syncToLocal @sync-finally="onSyncFinally"/>-->
-<!--      <a-button type="primary" icon="hdd" @click="recycleBinVisible=true">回收站</a-button>-->
+      <a-button type="primary" icon="hdd" @click="recycleBinVisible=true">回收站</a-button>
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay" @click="handleMenuClick">
           <a-menu-item key="1">
@@ -321,7 +321,13 @@
          //    dataIndex: 'orgCode'
          //  },
           {
-            title: '村庄',
+            title: '所在镇',
+            align: "center",
+            width: 180,
+            dataIndex: 'zhenId_dictText'
+          },
+          {
+            title: '所在村',
             align: "center",
             width: 180,
             dataIndex: 'orgCodeTxt'
