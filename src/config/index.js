@@ -7,5 +7,6 @@ window._CONFIG['domianURL'] = Vue.prototype.API_BASE_URL
 window._CONFIG['casPrefixUrl'] = process.env.VUE_APP_CAS_BASE_URL
 window._CONFIG['onlinePreviewDomainURL'] =  process.env.VUE_APP_ONLINE_BASE_URL
 window._CONFIG['staticDomainURL'] = Vue.prototype.API_BASE_URL + '/sys/common/static'
+window._CONFIG['ossFileUrl'] = process.env.VUE_APP_OSS_FILE_URL
 window._CONFIG['pdfDomainURL'] = Vue.prototype.API_BASE_URL+ '/sys/common/pdf/pdfPreviewIframe'
 window._CONFIG['filePreViewURL'] = process.env.VUE_APP_FILE_PREVIEW_URL + 'onlinePreview?url='

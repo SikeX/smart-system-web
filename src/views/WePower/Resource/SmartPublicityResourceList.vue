@@ -15,7 +15,7 @@
             </a-form-item>
           </a-col>
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
-            <a-form-item label="发布单位门">
+            <a-form-item label="发布单位">
               <j-select-depart
                 placeholder="请选择发布单位"
                 v-model="queryParam.sysOrgCode"
