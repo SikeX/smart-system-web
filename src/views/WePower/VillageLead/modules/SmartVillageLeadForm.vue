@@ -4,18 +4,29 @@
       <a-form-model ref="form" :model="model" :rules="validatorRules" slot="detail">
         <a-row>
           <a-col :span="24">
+            <a-form-model-item label="所属村镇" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="location">
+              <select-village-depart v-model="model.location" @change="changeVillage" />
+              <!-- <j-select-depart v-model="model.location" multi /> -->
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="24">
             <a-form-model-item label="人员选择" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="people">
+              <j-search-select-tag type="list" v-model="model.people" :dict="peopleDict" placeholder="请选择人员选择" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="24">
+            <a-form-model-item label="人员类型" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="peopleType">
               <j-dict-select-tag
                 type="list"
-                v-model="model.people"
-                dictCode="smart_village_home,home_surname,idnumber"
-                placeholder="请选择人员选择"
+                v-model="model.peopleType"
+                dictCode="lead_people_type"
+                placeholder="请选择人员类型"
               />
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
             <a-form-model-item label="职务" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="job">
-              <a-input v-model="model.job" placeholder="请输入职务"></a-input>
+              <j-dict-select-tag type="list" v-model="model.job" dictCode="lead_job" placeholder="请选择职务" />
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
@@ -24,13 +35,8 @@
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
-            <a-form-model-item label="标题" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="title">
-              <a-input v-model="model.title" placeholder="请输入标题"></a-input>
-            </a-form-model-item>
-          </a-col>
-          <a-col :span="24">
-            <a-form-model-item label="所属村" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="location">
-              <j-select-depart v-model="model.location" multi />
+            <a-form-model-item label="职能" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="title">
+              <a-input v-model="model.title" placeholder="请输入职能"></a-input>
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
@@ -50,11 +56,14 @@
 import { httpAction, getAction } from '@/api/manage'
 import { validateDuplicateValue } from '@/utils/util'
 import EloamModal from '@views/eloam/modules/EloamModal'
+import SelectVillageDepart from '@/components/common/SelectVillageDepart.vue'
+// import SelectVillageDepart from '../../../../components/common/SelectVillageDepart.vue'
 
 export default {
   name: 'SmartVillageLeadForm',
   components: {
     EloamModal,
+    SelectVillageDepart,
   },
   props: {
     //表单禁用
@@ -67,6 +76,7 @@ export default {
   data() {
     return {
       model: {},
+      peopleDict: '',
       labelCol: {
         xs: { span: 24 },
         sm: { span: 5 },
@@ -78,6 +88,10 @@ export default {
       confirmLoading: false,
       validatorRules: {
         people: [{ required: true, message: '请输入人员选择!' }],
+        peopleType: [{ required: true, message: '请输入人员类型!' }],
+        job: [{ required: true, message: '请输入职务!' }],
+        location: [{ required: true, message: '请输入所属村!' }],
+        picture: [{ required: true, message: '请上传照片!' }],
       },
       url: {
         add: '/smartVillageLead/smartVillageLead/add',
@@ -96,6 +110,9 @@ export default {
     this.modelDefault = JSON.parse(JSON.stringify(this.model))
   },
   methods: {
+    changeVillage(val) {
+      this.peopleDict = `sys_user,realname,idnumber,depart_id='${val}' and (home_role='1' or home_role='2')`
+    },
     eloamScan() {
       this.$refs.modalForm.open()
     },
@@ -117,6 +134,7 @@ export default {
     },
     edit(record) {
       this.model = Object.assign({}, record)
+      this.peopleDict = `sys_user,realname,idnumber,depart_id='${record.location}' and (home_role='1' or home_role='2')`
       this.visible = true
     },
     submitForm() {

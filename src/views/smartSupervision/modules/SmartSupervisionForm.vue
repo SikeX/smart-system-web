@@ -50,7 +50,7 @@ import EloamModal from '@views/eloam/modules/EloamModal'
 export default {
   name: 'SmartSupervisionForm',
   components: {
-    EloamModal
+    EloamModal,
   },
   data() {
     return {
@@ -84,7 +84,7 @@ export default {
       tableKeys: ['smartSupervisionAnnex'],
       activeKey: 'smartSupervisionAnnex',
       // 8项规定监督检查附件表
-      
+
       url: {
         add: '/smartSupervision/smartSupervision/add',
         edit: '/smartSupervision/smartSupervision/edit',
@@ -113,6 +113,20 @@ export default {
     edit(record) {
       this.model = Object.assign({}, record)
       this.visible = true
+    },
+    /** 调用完edit()方法之后会自动调用此方法 */
+    editAfter() {
+      this.$nextTick(() => {})
+      // 加载子表数据
+      if (this.model.id) {
+        console.log(this.model)
+        let params = { id: this.model.id }
+        getAction(this.url.queryById, params).then((res) => {
+          if (res.success) {
+            this.model = res.result
+          }
+        })
+      }
     },
     submitForm() {
       const that = this

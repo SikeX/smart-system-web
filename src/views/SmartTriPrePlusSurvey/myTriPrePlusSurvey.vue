@@ -496,9 +496,9 @@
         getAction("/SmartPaper/smartPaper/getPaperById",params).then(res =>{
           if (res.success) {
             this.processTestPaperData(res.result);
-            this.$message.success(res.message);
+            this.$message.success("问卷加载成功");
           } else {
-            this.$message.error(res.message);
+            this.$message.error("error!");
           }
         })
       },

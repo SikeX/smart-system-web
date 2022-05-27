@@ -10,8 +10,9 @@
             </a-form-item>
           </a-col>
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
-            <a-form-item label="单位">
-              <j-select-depart placeholder="请选择单位" v-model="queryParam.location" />
+            <a-form-item label="村镇">
+              <select-village-depart placeholder="请选择村镇" v-model="queryParam.location" />
+              <!-- <j-select-depart placeholder="请选择村镇" v-model="queryParam.location" /> -->
             </a-form-item>
           </a-col>
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
@@ -110,7 +111,6 @@
         :pagination="ipagination"
         :loading="loading"
         :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
-        class="j-table-force-nowrap"
         @change="handleTableChange"
       >
         <template slot="htmlSlot" slot-scope="text">
@@ -164,12 +164,14 @@ import { mixinDevice } from '@/utils/mixin'
 import { JeecgListMixin } from '@/mixins/JeecgListMixin'
 import SmartPublicityPartyModal from './modules/SmartPublicityPartyModal'
 import { filterMultiDictText } from '@/components/dict/JDictSelectUtil'
+import SelectVillageDepart from '../../../components/common/SelectVillageDepart.vue'
 
 export default {
   name: 'SmartPublicityPartyList',
   mixins: [JeecgListMixin, mixinDevice],
   components: {
     SmartPublicityPartyModal,
+    SelectVillageDepart,
   },
   data() {
     return {
@@ -192,19 +194,23 @@ export default {
           dataIndex: 'type_dictText',
         },
         {
-          title: '单位',
-          align: 'center',
-          dataIndex: 'location_dictText',
-        },
-        {
           title: '标题',
           align: 'center',
           dataIndex: 'title',
+          width: 200,
+        },
+        {
+          title: '村镇',
+          align: 'center',
+          dataIndex: 'location_dictText',
+          width: 200,
+          // ellipsis: true,
         },
         {
           title: '上传时间',
           align: 'center',
           dataIndex: 'createTime',
+          width: 150,
         },
         {
           title: '上传用户',

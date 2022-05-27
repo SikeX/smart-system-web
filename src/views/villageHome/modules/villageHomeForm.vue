@@ -54,7 +54,7 @@
           </a-col>
           <a-col :span="24">
             <a-form-model-item label="户主" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="idnumber">
-              <select-user-by-village v-model="model.idnumber" @info = "getHostUser" store='idnumber'/>
+              <select-user-by-village v-model="model.idnumber" @info = "getHostUser" store = 'idnumber'/>
             </a-form-model-item>
           </a-col>
 <!--          <a-col :span="24">-->
@@ -101,12 +101,12 @@
                 <a-input v-model="user.phone" placeholder="请输入手机号" disabled='true' ></a-input>
               </a-form-model-item>
             </a-col>
+            <a-col :span="24">
             <a-form-model-item
               :labelCol="labelCol"
               :wrapperCol="wrapperCol"
               prop="relation"
               label="家庭关系"
-              required
             >
               <j-search-select-tag
                 placeholder="请选择与户主的关系"
@@ -114,6 +114,7 @@
                 v-model="user.relation"
               />
             </a-form-model-item>
+            </a-col>
             <a-col :span="24">
               <a-form-model-item label="角色" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="role" >
                 <a-radio-group v-model="user.role" disabled='true'>

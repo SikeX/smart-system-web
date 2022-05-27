@@ -4,8 +4,8 @@
       <a-form-model ref="form" :model="model" :rules="validatorRules" slot="detail">
         <a-row>
           <a-col :span="24">
-            <a-form-model-item label="姓名" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="name">
-              <j-select-user-by-dep v-model="model.name" />
+            <a-form-model-item label="姓名"  :labelCol="labelCol" :wrapperCol="wrapperCol" prop="name">
+              <j-select-user-by-dep :multi="false" v-model="model.name" />
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
@@ -15,7 +15,7 @@
           </a-col>
           <a-col :span="24">
             <a-form-model-item label="单位" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="department">
-              <j-select-depart v-model="model.department" multi  />
+              <j-select-depart :multi="false" v-model="model.department" />
             </a-form-model-item>
           </a-col>
         </a-row>
@@ -66,7 +66,7 @@
            ],
         },
         url: {
-          add: "/smart_8_escorted_meal/smart_8EscortedMeal/add",
+          add: "/smart_8_escorted_meal/smart_8EscortedMeal/addByMainId",
           edit: "/smart_8_escorted_meal/smart_8EscortedMeal/edit",
           queryById: "/smart_8_escorted_meal/smart_8EscortedMeal/queryById"
         }
@@ -82,17 +82,17 @@
       this.modelDefault = JSON.parse(JSON.stringify(this.model));
     },
     methods: {
-      add () {
-        this.edit(this.modelDefault);
+      add(mainId) {
+        this.model = Object.assign({}, {"mainId": mainId})
       },
-      edit (record) {
-        this.model = Object.assign({}, record);
-        this.visible = true;
+      edit(record) {
+        this.model = Object.assign({}, record)
+        this.visible = true
       },
-      submitForm () {
-        const that = this;
+      submitForm() {
+        const that = this
         // 触发表单验证
-        this.$refs.form.validate(valid => {
+        this.$refs.form.validate((valid) => {
           if (valid) {
             that.confirmLoading = true;
             let httpurl = '';

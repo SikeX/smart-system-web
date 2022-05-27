@@ -142,8 +142,8 @@
                   <!--<span style="font-size:12px;">(三个下划线为一个填空符)</span>-->
 
                   <div class="fillInBlank">
-                    <div v-for="(q, index) in fillSymbolStr(t.question)" :key="index">
-                      <el-input type="textarea" autosize placeholder="请回答" v-if="index!=fillSymbolStr(t.question).length-1" v-model="t.correctAnswer[index]" :disabled="isRead">
+                    <div v-for="(q, index) in fillSymbolStr(t.question,tIndex)" :key="index">
+                      <el-input type="textarea" autosize placeholder="请回答" v-if="index!=fillSymbolStr(t.question,tIndex).length-1" v-model="t.correctAnswer[index]" :disabled="isRead">
                       </el-input>
                     </div>
                   </div>
@@ -337,8 +337,12 @@
 
       //按填空符(三个下划线)划分字符串
       fillSymbolStr() {
-        return function (str) {
+        return function (str,tIndex) {
           let q = str.split("___");
+          let len = this.sortedTopics[3].topic_content[tIndex].correctAnswer.length
+          for(var i =0;i<len - q.length+1;i++){
+            this.sortedTopics[3].topic_content[tIndex].correctAnswer.pop()
+          }
           return q;
         };
       },
