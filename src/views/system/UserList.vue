@@ -33,7 +33,15 @@
                 <j-input placeholder="请输入手机号码" v-model="queryParam.phone"></j-input>
               </a-form-item>
             </a-col>
-
+          <a-col :md="6" :sm="8" >
+            <a-form-item label="单位管理员" >
+              <a-select v-model="queryParam.userIdentity" placeholder="请选择是否为单位管理员">
+                <a-select-option value="">请选择</a-select-option>
+                <a-select-option value=1>否</a-select-option>
+                <a-select-option value=2>是</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
 
           <!--下拉搜索（可配置字典）：j-search-select-tag -->
             <a-col :md="6" :sm="8">
