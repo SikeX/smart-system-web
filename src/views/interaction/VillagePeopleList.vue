@@ -38,9 +38,11 @@
               </a-form-item>
             </a-col>
 
+
+
           <!--TODO 按照单位查询 (设置返回值，默认返回ID：customReturnField='orgCode')-->
           <a-col :md="6" :sm="8">
-            <a-form-item label="所在村"  hasFeedback>
+            <a-form-item label="所在镇"  hasFeedback>
 <!--              <j-select-fuze-depart placeholder="请选择单位"  v-model="queryParam.orgCode" customReturnField='orgCode' :multi="false"   :treeOpera="true"></j-select-fuze-depart>-->
 <!--              <a-form-model-item label="单位分配" :labelCol="labelCol" :wrapperCol="wrapperCol" v-show="!departDisabled">-->
                 <!-- <j-select-depart v-model="model.selecteddeparts" :multi="false" @back="backDepartInfo" :backDepart="true" :treeOpera="true"/>-->
@@ -49,12 +51,30 @@
                   :dropdownStyle="{maxHeight:'200px',overflow:'auto'}"
                   :treeData="departTree"
                   :multi="true"
-                  v-model="queryParam.departId"
-                  placeholder="请选择所在村"
+                  v-model="queryParam.zhenId"
+                  placeholder="请选择所在镇"
                   allow-clear
-                  tree-default-expand-all>
+                  >
                 </a-tree-select>
 <!--              </a-form-model-item>-->
+            </a-form-item>
+          </a-col>
+          <a-col :md="6" :sm="8">
+            <a-form-item label="所在村"  hasFeedback>
+              <!--              <j-select-fuze-depart placeholder="请选择单位"  v-model="queryParam.orgCode" customReturnField='orgCode' :multi="false"   :treeOpera="true"></j-select-fuze-depart>-->
+              <!--              <a-form-model-item label="单位分配" :labelCol="labelCol" :wrapperCol="wrapperCol" v-show="!departDisabled">-->
+              <!-- <j-select-depart v-model="model.selecteddeparts" :multi="false" @back="backDepartInfo" :backDepart="true" :treeOpera="true"/>-->
+              <a-tree-select
+                style="width:100%"
+                :dropdownStyle="{maxHeight:'200px',overflow:'auto'}"
+                :treeData="departTree"
+                :multi="true"
+                v-model="queryParam.departId"
+                placeholder="请选择所在村"
+                allow-clear
+                >
+              </a-tree-select>
+              <!--              </a-form-model-item>-->
             </a-form-item>
           </a-col>
 
@@ -101,8 +121,8 @@
 <!--      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">-->
 <!--        <a-button type="primary" icon="import">导入</a-button>-->
 <!--      </a-upload>-->
-      <j-third-app-button biz-type="user" :selected-row-keys="selectedRowKeys" syncToApp syncToLocal @sync-finally="onSyncFinally"/>
-      <a-button type="primary" icon="hdd" @click="recycleBinVisible=true">回收站</a-button>
+<!--      <j-third-app-button biz-type="user" :selected-row-keys="selectedRowKeys" syncToApp syncToLocal @sync-finally="onSyncFinally"/>-->
+<!--      <a-button type="primary" icon="hdd" @click="recycleBinVisible=true">回收站</a-button>-->
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay" @click="handleMenuClick">
           <a-menu-item key="1">
@@ -123,7 +143,7 @@
           <a-icon type="down"/>
         </a-button>
       </a-dropdown>
-      <j-super-query :fieldList="superQueryFieldList" @handleSuperQuery="handleSuperQuery"/>
+<!--      <j-super-query :fieldList="superQueryFieldList" @handleSuperQuery="handleSuperQuery"/>-->
     </div>
 
     <!-- table区域-begin -->
@@ -349,7 +369,7 @@
           list: "/sys/user/villageList",
           delete: "/sys/user/delete",
           deleteBatch: "/sys/user/deleteBatch",
-          exportXlsUrl: "/sys/user/exportXls",
+          exportXlsUrl: "/sys/user/exportXlsVillage",
           importExcelUrl: "sys/user/importExcel",
         },
       }

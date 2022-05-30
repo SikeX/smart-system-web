@@ -63,7 +63,7 @@
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">村两委新增</a-button>
       <!-- <a-button @click="handlePeopleAdd" type="primary" icon="plus">党员、村民代表新增</a-button> -->
-      <a-button type="primary" icon="download" @click="handleExportXls('村（社区）领导班子')">导出</a-button>
+      <!-- <a-button type="primary" icon="download" @click="handleExportXls('村（社区）领导班子')">导出</a-button> -->
       <a-upload
         name="file"
         :showUploadList="false"
@@ -241,7 +241,7 @@ export default {
         },
       ],
       url: {
-        list: '/smartVillageLead/smartVillageLead/list',
+        list: '/smartVillageLead/smartVillageLead/listAdmin',
         delete: '/smartVillageLead/smartVillageLead/delete',
         deleteBatch: '/smartVillageLead/smartVillageLead/deleteBatch',
         exportXlsUrl: '/smartVillageLead/smartVillageLead/exportXls',

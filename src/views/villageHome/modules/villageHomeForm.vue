@@ -301,7 +301,7 @@ import SelectUserByVillage from "../../../components/jeecgbiz/modal/SelectUserBy
       getHostUser(back){
         let that = this
         that.model.idnumber = back[0].idnumber
-        // that.model.realname= back[0].realname
+        that.model.realname= back[0].realname
         that.model.phone = back[0].phone
         that.model.role = back[0].role
       },
