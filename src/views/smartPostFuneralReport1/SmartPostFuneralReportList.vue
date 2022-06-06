@@ -33,12 +33,12 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
 <!--      <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>-->
-      <a-button type="primary" icon="download" @click="handleExportXls('丧事事后报备表')">导出</a-button>
-      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
-        <a-button type="primary" icon="import">导入</a-button>
-      </a-upload>
+      <a-button v-if=" roleId.indexOf('f6817f48af4fb3af11b9e8bf182f618b') != -1" type="primary" icon="download" @click="handleExportXls('丧事事后报备表')">导出</a-button>
+<!--      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">-->
+<!--        <a-button type="primary" icon="import">导入</a-button>-->
+<!--      </a-upload>-->
       <!-- 高级查询区域 -->
-      <j-super-query :fieldList="superFieldList" ref="superQueryModal" @handleSuperQuery="handleSuperQuery"></j-super-query>
+<!--      <j-super-query :fieldList="superFieldList" ref="superQueryModal" @handleSuperQuery="handleSuperQuery"></j-super-query>-->
 <!--      <a-dropdown v-if="selectedRowKeys.length > 0">-->
 <!--        <a-menu slot="overlay">-->
 <!--&lt;!&ndash;          <a-menu-item key="1" @click="batchDel"><a-icon type="delete"/>删除</a-menu-item>&ndash;&gt;-->
@@ -94,16 +94,21 @@
 <!--          <a  @click="viewPre(record)">查看口头报备</a>-->
 <!--          <a-divider type="vertical" />-->
           <a v-show="record.ifReport == '0'" @click="postAdd(record)">事后报备</a>
-                    <a-divider v-show="record.verifyStatus == '3' && roleId.indexOf('f6817f48af4fb3af11b9e8bf182f618b') != -1" type="vertical" />
-          <a v-show="record.verifyStatus == '3' && roleId.indexOf('f6817f48af4fb3af11b9e8bf182f618b') != -1" @click="postEdit(record.id)">编辑</a>
-
-          <a-divider v-show="record.verifyStatus == '3' && roleId.indexOf('f6817f48af4fb3af11b9e8bf182f618b') != -1" type="vertical" />
-
-                <a v-show="record.ifReport == '1'" @click="postDetail(record.id)">详情</a>
-             <a-divider v-show="record.verifyStatus == '3' && roleId.indexOf('f6817f48af4fb3af11b9e8bf182f618b') != -1" type="vertical" />
-                <a-popconfirm title="确定删除吗?" @confirm="() => postDelete(record)">
-                  <a v-show="record.verifyStatus == '3' && roleId.indexOf('f6817f48af4fb3af11b9e8bf182f618b') != -1">删除</a>
+           <a v-show="record.ifReport == '1'" @click="postDetail(record.id)">详情</a>
+                    <a-divider  type="vertical" />
+           <a-dropdown>
+            <a class="ant-dropdown-link">更多 <a-icon type="down" /></a>
+            <a-menu slot="overlay">
+              <a-menu-item v-show="record.verifyStatus == '3' && roleId.indexOf('f6817f48af4fb3af11b9e8bf182f618b') != -1">
+                 <a @click="postEdit(record.id)">编辑</a>
+              </a-menu-item>
+              <a-menu-item v-show="record.verifyStatus == '3' && roleId.indexOf('f6817f48af4fb3af11b9e8bf182f618b') != -1">
+                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
+                  <a>删除</a>
                 </a-popconfirm>
+              </a-menu-item>
+            </a-menu>
+          </a-dropdown>
 
 
         </span>

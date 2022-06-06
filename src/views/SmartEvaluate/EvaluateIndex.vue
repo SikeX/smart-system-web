@@ -364,26 +364,25 @@
         getAction(url).then((res)=>{
             if(res.success){
               let result = res.result
-              let l = result.length
-                let i=1;
-                let monthArray= ['1','2','3','4','5','6','7','8','9','10','11','12'];
+              let i=1;
+              let monthArray= ['1','2','3','4','5','6','7','8','9','10','11','12'];
                 //console.log(result.length,result)
-              if(result.length != 0){
+              if(result.length !== 0){
                 for(i=0;i<12;i++){
-                  if(result[i].month != monthArray[i] ){
-                    //console.log(i,monthArray[i],result[i].month)
-                    let item ={month:monthArray[i],count:0}
-                    result.splice(i,0,item)
-                  }else {
-                    //console.log(result.length,i+l)
-                    let item ={month:monthArray[i+1],count:0}
-                    if(result.length< 12 ){
-                      result.splice(i+1,0,item)
-                    }else if(result.length !=12){
+                  if(result.length>i+1){
+                    if(result[i].month !== monthArray[i] ){
+                      //console.log(i,monthArray[i],result[i].month)
+                      let item ={month:monthArray[i],count:0}
+                      result.splice(i,0,item)
+                    }else {
+                      let item ={month:monthArray[i],count:result[i].count}
                       result.push(item)
                     }
+                  }else{
+                    let item ={month:monthArray[i],count:0}
+                    result.splice(i,0,item)
                   }
-                }
+              }
               }else{
                 for(i=0;i<12;i++){
                     console.log(monthArray[i])

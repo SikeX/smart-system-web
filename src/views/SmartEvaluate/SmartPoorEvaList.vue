@@ -9,9 +9,15 @@
               <a-input placeholder="请输入主管单位" v-model="queryParam.exeDept"></a-input>
             </a-form-item>
           </a-col>
-          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+          <a-col :xl="7" :lg="7" :md="8" :sm="24">
             <a-form-item label="窗口服务大厅名称">
-              <a-input placeholder="请输入窗口服务大厅名称" v-model="queryParam.windowsName"></a-input>
+<!--              <a-input placeholder="请输入窗口服务大厅名称" v-model="queryParam.windowsName"></a-input>-->
+              <j-search-select-tag
+                placeholder="请选择窗口服务大厅名称"
+                v-model="queryParam.windowsName"
+                dict="smart_window_unit,name,name,del_flag = 0"
+                :async="true" :style="{width:'200px'}">
+              </j-search-select-tag>
             </a-form-item>
           </a-col>
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
@@ -209,7 +215,7 @@
           deleteBatch: "/smartEvaluateList/smartEvaluateWindow/deleteBatch",
           exportXlsUrl: "/smartEvaluateList/smartEvaluateWindow/exportXls",
           importExcelUrl: "smartEvaluateList/smartEvaluateWindow/importExcel",
-          
+
         },
         dictOptions:{},
         superFieldList:[],

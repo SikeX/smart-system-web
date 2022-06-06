@@ -209,6 +209,7 @@ export default {
         endTime: [{ required: true, message: '请选择结束时间!' }, { validator: this.endTimeValidate }],
         startTime: [{ required: true, message: '请选择开始时间!' }, { validator: this.startTimeValidate }],
         msgAbstract: [{ required: true, message: '请输入摘要!' }],
+        // sendType: [{ required: true, message: '请选择发送方式!' }],
       },
       url: {
         queryByIds: '/sys/user/queryByIds',

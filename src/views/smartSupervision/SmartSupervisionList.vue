@@ -122,7 +122,7 @@
 import { JeecgListMixin } from '@/mixins/JeecgListMixin'
 import SmartSupervisionModal from './modules/SmartSupervisionModal'
 import '@/assets/less/TableExpand.less'
-import { mapActions, mapGetters,mapState } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 
 export default {
   name: 'SmartSupervisionList',
@@ -149,7 +149,7 @@ export default {
         {
           title: '创建人',
           align: 'center',
-          dataIndex: 'createBy',
+          dataIndex: 'createBy_dictText',
         },
         {
           title: '创建日期',
@@ -225,9 +225,9 @@ export default {
     },
   },
   methods: {
-    ...mapGetters(["userInfo"]),
+    ...mapGetters(['userInfo']),
     initDictConfig() {},
-     getSuperFieldList() {
+    getSuperFieldList() {
       let fieldList = []
       fieldList.push({ type: 'string', value: 'createBy', text: '创建人', dictCode: '' })
       fieldList.push({ type: 'datetime', value: 'createTime', text: '创建日期' })

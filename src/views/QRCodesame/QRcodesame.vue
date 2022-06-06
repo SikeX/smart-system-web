@@ -1,45 +1,46 @@
 <template>
   <div id="qrcode">
     <canvas id="aa" width="450" height="500"></canvas>
-    <button v-show=false @click="initQrCode">生成二维码</button>
+    <button v-show="false" @click="initQrCode">生成二维码</button>
     <smart-reporting-information-detail />
   </div>
-
 </template>
 
 <!--显示纠治四风二维码-->
 
 <script>
-  import { getAction } from '@/api/manage'
-  import SmartReportingInformationDetail from '../SmartReportingInformation/SmartReportingInformationDetail'
-  export default {
-    name: 'QRcodesame',
-    //调用表格作为首页的表格
-    components: { SmartReportingInformationDetail },
-    //props: ['sex','name'],
-    data () {
-      return {
-        url: 'https://www.ningxitong.cn/smart-system/qrCode/generate/v3?content=https://www.ningxitong.cn/InsertReportingInformation/InsertReportingInformationDetail',
-        name: '纠治四风',
-        formLayout: 'horizontal',
-        model: {},
-        rules: {
-          note: [{required: true, message: 'Please input your note!'}],
-          gender:[{ required: true, message: 'Please select your gender!' }]
-        },
-        areaOptions:[],
+import { getAction } from '@/api/manage'
+import SmartReportingInformationDetail from '../SmartReportingInformation/SmartReportingInformationDetail'
+export default {
+  name: 'QRcodesame',
+  //调用表格作为首页的表格
+  components: { SmartReportingInformationDetail },
+  //props: ['sex','name'],
+  data() {
+    return {
+      url:
+        window._CONFIG['domianURL'] +
+        '/qrCode/generate/v3?content=https://zhjj.dlqzzst.com:543/InsertReportingInformation/InsertReportingInformationDetail',
+      name: '纠治四风',
+      formLayout: 'horizontal',
+      model: {},
+      rules: {
+        note: [{ required: true, message: 'Please input your note!' }],
+        gender: [{ required: true, message: 'Please select your gender!' }],
+      },
+      areaOptions: [],
 
-        columns: [
-          {
-            title: '#',
-            dataIndex: '',
-            key:'rowIndex',
-            width:60,
-            align:"center",
-            customRender:function (t,r,index) {
-              return parseInt(index)+1;
-            }
+      columns: [
+        {
+          title: '#',
+          dataIndex: '',
+          key: 'rowIndex',
+          width: 60,
+          align: 'center',
+          customRender: function (t, r, index) {
+            return parseInt(index) + 1
           },
+        },
         /*  {
             title:'被反映人姓名',
             align:"center",
@@ -84,34 +85,34 @@
             width:147,
             scopedSlots: { customRender: 'action' }
           }*/
-        ],
+      ],
+    }
+  },
+
+  methods: {
+    initQrCode() {
+      //二维码部分
+      var aa = document.getElementById('aa')
+      var bb = aa.getContext('2d')
+
+      bb.fillStyle = '#fff' //   填充背景框颜色
+      bb.fillRect(0, 0, 450, 470) //(背景框)
+
+      var img = new Image()
+      img.src = this.url
+
+      img.onload = function () {
+        bb.drawImage(img, 70, 70)
       }
+
+      bb.fillStyle = '#000' //字体颜色
+      bb.font = '20px Adobe Ming Std' //字体样式大小
+      bb.fillText(this.name, 180, 450) //位置
+
+      bb.stroke()
     },
-
-    methods: {
-      initQrCode(){ //二维码部分
-        var aa = document.getElementById('aa');
-        var bb = aa.getContext('2d');
-
-        bb.fillStyle = '#fff';    //   填充背景框颜色
-        bb.fillRect(0,0,450,470);//(背景框)
-
-        var img = new Image;
-        img.src = this.url;
-
-        img.onload = function () {
-            bb.drawImage(img, 70,70);
-        }
-
-        bb.fillStyle = '#000';//字体颜色
-        bb.font = '20px Adobe Ming Std';//字体样式大小
-        bb.fillText(this.name,180,450);//位置
-
-        bb.stroke();
-      },
-      initDictConfig(){
-      },
-      /*getSuperFieldList(){//表
+    initDictConfig() {},
+    /*getSuperFieldList(){//表
         let fieldList=[];
         fieldList.push({type:'string',value:'reflectedName',text:'被反映人姓名',dictCode:''})
         fieldList.push({type:'string',value:'reflectedDocumentid',text:'被反映人单位',dictCode:''})
@@ -122,31 +123,29 @@
         fieldList.push({type:'datetime',value:'reportingTime',text:'举报时间'})
         this.superFieldList = fieldList
       }*/
-    },
-    mounted() {
-      this.initQrCode()
-      this.initDictConfig()
-    },
-    created (){
-      console.log('============= online href common props ============= ');
-      console.log('props sex: ',this.sex);
-      console.log('props name: ',this.name);
+  },
+  mounted() {
+    this.initQrCode()
+    this.initDictConfig()
+  },
+  created() {
+    console.log('============= online href common props ============= ')
+    console.log('props sex: ', this.sex)
+    console.log('props name: ', this.name)
 
-      this.getSuperFieldList();
-
+    this.getSuperFieldList()
+  },
+  watch: {
+    $route: {
+      immediate: true,
+      handler() {
+        console.log('============= online href  $route props ============= ')
+        let sex = this.$route.query.sex
+        console.log('$route sex: ', sex)
+      },
     },
-    watch: {
-      $route: {
-        immediate: true,
-        handler() {
-          console.log('============= online href  $route props ============= ');
-          let sex = this.$route.query.sex
-          console.log('$route sex: ', sex);
-        }
-      }
-    },
-
-  }
+  },
+}
 </script>
 
 <style>
