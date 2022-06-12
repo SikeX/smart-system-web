@@ -1,6 +1,5 @@
 <template>
   <a-card :bordered="false">
-    
     <!-- table区域-begin -->
     <!-- <div>
     <div class="ant-alert ant-alert-info" style="margin-bottom: 16px">
@@ -160,7 +159,7 @@ export default {
           dataIndex: 'submitFile',
           customRender: (text) => {
             if (text) {
-              const url = window._CONFIG['staticDomainURL'] + '/' + text
+              const url = text
               const type = text.split('.').pop()
               const name = text.split('/').pop().split('_')[0]
               const fileName = name + '.' + type
@@ -275,7 +274,7 @@ export default {
         if (res.success) {
           res.result.map((item) => {
             if (item) {
-              this.fileList.push(this.upurl + item)
+              this.fileList.push(item)
             }
           })
           console.log(this.fileList)

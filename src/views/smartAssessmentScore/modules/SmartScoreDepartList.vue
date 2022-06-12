@@ -1,5 +1,34 @@
 <template>
   <a-card :title='description' v-if='contentId' :bordered='false'>
+    <!-- 查询区域 -->
+    <div class='table-page-search-wrapper'>
+      <a-form layout='inline' @keyup.enter.native='searchQuery'>
+        <a-row :gutter='24'>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="评分状态">
+              <a-select
+                placeholder="全部"
+                v-model:value="queryParam.markedContent">
+                <a-select-option :value="'!' + contentId">未评分</a-select-option>
+                <a-select-option :value="contentId">已评分</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+              <a @click="handleToggleSearch" style="margin-left: 8px">
+                {{ toggleSearchStatus ? '收起' : '展开' }}
+                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+              </a>
+            </span>
+          </a-col>
+        </a-row>
+      </a-form>
+    </div>
+    <!-- 查询区域-END -->
+
     <!-- table区域-begin -->
     <div>
       <a-table
@@ -37,7 +66,11 @@
         </template>
 
         <span slot='action' slot-scope='text, record'>
-          <a @click='handleMark(record)'>评分</a>
+          <span v-if="disableSubmit(record.endTime)">未到截止时间</span>
+          <div v-else>
+            <a v-if="record.missionStatus==='未签收'" @click='signMission(record)'>代替签收</a>
+            <a v-else @click='handleMark(record)'>评分</a>
+          </div>
         </span>
 
       </a-table>
@@ -83,23 +116,21 @@ export default {
       type: Number,
       default:0,
       required:false
-    }
+    },
+    disabled: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
   },
   watch:{
     contentId:{
       immediate: true,
       handler(val) {
-        if(!this.missionId){
-          this.clearList()
-        }else{
-          this.queryParam['missionId'] = this.missionId
-          let assessInfo = Vue.ls.get("assessInfo")
-          if (assessInfo) {
-            this.queryParam['depart'] = assessInfo.departs || assessInfo.responsibleDepart;
-            this.loadData(1);
-          } else {
-            this.$message.warning('没有评分权限!')
-          }
+        if (val && this.missionId) {
+          this.loadData(1);
+        } else {
+          this.clearList();
         }
       }
     }
@@ -126,9 +157,19 @@ export default {
           dataIndex: 'depart_dictText'
         },
         {
-          title: '状态',
+          title: '任务状态',
           align: 'center',
           dataIndex: 'missionStatus'
+        },
+        {
+          title: '截止时间',
+          align: 'center',
+          dataIndex: 'endTime'
+        },
+        {
+          title: '评分状态',
+          align: 'center',
+          dataIndex: 'markedContent',
         },
         {
           title: '操作',
@@ -140,7 +181,7 @@ export default {
         }
       ],
       url: {
-        list: '/smartAnswerInfo/smartAnswerInfo/listAll',
+        list: '/smartAnswerInfo/smartAnswerInfo/listInCharge',
         delete: '/smartAnswerInfo/smartAnswerInfo/delete',
         sign: '/smartAnswerInfo/smartAnswerInfo/sign',
         deleteBatch: '/smartAnswerInfo/smartAnswerInfo/deleteBatch',
@@ -163,13 +204,75 @@ export default {
     }
   },
   methods: {
+    disableSubmit(endTime) {
+      let dateDiff = new Date(endTime).getTime() - new Date().getTime()
+      return dateDiff > 0;
+    },
     handleMark:function(record){
       // console.log(record)
       this.$refs.modalForm.title="评分";
       this.$refs.modalForm.disableSubmit = false;
       this.$refs.modalForm.edit(this.contentId, record.id);
     },
+    clearList() {
+      this.dataSource = [];
+    },
+    loadData(arg) {
+      if(!this.url.list){
+        this.$message.error("请设置url.list属性!")
+        return
+      }
+      //加载数据 若传入参数1则加载第一页的内容
+      if (arg === 1) {
+        this.ipagination.current = 1;
+      }
+      var params = this.getQueryParams();//查询条件
+      params['missionId'] = this.missionId;
+      let assessInfo = Vue.ls.get("assessInfo")
+      if (assessInfo) {
+        params['depart'] = assessInfo.departs || assessInfo.responsibleDepart;
+        params['contentId'] = this.contentId;
+        params['type'] = assessInfo.type
+      } else {
+        this.$message.warning('没有评分权限!')
+        return
+      }
+      this.loading = true;
+      getAction(this.url.list, params).then((res) => {
+        if (res.success) {
+          //update-begin---author:zhangyafei    Date:20201118  for：适配不分页的数据列表------------
+          this.dataSource = res.result.records||res.result;
+          if(res.result.total)
+          {
+            this.ipagination.total = res.result.total;
+          }else{
+            this.ipagination.total = 0;
+          }
+          //update-end---author:zhangyafei    Date:20201118  for：适配不分页的数据列表------------
+        }else{
+          this.dataSource = []
+          this.$message.warning(res.message)
+        }
+      }).finally(() => {
+        this.loading = false
+      })
+    },
     initDictConfig() {
+    },
+    signMission(record) {
+      // 签收任务，并生成答题要点记录
+      this.loading = true
+      putAction(this.url.sign, record).then((res) => {
+        if (res.success) {
+          this.$message.success(res.message);
+          this.onClearSelected()
+          this.loadData(1)
+        }else{
+          this.$message.warning(res.message);
+        }
+      }).finally(() => {
+        this.loading = false;
+      })
     },
     getSuperFieldList() {
       let fieldList = []

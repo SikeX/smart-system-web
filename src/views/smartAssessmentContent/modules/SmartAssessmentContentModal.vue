@@ -10,22 +10,16 @@
     cancelText='关闭'>
     <a-spin :spinning='confirmLoading'>
       <a-form-model ref='form' :model='model' :rules='validatorRules'>
-          <a-form-model-item label='父级节点' :labelCol='labelCol' :wrapperCol='wrapperCol' prop='pid'>
-            <j-tree-select
-              ref='treeSelect'
-              placeholder='请选择父级节点'
-              v-model='model.pid'
-              dict='smart_assessment_content,name,id'
-              pidField='pid'
-              pidValue='0'
-              hasChildField='has_child'
-              :disabled="disableSubmit"
-              :condition='condition'
-            >
-            </j-tree-select>
+          <a-form-model-item v-if='curLevel !== 1' label='父级节点' :labelCol='labelCol' :wrapperCol='wrapperCol' prop='pid'>
+            <j-search-select-tag
+              placeholder="请选择父级节点"
+              v-model="model.pid"
+              :dictOptions="contentOptions"
+              :disabled="disableSubmit">
+            </j-search-select-tag>
           </a-form-model-item>
           <a-form-model-item label='名称' :labelCol='labelCol' :wrapperCol='wrapperCol' prop='name'>
-            <a-input v-model='model.name' placeholder='请输入名称'></a-input>
+            <a-input v-model='model.name' placeholder='请输入名称' :disabled="disableSubmit"></a-input>
           </a-form-model-item>
           <a-form-model-item v-if='model.isKey === 1' label='填报说明' :labelCol='labelCol' :wrapperCol='wrapperCol'
                              prop='instructions'>
@@ -55,7 +49,7 @@
                              prop='assTeam' >
             <j-search-select-tag v-model='model.assTeam' dict='smart_assessment_teamwheredel_flag=0,team_name,id' :disabled="disableSubmit"/>
           </a-form-model-item>
-          <a-form-model-item label='是否考核要点' :labelCol='labelCol' :wrapperCol='wrapperCol' prop='isKey'>
+          <a-form-model-item v-show='false' label='是否考核要点' :labelCol='labelCol' :wrapperCol='wrapperCol' prop='isKey'>
             <j-switch v-model='model.isKey' :options='[1, 0]' :disabled="disableSubmit"></j-switch>
           </a-form-model-item>
 
@@ -68,6 +62,7 @@
 
 import {getAction, httpAction} from '@/api/manage'
 import {validateDuplicateValue} from '@/utils/util'
+import { ajaxGetDictItems } from '@api/api'
 
 export default {
   name: 'SmartAssessmentContentModal',
@@ -83,13 +78,14 @@ export default {
     mainId: {
       immediate: true,
       handler(val) {
-        let params = {
-          mission_id: val,
-          is_key: 0
-        }
-        this.condition = JSON.stringify(params)
+
+        // let params = {
+        //   mission_id: val,
+        //   is_key: 0
+        // }
+        // this.condition = JSON.stringify(params)
       }
-    }
+    },
   },
   data() {
     return {
@@ -109,6 +105,9 @@ export default {
 
       confirmLoading: false,
       validatorRules: {
+        pid: [
+          {required: true, message: '请选择父节点!'},
+        ],
         name: [
           {required: true, message: '请输入考核名称!'},
         ],
@@ -137,6 +136,10 @@ export default {
 
       loading: false,
       departOptions: [],
+      contentOptions: null,
+
+      curLevel: 1,
+      pidName: ''
 
     }
   },
@@ -146,6 +149,28 @@ export default {
     this.loadDepartDict()
   },
   methods: {
+    initDict() {
+      let dictStr = 'smart_assessment_content,name,id'
+      if (this.curLevel === 2) {
+        dictStr = 'smart_assessment_content,name,id,pid=\'0\' and is_key=0 and mission_id=\'' + this.mainId + '\''
+      } else if (this.curLevel === 3) {
+        dictStr = 'smart_assessment_content,name,id,pid<>\'0\' and is_key=0 and mission_id=\'' + this.mainId + '\''
+      } else {
+        return
+      }
+      ajaxGetDictItems(dictStr, null).then((res) => {
+        if (res.success) {
+          if (this.disableSubmit) {
+            this.disableSubmit = !this.disableSubmit
+            this.contentOptions = res.result
+            this.disableSubmit = !this.disableSubmit
+          } else {
+            this.contentOptions = res.result
+          }
+
+        }
+      })
+    },
     loadDepartDict() {
       this.departOptions = []
       this.loading = true
@@ -173,11 +198,13 @@ export default {
     edit(record) {
       this.lastPoint = record.point
       this.model = Object.assign({}, record)
+      this.initDict()
       this.visible = true
     },
     close() {
       this.$emit('close')
       this.visible = false
+      this.contentOptions = []
       this.$refs.form.clearValidate()
     },
     handleOk() {

@@ -16,13 +16,12 @@
               </a-select>
             </a-form-item>
           </a-col>-->
-          <!--TODO 按照单位查询 (设置返回值，默认返回ID：customReturnField='orgCode')-->
-          <a-col :md="6" :sm="8">
+          <!--按照单位查询 (设置返回值，默认返回ID：customReturnField='orgCode'),系统管理员、纪委管理员可按照单位查询-->
+          <a-col :md="6" :sm="8"  v-has="'user:departSelect'">
             <a-form-item label="单位" >
-              <j-select-depart placeholder="请选择单位"  v-model="queryParam.orgCode" customReturnField='orgCode' :multi="true"   :treeOpera="true"></j-select-depart>
+              <j-select-depart placeholder="请选择单位"  v-model="queryParam.departId" customReturnField='id' :multi="true" :treeOpera="true"></j-select-depart>
             </a-form-item>
           </a-col>
-
             <a-col :md="6" :sm="8">
               <a-form-item label="姓名">
                 <j-input placeholder="请输入姓名" v-model="queryParam.realname"></j-input>
@@ -34,7 +33,15 @@
                 <j-input placeholder="请输入手机号码" v-model="queryParam.phone"></j-input>
               </a-form-item>
             </a-col>
-
+          <a-col :md="6" :sm="8" v-has="'user:fzSelect'">
+            <a-form-item label="单位负责人" >
+              <a-select v-model="queryParam.userIdentity" placeholder="请选择是否为单位负责人">
+                <a-select-option value="">请选择</a-select-option>
+                <a-select-option value=1>否</a-select-option>
+                <a-select-option value=2>是</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
 
           <!--下拉搜索（可配置字典）：j-search-select-tag -->
             <a-col :md="6" :sm="8">
@@ -44,13 +51,13 @@
             </a-col>
 
           <template v-if="toggleSearchStatus">
-            <a-col :md="6" :sm="12">
-              <a-form-item label="账号">
-                <!--<a-input placeholder="请输入账号查询" v-model="queryParam.username"></a-input>-->
-                <!--模糊查询:j-input-->
-                <j-input placeholder="输入账号" v-model="queryParam.username"></j-input>
-              </a-form-item>
-            </a-col>
+<!--            <a-col :md="6" :sm="12">-->
+<!--              <a-form-item label="账号">-->
+<!--                &lt;!&ndash;<a-input placeholder="请输入账号查询" v-model="queryParam.username"></a-input>&ndash;&gt;-->
+<!--                &lt;!&ndash;模糊查询:j-input&ndash;&gt;-->
+<!--                <j-input placeholder="输入账号" v-model="queryParam.username"></j-input>-->
+<!--              </a-form-item>-->
+<!--            </a-col>-->
 <!--            <a-col :md="6" :sm="8">-->
 <!--              <a-form-item label="用户状态">-->
 <!--                <a-select v-model="queryParam.status" placeholder="请选择">-->
@@ -66,10 +73,10 @@
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
               <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
-              <a @click="handleToggleSearch" style="margin-left: 8px">
-                {{ toggleSearchStatus ? '收起' : '展开' }}
-                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-              </a>
+<!--              <a @click="handleToggleSearch" style="margin-left: 8px">-->
+<!--                {{ toggleSearchStatus ? '收起' : '展开' }}-->
+<!--                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>-->
+<!--              </a>-->
             </span>
           </a-col>
 
@@ -85,21 +92,21 @@
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
       <j-third-app-button biz-type="user" :selected-row-keys="selectedRowKeys" syncToApp syncToLocal @sync-finally="onSyncFinally"/>
-      <a-button type="primary" icon="hdd" @click="recycleBinVisible=true">回收站</a-button>
+<!--      <a-button type="primary" icon="hdd" @click="recycleBinVisible=true">回收站</a-button>-->
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay" @click="handleMenuClick">
           <a-menu-item key="1">
             <a-icon type="delete" @click="batchDel"/>
             删除
           </a-menu-item>
-          <a-menu-item key="2">
-            <a-icon type="lock" @click="batchFrozen('2')"/>
-            冻结
-          </a-menu-item>
-          <a-menu-item key="3">
-            <a-icon type="unlock" @click="batchFrozen('1')"/>
-            解冻
-          </a-menu-item>
+<!--          <a-menu-item key="2">-->
+<!--            <a-icon type="lock" @click="batchFrozen('2')"/>-->
+<!--            冻结-->
+<!--          </a-menu-item>-->
+<!--          <a-menu-item key="3">-->
+<!--            <a-icon type="unlock" @click="batchFrozen('1')"/>-->
+<!--            解冻-->
+<!--          </a-menu-item>-->
         </a-menu>
         <a-button style="margin-left: 8px">
           批量操作
@@ -149,7 +156,7 @@
                 <a href="javascript:;" @click="handleDetail(record)">详情</a>
               </a-menu-item>
 
-              <a-menu-item>
+              <a-menu-item v-has="'user:updatePassword'">
                 <a href="javascript:;" @click="handleChangePassword(record.username)">修改密码</a>
               </a-menu-item>
 
@@ -159,17 +166,17 @@
                 </a-popconfirm>
               </a-menu-item>
 
-              <a-menu-item v-if="record.status==1">
-                <a-popconfirm title="确定冻结吗?" @confirm="() => handleFrozen(record.id,2,record.username)">
-                  <a>冻结</a>
-                </a-popconfirm>
-              </a-menu-item>
+<!--              <a-menu-item v-if="record.status==1">-->
+<!--                <a-popconfirm title="确定冻结吗?" @confirm="() => handleFrozen(record.id,2,record.username)">-->
+<!--                  <a>冻结</a>-->
+<!--                </a-popconfirm>-->
+<!--              </a-menu-item>-->
 
-              <a-menu-item v-if="record.status==2">
-                <a-popconfirm title="确定解冻吗?" @confirm="() => handleFrozen(record.id,1,record.username)">
-                  <a>解冻</a>
-                </a-popconfirm>
-              </a-menu-item>
+<!--              <a-menu-item v-if="record.status==2">-->
+<!--                <a-popconfirm title="确定解冻吗?" @confirm="() => handleFrozen(record.id,1,record.username)">-->
+<!--                  <a>解冻</a>-->
+<!--                </a-popconfirm>-->
+<!--              </a-menu-item>-->
 
             </a-menu>
           </a-dropdown>
@@ -205,6 +212,7 @@
   import JThirdAppButton from '@/components/jeecgbiz/thirdApp/JThirdAppButton'
   import JSelectDepartModal from '../../components/jeecgbiz/modal/JSelectDepartModal'
   import { mapGetters } from 'vuex'
+  import { colAuthFilter } from "@/utils/authFilter"
 
   export default {
     name: "UserList",
@@ -217,7 +225,7 @@
       PasswordModal,
       JInput,
       UserRecycleBinModal,
-      JSuperQuery
+      JSuperQuery,
     },
     data() {
       return {
@@ -352,6 +360,7 @@
             dataIndex: 'action',
             scopedSlots: {customRender: 'action'},
             align: "center",
+            fixed:"right",
             width: 170
           }
 
@@ -374,7 +383,9 @@
     },
     created(){
       this.roleId=this.userInfo().roleId
-      //console.log(this.$store.getters.user);
+      //console.log("roleId:"+this.roleId);
+      this.columns = colAuthFilter(this.columns,'userList:');
+      this.loadData();
     },
     computed: {
       importExcelUrl: function(){

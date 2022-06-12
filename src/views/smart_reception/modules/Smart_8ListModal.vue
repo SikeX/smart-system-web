@@ -31,26 +31,26 @@
               <a-input-number v-model="model.cost"placeholder="请输入活动费用" style="width: 100%" />
             </a-form-model-item>
           </a-col>
-          <a-col :span="24">
-            <a-form-model-item label="创建人" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="crateName">
-              <j-select-user-by-dep v-model="model.crateName"/>
-            </a-form-model-item>
-          </a-col>
-          <a-col :span="24">
-            <a-form-model-item label="创建时间" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="crateTime">
-              <j-date placeholder="请选择创建时间" v-model="model.crateTime" style="width: 100%" />
-            </a-form-model-item>
-          </a-col>
-          <a-col :span="24">
-            <a-form-model-item label="更新人" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="updateName">
-              <j-select-user-by-dep v-model="model.updateName"/>
-            </a-form-model-item>
-          </a-col>
-          <a-col :span="24">
-            <a-form-model-item label="更新时间" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="updateTime">
-              <j-date placeholder="请选择更新时间" v-model="model.updateTime" style="width: 100%" />
-            </a-form-model-item>
-          </a-col>
+<!--          <a-col :span="24">-->
+<!--            <a-form-model-item label="创建人" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="crateName">-->
+<!--              <j-select-user-by-dep v-model="model.crateName"/>-->
+<!--            </a-form-model-item>-->
+<!--          </a-col>-->
+<!--          <a-col :span="24">-->
+<!--            <a-form-model-item label="创建时间" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="crateTime">-->
+<!--              <j-date placeholder="请选择创建时间" v-model="model.crateTime" style="width: 100%" />-->
+<!--            </a-form-model-item>-->
+<!--          </a-col>-->
+<!--          <a-col :span="24">-->
+<!--            <a-form-model-item label="更新人" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="updateName">-->
+<!--              <j-select-user-by-dep v-model="model.updateName"/>-->
+<!--            </a-form-model-item>-->
+<!--          </a-col>-->
+<!--          <a-col :span="24">-->
+<!--            <a-form-model-item label="更新时间" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="updateTime">-->
+<!--              <j-date placeholder="请选择更新时间" v-model="model.updateTime" style="width: 100%" />-->
+<!--            </a-form-model-item>-->
+<!--          </a-col>-->
         </a-row>
       </a-form-model>
     </a-spin>
@@ -104,12 +104,12 @@
               { required: true, message: '请输入活动费用!'},
               { pattern: /^(([1-9][0-9]*)|([0]\.\d{0,2}|[1-9][0-9]*\.\d{0,2}))$/, message: '请输入正确的金额!'},
            ],
-           crateName: [
-              { required: true, message: '请输入创建人!'},
-           ],
-           crateTime: [
-              { required: true, message: '请输入创建时间!'},
-           ],
+           // crateName: [
+           //    { required: true, message: '请输入创建人!'},
+           // ],
+           // crateTime: [
+           //    { required: true, message: '请输入创建时间!'},
+           // ],
         },
         url: {
           add: "/smart_reception/smartReception/addSmart_8List",

@@ -121,10 +121,25 @@
 
   </a-card>
   <div>
-  <h2>三重一大已通过任务列表</h2>
-  <szyd-tasks-list />
-  <h2>三重一大审核未通过列表</h2>
-  <szyd-not-pass-list />
+    <a-row :gutter="12">
+      <a-card :class="{ 'anty-list-cust':true }" :bordered="false" :style="{marginTop:'30px',marginLeft:'3px'}">
+
+        <a-tabs v-model="indexBottomTab" size="large" :tab-bar-style="{marginBottom: '24px', paddingLeft: '16px'}">
+          <a-tab-pane loading="true" tab="三重一大已通过任务列表" key="1">
+            <szyd-tasks-list />
+          </a-tab-pane>
+          <a-tab-pane loading="true" tab="三重一大审核未通过列表" key="2">
+            <szyd-not-pass-list />
+          </a-tab-pane>
+        </a-tabs>
+
+
+      </a-card>
+    </a-row>
+<!--  <h2>三重一大已通过任务列表</h2>-->
+<!--  <szyd-tasks-list />-->
+<!--  <h2>三重一大审核未通过列表</h2>-->
+<!--  <szyd-not-pass-list />-->
   </div>
   </div>
 </template>
@@ -148,6 +163,7 @@ export default {
   },
   data() {
     return {
+      indexBottomTab:"1",
       description: '三重一大统计页面',
       // 查询条件
       queryParam: {pieDate: '',barDate:''},

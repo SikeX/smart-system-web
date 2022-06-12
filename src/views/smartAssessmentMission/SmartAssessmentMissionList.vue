@@ -4,6 +4,38 @@
     <div class='table-page-search-wrapper'>
       <a-form layout='inline' @keyup.enter.native='searchQuery'>
         <a-row :gutter='24'>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="任务名称">
+              <a-input placeholder="请输入任务名称" v-model="queryParam.missionName"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="考核年份">
+              <a-input placeholder="请输入考核年份" v-model="queryParam.assessmentYear"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="任务状态">
+              <a-select
+                placeholder="全部"
+                v-model:value="queryParam.missionStatus">
+                <a-select-option value="">全部</a-select-option>
+                <a-select-option value="未发布">未发布</a-select-option>
+                <a-select-option value="已发布">已发布</a-select-option>
+                <a-select-option value="发布评分结果">发布评分结果</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+              <a @click="handleToggleSearch" style="margin-left: 8px">
+                {{ toggleSearchStatus ? '收起' : '展开' }}
+                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+              </a>
+            </span>
+          </a-col>
         </a-row>
       </a-form>
     </div>
@@ -90,6 +122,11 @@
                   <a>撤销发布</a>
                 </a-popconfirm>
               </a-menu-item>
+              <a-menu-item v-if='record.missionStatus === "发布评分结果"'>
+                <a-popconfirm title='确定取消发布评分结果吗?' @confirm='() => cancelPublishScoreResult(record)'>
+                  <a>取消发布评分结果</a>
+                </a-popconfirm>
+              </a-menu-item>
               <a-menu-item v-if='record.missionStatus === "未发布"'>
                 <a-popconfirm title='确定删除吗?' @confirm='() => handleDelete(record.id)'>
                   <a>删除</a>
@@ -107,7 +144,7 @@
         <SmartAssessmentDepartList :mainId='selectedMainId' :main-info='selectionRows[0]' />
       </a-tab-pane>
       <a-tab-pane tab='考核内容' key='2'>
-        <SmartAssessmentContentList :mainId='selectedMainId' :main-info='selectionRows[0]' @ok='loadData(1)' />
+        <SmartAssessmentContentList :mainId='selectedMainId' :main-info='selectionRows[0]' @ok='loadData(2)' />
       </a-tab-pane>
     </a-tabs>
 
@@ -190,6 +227,7 @@ export default {
       url: {
         list: '/smartAssessmentMission/smartAssessmentMission/list',
         reset: '/smartAssessmentMission/smartAssessmentMission/reset',
+        recallScoreResult: '/smartAssessmentMission/smartAssessmentMission/recallScoreResult',
         delete: '/smartAssessmentMission/smartAssessmentMission/delete',
         publish: '/smartAssessmentMission/smartAssessmentMission/publish',
         deleteBatch: '/smartAssessmentMission/smartAssessmentMission/deleteBatch',
@@ -251,8 +289,11 @@ export default {
       //加载数据 若传入参数1则加载第一页的内容
       if (arg === 1) {
         this.ipagination.current = 1
+      } else if (arg === 2) {
+        console.log('刷新分数!')
+      } else {
+        this.onClearSelected()
       }
-      this.onClearSelected()
       var params = this.getQueryParams()//查询条件
       this.loading = true
       getAction(this.url.list, params).then((res) => {
@@ -286,7 +327,7 @@ export default {
       putAction(that.url.reset, record).then((res) => {
         if (res.success) {
           that.$message.success(res.message);
-          that.loadData(1);
+          that.loadData();
         } else {
           that.$message.warning(res.message);
         }
@@ -299,14 +340,27 @@ export default {
       putAction(this.url.publish, record).then((res) => {
         if (res.success) {
           this.$message.success(res.message);
-          this.loadData(1)
+          this.loadData()
         }else{
           this.$message.warning(res.message);
         }
       }).finally(() => {
         this.loading = false;
       })
-    }
+    },
+    cancelPublishScoreResult(record) {
+      this.loading = true
+      putAction(this.url.recallScoreResult, record).then((res) => {
+        if (res.success) {
+          this.$message.success(res.message);
+          this.loadData()
+        }else{
+          this.$message.warning(res.message);
+        }
+      }).finally(() => {
+        this.loading = false;
+      })
+    },
   }
 }
 </script>

@@ -1,5 +1,34 @@
 <template>
   <a-card :title='description' :bordered="false">
+    <!-- 查询区域 -->
+    <div class='table-page-search-wrapper'>
+      <a-form layout='inline' @keyup.enter.native='searchQuery'>
+        <a-row :gutter='24'>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="任务名称">
+              <a-input placeholder="请输入任务名称" v-model="queryParam.missionName"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="考核年份">
+              <a-input placeholder="请输入考核年份" v-model="queryParam.assessmentYear"></a-input>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+              <a @click="handleToggleSearch" style="margin-left: 8px">
+                {{ toggleSearchStatus ? '收起' : '展开' }}
+                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+              </a>
+            </span>
+          </a-col>
+        </a-row>
+      </a-form>
+    </div>
+    <!-- 查询区域-END -->
+
     <!-- table区域-begin -->
     <div>
 
@@ -40,21 +69,9 @@
         </template>
 
         <span slot="action" slot-scope="text, record">
-          <a @click="handleEdit(record)">编辑</a>
-
-          <a-divider type="vertical"/>
-          <a @click="publishMission(record)">发布</a>
-          <a-divider type="vertical"/>
-          <a-dropdown>
-            <a class="ant-dropdown-link">更多 <a-icon type="down"/></a>
-            <a-menu slot="overlay">
-              <a-menu-item>
-                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
-                  <a>删除</a>
-                </a-popconfirm>
-              </a-menu-item>
-            </a-menu>
-          </a-dropdown>
+          <a-popconfirm title="确定发布评分结果吗?" @confirm="() => publishScoreResult(record)">
+            <a @click="">发布评分结果</a>
+          </a-popconfirm>
         </span>
 
       </a-table>
@@ -121,15 +138,19 @@ export default {
           title: '考核要点总数',
           align: "center",
           dataIndex: 'keyPointsAmount'
+        },
+        {
+          title: '操作',
+          dataIndex: 'action',
+          align: 'center',
+          fixed: 'right',
+          width: 147,
+          scopedSlots: { customRender: 'action' }
         }
       ],
       url: {
-        list: "/smartAssessmentMission/smartAssessmentMission/list",
-        delete: "/smartAssessmentMission/smartAssessmentMission/delete",
-        publish: "/smartAssessmentMission/smartAssessmentMission/publish",
-        deleteBatch: "/smartAssessmentMission/smartAssessmentMission/deleteBatch",
-        exportXlsUrl: "/smartAssessmentMission/smartAssessmentMission/exportXls",
-        importExcelUrl: "smartAssessmentMission/smartAssessmentMission/importExcel",
+        list: "/smartAssessmentMission/smartAssessmentMission/finalScoreList",
+        publish: "/smartAssessmentMission/smartAssessmentMission/publishScore",
       },
       dictOptions: {},
       /* 分页参数 */
@@ -211,11 +232,17 @@ export default {
       fieldList.push({type: 'int', value: 'keyPointsAmount', text: '考核要点总数', dictCode: ''})
       this.superFieldList = fieldList
     },
-    publishMission(record) {
+    publishScoreResult(record) {
+      this.loading = true
       putAction(this.url.publish, record).then((res) => {
         if (res.success) {
           this.loadData(1)
+          this.$message.success(res.message)
+        } else {
+          this.$message.warning(res.message)
         }
+      }).finally(()=> {
+        this.loading = false;
       })
     }
   }

@@ -7,9 +7,9 @@
         <a-row style="margin-left: 14px">
           <a-button @click="handleAdd(2)" type="primary">添加机构</a-button>
           <a-button type="primary" icon="download" @click="handleExportXls('部门信息')">导出</a-button>
-          <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
-            <a-button type="primary" icon="import">导入</a-button>
-          </a-upload>
+<!--          <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">-->
+<!--            <a-button type="primary" icon="import">导入</a-button>-->
+<!--          </a-upload>-->
           <a-button title="删除多条数据" @click="batchDel" type="default">批量删除</a-button>
           <!--<a-button @click="refresh" type="default" icon="reload" :loading="loading">刷新</a-button>-->
         </a-row>
@@ -174,9 +174,9 @@
             </a-empty>
           </a-card>
         </a-tab-pane>
-        <a-tab-pane tab="部门权限" key="2" forceRender>
-          <depart-auth-modal ref="departAuth"/>
-        </a-tab-pane>
+<!--        <a-tab-pane tab="部门权限" key="2" forceRender>-->
+<!--          <depart-auth-modal ref="departAuth"/>-->
+<!--        </a-tab-pane>-->
       </a-tabs>
 
     </a-col>
@@ -549,15 +549,11 @@
               return
             }
             if (this.currSelected.departName === "部门类型") {
-                this.$message.warning('该类型不可更改!')
+                this.$message.warning('该部门不可更改!')
                 return
               }
-            if (this.currSelected.departName === "中共哈尔滨市道里区纪律检查委员会" && this.currSelected.businessParentId !== "01c47d4fbf994b34a13237552f2aeec8") {
-              this.$message.warning('上级部门不可更改!')
-              return
-            }
-            if (this.currSelected.departName === "中共哈尔滨市道里区纪律检查委员会" && this.currSelected.parentId !== "") {
-              this.$message.warning('上级业务部门不可更改!')
+            if (this.currSelected.departName === "区纪委") {
+              this.$message.warning('该部门不可更改!')
               return
             }
             httpAction(this.url.edit, this.currSelected, 'put').then((res) => {

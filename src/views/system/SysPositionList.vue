@@ -13,7 +13,7 @@
           </a-col>
           <a-col :md="6" :sm="8">
             <a-form-item label="职务名称">
-              <a-input placeholder="请输入职务名称" v-model="queryParam.name"></a-input>
+              <j-input placeholder="请输入职务名称" v-model="queryParam.name"></j-input>
             </a-form-item>
           </a-col>
           <template v-if="toggleSearchStatus">

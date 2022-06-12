@@ -175,14 +175,14 @@ export default {
         //   align: "center",
         //   dataIndex: 'times'
         // },
-        // {
-        //   title: '操作',
-        //   dataIndex: 'action',
-        //   align: "center",
-        //   fixed: "right",
-        //   width: 60,
-        //   scopedSlots: {customRender: 'action'}
-        // }
+        {
+          title: '操作',
+          dataIndex: 'action',
+          align: "center",
+          fixed: "right",
+          width: 60,
+          scopedSlots: {customRender: 'action'}
+        }
       ],
       url: {
         list: "/smart_data_sheet_new/smartDataSheetNewP/list",

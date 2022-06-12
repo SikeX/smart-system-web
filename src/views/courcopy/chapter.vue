@@ -494,7 +494,7 @@ export default {
     getChapterVideo(){
       chapter.getAllChapterVideo(this.courseId)
       .then(response=>{
-        console.log(response)
+        console.log(response.allChapterVideo)
         this.chapterVideoList = response.data.allChapterVideo
       })
 

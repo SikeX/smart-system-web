@@ -11,7 +11,7 @@
     cancelText="关闭"
   >
     <a-row :gutter="10" style="background-color: #ececec; padding: 10px; margin: -10px">
-      <a-col :md="6" :sm="24">
+      <a-col :md="8" :sm="24">
         <a-card :bordered="false">
           <!--组织机构-->
           <!--修改为自然机构-->
@@ -37,7 +37,7 @@
           />-->
         </a-card>
       </a-col>
-      <a-col :md="18" :sm="24">
+      <a-col :md="16" :sm="24">
         <a-card :bordered="false">
           <a-form-model>
             <a-form-model-item label="姓名" :labelCol="labelCol" :wrapperCol="wrapperCol">
@@ -46,7 +46,7 @@
                   <a-input-search
                       :style="{width:'100%'}"
                       placeholder="请输入姓名"
-                      v-model="queryParam.username"
+                      v-model="queryParam.realname"
                       @search="onSearch"
                   ></a-input-search>
                 </a-col>

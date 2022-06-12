@@ -328,7 +328,7 @@ import { validateDuplicateValue } from '@/utils/util'
 import JSelectUserByDep from '../../../components/jeecgbiz/JSelectUserByDep.vue'
 import SelectUserByDep from '../../../components/jeecgbiz/modal/SelectUserByDep'
 import EloamModal from '@views/eloam/modules/EloamModal'
-import { mapActions, mapGetters,mapState } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 
 export default {
   name: 'SmartPremaritalFilingForm',
@@ -464,10 +464,10 @@ export default {
 
     this.getUser(this.userInfo().id)
 
-    tmp.peopleId = userInfo.id
+    // tmp.peopleId = userInfo.id
   },
   methods: {
-     ...mapGetters(["userInfo"]),
+    ...mapGetters(['userInfo']),
     //人员注释
     getUser(back) {
       getAction('/sys/user/queryById', { id: back }).then((res) => {
@@ -546,6 +546,21 @@ export default {
     edit(record) {
       this.model = Object.assign({}, record)
       this.visible = true
+      this.editAfter()
+    },
+    /** 调用完edit()方法之后会自动调用此方法 */
+    editAfter() {
+      this.$nextTick(() => {})
+      // 加载子表数据
+      if (this.model.id) {
+        console.log(this.model)
+        let params = { id: this.model.id }
+        getAction(this.url.queryById, params).then((res) => {
+          if (res.success) {
+            this.model = res.result
+          }
+        })
+      }
     },
     submitForm() {
       const that = this
@@ -605,19 +620,19 @@ export default {
     //   }
     // },
     scanOk(url) {
-    let image = url
-    // 请根据自己表单中的字段名称修改 field 变量的值
-    let field = 'files'
-    if (image) {
+      let image = url
+      // 请根据自己表单中的字段名称修改 field 变量的值
+      let field = 'files'
+      if (image) {
         let arr = []
         // 考虑如果存在已经上传的文件，则拼接起来，没有则直接添加
         if (this.model[field]) {
-            arr.push(this.model[field])
+          arr.push(this.model[field])
         }
         arr.push(image)
         this.$set(this.model, field, arr.join())
-    }
-},
+      }
+    },
   },
 }
 </script>
