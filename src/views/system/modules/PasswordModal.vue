@@ -43,8 +43,9 @@
           password:{
             rules: [{
               required: true,
-              pattern:/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[~!@#$%^&*()_+`\-={}:";'<>?,./]).{8,}$/,
-              message: '密码由8位数字、大小写字母和特殊符号组成!'
+              message: '请输入密码！'
+              //pattern:/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[~!@#$%^&*()_+`\-={}:";'<>?,./]).{8,}$/,
+              //message: '密码由8位数字、大小写字母和特殊符号组成!'
             }, {
               validator: this.validateToNextPassword,
             }],
@@ -116,7 +117,7 @@
       validateToNextPassword  (rule, value, callback) {
         const form = this.form;
         const confirmpassword=form.getFieldValue('confirmpassword');
-        console.log("confirmpassword==>",confirmpassword);
+        //console.log("confirmpassword==>",confirmpassword);
         if (value && confirmpassword && value !== confirmpassword) {
           callback('两次输入的密码不一样！');
         }

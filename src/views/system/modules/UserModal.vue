@@ -80,7 +80,7 @@
             v-model="model.positionRank"
           />
         </a-form-model-item>
-        <template v-if="roleId.indexOf('1467143903808229378') != -1">
+        <template  v-if="roleId.indexOf('1467143903808229378') != -1">
         <!--纪委管理员可以分配角色，单位管理员默认添加单位非管理员-->
         <a-form-model-item label="角色分配" :labelCol="labelCol" :wrapperCol="wrapperCol" v-show="!roleDisabled" prop="selectedroles">
           <j-multi-select-tag
@@ -149,7 +149,6 @@
         :labelCol="labelCol"
         :wrapperCol="wrapperCol"
         prop="politicalStatus"
-        required
         label="政治面貌"
         >
         <j-search-select-tag
@@ -302,7 +301,7 @@
     },
     created () {
       this.roleId=this.userInfo().roleId
-      console.log("userInfo"+this.userInfo())
+      //console.log("userInfo"+this.userInfo())
       const token = Vue.ls.get(ACCESS_TOKEN);
       this.headers = {"X-Access-Token":token}
       this.initRoleList()

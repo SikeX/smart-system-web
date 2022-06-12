@@ -20,7 +20,7 @@ export default {
     return {
       url:
         window._CONFIG['domianURL'] +
-        '/qrCode/generate/v3?content=https://zhjj.dlqzzst.com:543/InsertReportingInformation/InsertReportingInformationDetail',
+        '/qrCode/generate/v3?content=https://www.dlqjjw.com/InsertReportingInformation/InsertReportingInformationDetail',
       name: '纠治四风',
       formLayout: 'horizontal',
       model: {},
