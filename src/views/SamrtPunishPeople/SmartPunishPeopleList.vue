@@ -58,17 +58,18 @@
               <j-select-depart placeholder="请输入单位" v-model="queryParam.departCode" customReturnField='id'></j-select-depart>
             </a-form-item>
           </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="手机号">
+              <j-input placeholder="请输入手机号" v-model="queryParam.phone"></j-input>
+            </a-form-item>
+          </a-col>
             <a-col :xl="6" :lg="7" :md="8" :sm="24">
               <a-form-item label="职级">
                 <j-search-select-tag placeholder="请输入或选择职级" v-model="queryParam.positionRank" dict="position_rank" />
               </a-form-item>
             </a-col>
-            <template v-if="toggleSearchStatus">
-            <a-col :xl="6" :lg="7" :md="8" :sm="24">
-              <a-form-item label="手机号">
-                <j-input placeholder="请输入手机号" v-model="queryParam.phone"></j-input>
-              </a-form-item>
-            </a-col>
+
+          <template v-if="toggleSearchStatus">
           </template>
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">

@@ -102,13 +102,16 @@
         </template>
 
         <span slot="action" slot-scope="text, record">
-          <a v-show="record.verifyStatus == '3'" @click="handleEdit(record)">编辑</a>
-
-          <a-divider type="vertical" />
+          <a-popconfirm title="确定提交吗，提交后不可再修改?" @confirm="() => submitVerify(record)">
+            <a v-if="record.verifyStatus === '4'">提交审核</a>
+          </a-popconfirm>
+          <a-divider v-if="record.verifyStatus === '4'" type="vertical" />
+          <a v-show="record.verifyStatus === '3' || record.verifyStatus === '4'" @click="handleEdit(record)">编辑</a>
+          <a-divider v-show="record.verifyStatus === '3' || record.verifyStatus === '4'" type="vertical" />
           <a @click="handleDetail(record)">详情</a>
           <a-divider type="vertical" />
           <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
-            <a v-show="record.verifyStatus == '3'">删除</a>
+            <a v-show="record.verifyStatus == '3' || record.verifyStatus === '4'">删除</a>
           </a-popconfirm>
         </span>
       </a-table>
@@ -122,7 +125,7 @@
 import { JeecgListMixin } from '@/mixins/JeecgListMixin'
 import SmartCreateAdviceModal from './modules/SmartCreateAdviceModal'
 import '@/assets/less/TableExpand.less'
-import { mapActions, mapGetters,mapState } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 
 export default {
   name: 'SmartCreateAdviceList',
@@ -172,8 +175,10 @@ export default {
               return '通过'
             } else if (text == '2') {
               return '待审核'
-            } else {
+            } else if (text == '3') {
               return '免审'
+            } else if (text == '4') {
+              return '待提交'
             }
           },
         },
@@ -192,6 +197,7 @@ export default {
         deleteBatch: '/smartCreateAdvice/smartCreateAdvice/deleteBatch',
         exportXlsUrl: '/smartCreateAdvice/smartCreateAdvice/exportXls',
         importExcelUrl: 'smartCreateAdvice/smartCreateAdvice/importExcel',
+        verify: '/smartCreateAdvice/smartCreateAdvice/submitVerify',
       },
       dictOptions: {},
       superFieldList: [],
@@ -207,7 +213,7 @@ export default {
     },
   },
   methods: {
-    ...mapGetters(["userInfo"]),
+    ...mapGetters(['userInfo']),
     initDictConfig() {},
     getSuperFieldList() {
       let fieldList = []

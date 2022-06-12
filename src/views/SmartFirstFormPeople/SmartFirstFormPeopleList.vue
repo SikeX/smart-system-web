@@ -12,8 +12,8 @@
               <a-col span='8'>
               <j-select-depart placeholder="请选择单位" v-model="queryParam.departCode" customReturnField='id' width='60%'></j-select-depart>
               </a-col>
-                <a-button type="primary" @click="search" icon="search">查询</a-button>
-                <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+                <a-button type="primary" @click="searchStatic" icon="search">查询</a-button>
+                <a-button type="primary" @click="searchResetStatic" icon="reload" style="margin-left: 8px">重置</a-button>
             </a-row>
           </div>
           <!--统计展示-->
@@ -45,7 +45,6 @@
                 <j-input placeholder="请输入被谈话人姓名" v-model="queryParam.intervieweeName"></j-input>
               </a-form-item>
             </a-col>
-            <template v-if="toggleSearchStatus">
               <a-col :xl="6" :lg="7" :md="8" :sm="24">
                 <a-form-item label="谈话人单位">
                   <j-select-depart placeholder="请输入谈话人单位" v-model="queryParam.talkerDept" customReturnField='id'></j-select-depart>
@@ -56,15 +55,15 @@
                   <j-input placeholder="请输入谈话人姓名" v-model="queryParam.talkerName"></j-input>
                 </a-form-item>
               </a-col>
-            </template>
+<!--              <template v-if="toggleSearchStatus"></template>-->
             <a-col :xl="6" :lg="7" :md="8" :sm="24">
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
               <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
-              <a @click="handleToggleSearch" style="margin-left: 8px">
-                {{ toggleSearchStatus ? '收起' : '展开' }}
-                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-              </a>
+<!--              <a @click="handleToggleSearch" style="margin-left: 8px">-->
+<!--                {{ toggleSearchStatus ? '收起' : '展开' }}-->
+<!--                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>-->
+<!--              </a>-->
             </span>
             </a-col>
           </a-row>
@@ -91,10 +90,10 @@
 
       <!-- table区域-begin -->
       <div>
-        <div class="ant-alert ant-alert-info" style="margin-bottom: 16px;">
-          <i class="anticon anticon-info-circle ant-alert-icon"></i> 已选择 <a style="font-weight: 600">{{ selectedRowKeys.length }}</a>项
-          <a style="margin-left: 24px" @click="onClearSelected">清空</a>
-        </div>
+<!--        <div class="ant-alert ant-alert-info" style="margin-bottom: 16px;">-->
+<!--          <i class="anticon anticon-info-circle ant-alert-icon"></i> 已选择 <a style="font-weight: 600">{{ selectedRowKeys.length }}</a>项-->
+<!--          <a style="margin-left: 24px" @click="onClearSelected">清空</a>-->
+<!--        </div>-->
 
         <a-table
           ref="table"
@@ -106,7 +105,6 @@
           :dataSource="dataSource"
           :pagination="ipagination"
           :loading="loading"
-          :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
           class="j-table-force-nowrap"
           @change="handleTableChange">
 
@@ -292,35 +290,34 @@
           console.log(res)
           if(res.success){
             let result = res.result
-
             let i=1;
             let monthArray= ['1','2','3','4','5','6','7','8','9','10','11','12'];
             //console.log(result.length,result)
             if(result.length !== 0){
               for(i=0;i<12;i++){
-                if(result[i].month !== monthArray[i] ){
-                  //console.log(i,monthArray[i],result[i].month)
+                if(result.length>i+1){
+                  if(result[i].month !== monthArray[i] ){
+                    //console.log(i,monthArray[i],result[i].month)
+                    let item ={month:monthArray[i],count:0}
+                    result.splice(i,0,item)
+                  }else {
+                      let item ={month:monthArray[i],count:result[i].count}
+                      result.push(item)
+                  }
+                }else{
                   let item ={month:monthArray[i],count:0}
                   result.splice(i,0,item)
-                }else {
-                  //console.log(result.length,i+l)
-                  let item ={month:monthArray[i+1],count:0}
-                  if(result.length< 12 ){
-                    result.splice(i+1,0,item)
-                  }else if(result.length !==12){
-                    result.push(item)
-                  }
                 }
               }
             }else{
               for(i=0;i<12;i++){
-                console.log(monthArray[i])
+                //console.log(monthArray[i])
                 this.lineData = []
                 let item ={month:monthArray[i],count:0}
                 result.splice(i,0,item)
               }
             }
-            //console.log(result)
+            console.log(result)
             result.forEach((c)=>{
               let monthData = c.month+'月'
               //console.log(this.lineData)
@@ -338,7 +335,7 @@
 
       },
       //搜索
-      search(){
+      searchStatic(){
         let curYear = Number(new Date().getFullYear());
         let l = this.queryParam.year.length
         let y = Number(this.queryParam.year.substring(1,l-1))
@@ -359,7 +356,7 @@
           // }, 1000)
         }
       },
-      searchReset(){
+      searchResetStatic(){
         this.queryParam.year = ''
         this.queryParam.departCode = ''
         this.cardLoading = true

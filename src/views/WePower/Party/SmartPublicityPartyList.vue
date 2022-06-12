@@ -66,7 +66,7 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('党务村（居）公开')">导出</a-button>
+      <!-- <a-button type="primary" icon="download" @click="handleExportXls('党务村（居）公开')">导出</a-button> -->
       <a-upload
         name="file"
         :showUploadList="false"
@@ -232,7 +232,7 @@ export default {
         },
       ],
       url: {
-        list: '/smartPublicityParty/smartPublicityParty/list',
+        list: '/smartPublicityParty/smartPublicityParty/listAdmin',
         delete: '/smartPublicityParty/smartPublicityParty/delete',
         deleteBatch: '/smartPublicityParty/smartPublicityParty/deleteBatch',
         exportXlsUrl: '/smartPublicityParty/smartPublicityParty/exportXls',
