@@ -83,13 +83,17 @@
           </a-button>
         </template>
 
-        <span slot="action" slot-scope="text, record">
-          <a v-show="record.verifyStatus == '3'" @click="handleEdit(record)">编辑</a>
-          <a-divider type="vertical" />
+       <span slot="action" slot-scope="text, record">
+          <a-popconfirm title="确定提交吗，提交后不可再修改?" @confirm="() => submitVerify(record)">
+            <a v-if="record.verifyStatus === '4'">提交审核</a>
+          </a-popconfirm>
+          <a-divider v-if="record.verifyStatus === '4'" type="vertical" />
+          <a v-show="record.verifyStatus === '3' || record.verifyStatus === '4'" @click="handleEdit(record)">编辑</a>
+          <a-divider v-show="record.verifyStatus === '3' || record.verifyStatus === '4'" type="vertical" />
           <a @click="handleDetail(record)">详情</a>
           <a-divider type="vertical" />
           <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
-            <a v-show="record.verifyStatus == '3'">删除</a>
+            <a v-show="record.verifyStatus == '3' || record.verifyStatus === '4'">删除</a>
           </a-popconfirm>
         </span>
 
@@ -194,15 +198,17 @@
             align:'center',
             dataIndex: 'verifyStatus',
             customRender: function(text) {
-              if(text == '0') {
+              if (text == '0') {
                 return '不通过'
               } else if (text == '1') {
                 return '通过'
               } else if (text == '2') {
                 return '待审核'
-              } else {
-                return '免审' }
-            }
+              } else if (text == '3') {
+                return '免审'
+              } else if (text == '4') {
+                return '待提交'
+              }
           },
           {
             title: '操作',
@@ -220,6 +226,7 @@
           deleteBatch: "/smartTripleImportanceOneGreatness/smartTripleImportanceOneGreatness/deleteBatch",
           exportXlsUrl: "/smartTripleImportanceOneGreatness/smartTripleImportanceOneGreatness/exportXls",
           importExcelUrl: "smartTripleImportanceOneGreatness/smartTripleImportanceOneGreatness/importExcel",
+          verify:'/smartTripleImportanceOneGreatness/smartTripleImportanceOneGreatness/submitVerify',
 
         },
         dictOptions:{},
