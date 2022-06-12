@@ -7,9 +7,9 @@
         <a-row style="margin-left: 14px">
           <a-button @click="handleAdd(2)" type="primary">添加机构</a-button>
           <a-button type="primary" icon="download" @click="handleExportXls('部门信息')">导出</a-button>
-          <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
-            <a-button type="primary" icon="import">导入</a-button>
-          </a-upload>
+<!--          <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">-->
+<!--            <a-button type="primary" icon="import">导入</a-button>-->
+<!--          </a-upload>-->
           <a-button title="删除多条数据" @click="batchDel" type="default">批量删除</a-button>
           <!--<a-button @click="refresh" type="default" icon="reload" :loading="loading">刷新</a-button>-->
         </a-row>
@@ -174,9 +174,9 @@
             </a-empty>
           </a-card>
         </a-tab-pane>
-        <a-tab-pane tab="部门权限" key="2" forceRender>
-          <depart-auth-modal ref="departAuth"/>
-        </a-tab-pane>
+<!--        <a-tab-pane tab="部门权限" key="2" forceRender>-->
+<!--          <depart-auth-modal ref="departAuth"/>-->
+<!--        </a-tab-pane>-->
       </a-tabs>
 
     </a-col>

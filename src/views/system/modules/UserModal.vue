@@ -80,7 +80,7 @@
             v-model="model.positionRank"
           />
         </a-form-model-item>
-        <template v-if="roleId.indexOf('1467143903808229378') != -1">
+        <template  v-if="roleId.indexOf('1467143903808229378') != -1">
         <!--纪委管理员可以分配角色，单位管理员默认添加单位非管理员-->
         <a-form-model-item label="角色分配" :labelCol="labelCol" :wrapperCol="wrapperCol" v-show="!roleDisabled" prop="selectedroles">
           <j-multi-select-tag
@@ -92,7 +92,7 @@
         </a-form-model-item>
         <!--部门分配-->
         <a-form-model-item label="单位" :labelCol="labelCol" :wrapperCol="wrapperCol" v-show="!departDisabled" prop="selecteddeparts">
-          <j-select-depart v-model="model.selecteddeparts" :multi="true" @back="backDepartInfo" :backDepart="true" :treeOpera="true"/>
+          <j-select-depart v-model="model.selecteddeparts" :multi="true" @back="backDepartInfo" :backDepart="true" :treeOpera="true" @change='change'/>
 <!--          <a-tree-select-->
 <!--            style="width:100%"-->
 <!--            :dropdownStyle="{maxHeight:'200px',overflow:'auto'}"-->
@@ -120,7 +120,7 @@
             </a-radio-group>
           </a-form-model-item>
           <a-form-model-item label="负责单位" :labelCol="labelCol" :wrapperCol="wrapperCol" v-if="departIdShow===true" prop="departIds">
-            <j-select-depart v-model="model.departIds" :multi="false" :treeOpera="true"></j-select-depart>
+<!--            <j-select-depart v-model="model.departIds" :multi="false" :treeOpera="true"></j-select-depart>-->
 <!--            <a-tree-select-->
 <!--              style="width:100%"-->
 <!--              :dropdownStyle="{maxHeight:'200px',overflow:'auto'}"-->
@@ -130,12 +130,12 @@
 <!--              allow-clear-->
 <!--              tree-default-expand-all>-->
 <!--            </a-tree-select>-->
-<!--            <j-multi-select-tag-->
-<!--              :disabled="disableSubmit"-->
-<!--              v-model="model.departIds"-->
-<!--              :options="nextDepartOptions"-->
-<!--              placeholder="请选择负责单位">-->
-<!--            </j-multi-select-tag>-->
+            <j-search-select-tag
+              :disabled="disableSubmit"
+              v-model="model.departIds"
+              :dictOptions="nextDepartOptions"
+              placeholder="请选择负责单位">
+            </j-search-select-tag>
           </a-form-model-item>
         </template>
 
@@ -149,7 +149,6 @@
         :labelCol="labelCol"
         :wrapperCol="wrapperCol"
         prop="politicalStatus"
-        required
         label="政治面貌"
         >
         <j-search-select-tag
@@ -302,7 +301,7 @@
     },
     created () {
       this.roleId=this.userInfo().roleId
-      console.log("userInfo"+this.userInfo())
+      //console.log("userInfo"+this.userInfo())
       const token = Vue.ls.get(ACCESS_TOKEN);
       this.headers = {"X-Access-Token":token}
       this.initRoleList()
@@ -353,6 +352,9 @@
           that.getUserDeparts(record.id);
         }
         //console.log('that.model=',that.model)
+      },
+      change(storeVals){
+        console.log("storeVals"+storeVals)
       },
       isDisabledAuth(code){
         return disabledAuthFilter(code);
@@ -417,21 +419,29 @@
             for (let i = 0; i < res.result.length; i++) {
               selectDepartKeys.push(res.result[i].key);
               //新增负责部门选择下拉框
+              // departOptions.push({
+              //   value: res.result[i].key,
+              //   label: res.result[i].title
+              // })
               departOptions.push({
                 value: res.result[i].key,
-                label: res.result[i].title
+                text: res.result[i].title
               })
             }
             that.model.selecteddeparts = selectDepartKeys.join(",")
             that.nextDepartOptions=departOptions;
-            console.log('that.nextDepartOptions=',that.nextDepartOptions)
+            //console.log('that.nextDepartOptions=',that.nextDepartOptions)
           }
         })
       },
       backDepartInfo(info) {
-        this.model.departIds = this.model.selecteddeparts;
+        //this.model.departIds = this.model.selecteddeparts;
+        // this.nextDepartOptions = info.map((item,index,arr)=>{
+        //   let c = {label:item.text, value: item.value+""}
+        //   return c;
+        // })
         this.nextDepartOptions = info.map((item,index,arr)=>{
-          let c = {label:item.text, value: item.value+""}
+          let c = {text:item.text, value: item.value}
           return c;
         })
       },
@@ -734,7 +744,7 @@
         }
       },
       validateDepartIds(rule,value,callback){
-        if(this.model.userIdentity == 2){
+        if(this.model.userIdentity === 2){
           if(!value){
             callback('请选择负责单位')
           }else{

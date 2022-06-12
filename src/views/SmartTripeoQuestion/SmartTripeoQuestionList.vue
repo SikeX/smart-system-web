@@ -4,6 +4,45 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="问卷名称">
+              <j-search-select-tag
+                ref='surveyFilter'
+                placeholder="请选择问卷名称"
+                v-model="queryParam.surveyId"
+                dict="smart_paper,paper_name,id,paper_type = '3' or paper_type = '4' and del_flag = '0'"
+                :async="true">
+              </j-search-select-tag>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="走访人">
+          <j-search-select-tag
+            placeholder="请选择走访人"
+            v-model="queryParam.visiterId"
+            dict='sys_user,realname,id'
+            :async='true'
+            pageSize='30'>
+          </j-search-select-tag>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="被走访人">
+              <j-search-select-tag
+                placeholder="请选择被走访人"
+                v-model="queryParam.intervieweeId"
+                dict='sys_user,realname,id'
+                :async='true'
+                pageSize='30'>
+              </j-search-select-tag>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+            </span>
+          </a-col>
         </a-row>
       </a-form>
     </div>
@@ -172,7 +211,7 @@
           deleteBatch: "/SmartTripeoQuestion/smartTripeoQuestion/deleteBatch",
           exportXlsUrl: "/SmartTripeoQuestion/smartTripeoQuestion/exportXls",
           importExcelUrl: "SmartTripeoQuestion/smartTripeoQuestion/importExcel",
-          
+
         },
         dictOptions:{},
         superFieldList:[],

@@ -80,7 +80,7 @@
         default: false,
         required: false
       }
-      
+
     },
     data(){
       return {
@@ -117,18 +117,28 @@
       //返回选中的部门信息
       backDeparInfo(){
         if(this.backDepart===true){
-          if(this.departIds && this.departIds.length>0){
-            let arr1 = this.storeVals.split(',')
-            let arr2 = this.textVals.split(',')
-            let info = []
-            for(let i=0;i<arr1.length;i++){
-              info.push({
-                value: arr1[i],
-                text: arr2[i]
-              })
-            }
-            this.$emit('back', info)
+          // if(this.departIds && this.departIds.length>0){
+          //   let arr1 = this.storeVals.split(',')
+          //   let arr2 = this.textVals.split(',')
+          //   let info = []
+          //   for(let i=0;i<arr1.length;i++){
+          //     info.push({
+          //       value: arr1[i],
+          //       text: arr2[i]
+          //     })
+          //   }
+          //   this.$emit('back', info)
+          // }
+          let arr1 = this.storeVals.split(',')
+          let arr2 = this.textVals.split(',')
+          let info = []
+          for(let i=0;i<arr1.length;i++){
+            info.push({
+              value: arr1[i],
+              text: arr2[i]
+            })
           }
+          this.$emit('back', info)
         }
       },
       openModal(){

@@ -69,11 +69,15 @@
           <a-icon type="setting" />
           <span>密码修改</span>
         </a-menu-item>
-        <a-menu-item key="5" @click="updateCurrentDepart">
+        <a-menu-item key="5" @click="updatePhone">
+          <a-icon type='phone'/>
+          <span>修改手机号码</span>
+        </a-menu-item>
+        <a-menu-item key="6" @click="updateCurrentDepart">
           <a-icon type="cluster" />
           <span>切换部门</span>
         </a-menu-item>
-        <a-menu-item key="6" @click="clearCache">
+        <a-menu-item key="7" @click="clearCache">
           <a-icon type="sync" />
           <span>清理缓存</span>
         </a-menu-item>
@@ -97,6 +101,7 @@
       </a>
     </span>
     <user-password ref="userPassword"></user-password>
+    <user-phone ref='userPhone'/>
     <depart-select ref="departSelect" :closable="true" title="部门切换"></depart-select>
     <setting-drawer ref="settingDrawer" :closable="true" title="系统设置"></setting-drawer>
   </div>
@@ -105,6 +110,7 @@
 <script>
 import HeaderNotice from './HeaderNotice'
 import UserPassword from './UserPassword'
+import UserPhone from '@comp/tools/UserPhone'
 import SettingDrawer from '@/components/setting/SettingDrawer'
 import DepartSelect from './DepartSelect'
 import { mapActions, mapGetters, mapState } from 'vuex'
@@ -130,6 +136,7 @@ export default {
     UserPassword,
     DepartSelect,
     SettingDrawer,
+    UserPhone
   },
   props: {
     theme: {
@@ -213,6 +220,10 @@ export default {
     updatePassword() {
       let username = this.userInfo().username
       this.$refs.userPassword.show(username)
+    },
+    updatePhone(){
+      let username = this.userInfo().username
+      this.$refs.userPhone.show(username)
     },
     updateCurrentDepart() {
       this.$refs.departSelect.show()

@@ -30,6 +30,10 @@
           <a-input placeholder="请输入手机号码" v-model="model.phone" />
         </a-form-model-item>
 
+        <a-form-model-item label="身份证号" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="idnumber">
+          <a-input placeholder="请输入身份证号" v-model="model.idnumber"/>
+        </a-form-model-item>
+
 <!--        <a-form-model-item label="工号" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="workNo">-->
 <!--          <a-input placeholder="请输入工号" v-model="model.workNo" />-->
 <!--        </a-form-model-item>-->
@@ -45,8 +49,20 @@
           </a-radio-group>
         </a-form-model-item>
 
+        <a-form-model-item label="所在镇" :labelCol="labelCol" :wrapperCol="wrapperCol" v-show="!departDisabled" prop="zhenId">
+          <!-- <j-select-depart v-model="model.selecteddeparts" :multi="false" @back="backDepartInfo" :backDepart="true" :treeOpera="true"/>-->
+          <a-tree-select
+            style="width:100%"
+            :dropdownStyle="{maxHeight:'200px',overflow:'auto'}"
+            :treeData="departTree"
+            v-model="model.zhenId"
+            placeholder="请选择所在镇"
+            allow-clear
+          >
+          </a-tree-select>
+        </a-form-model-item>
 
-        <a-form-model-item label="所在乡镇、村" :labelCol="labelCol" :wrapperCol="wrapperCol" v-show="!departDisabled" prop="selecteddeparts">
+        <a-form-model-item label="所在村" :labelCol="labelCol" :wrapperCol="wrapperCol" v-show="!departDisabled" prop="selecteddeparts">
           <!-- <j-select-depart v-model="model.selecteddeparts" :multi="false" @back="backDepartInfo" :backDepart="true" :treeOpera="true"/>-->
           <a-tree-select
             style="width:100%"
@@ -55,7 +71,7 @@
             v-model="model.selecteddeparts"
             placeholder="请选择乡镇、村"
             allow-clear
-            tree-default-expand-all>
+          >
           </a-tree-select>
         </a-form-model-item>
 
@@ -217,7 +233,9 @@
           // ethnicity:  [{ required: true, message: '请选择民族' }],
           // politicalStatus:  [{ required: true, message: '请选择政治面貌' }],
           selectedroles:  [{ required: true, message: '请选择村民的角色' }],
-          selecteddeparts:  [{ required: true, message: '请选择村民所在村' }]
+          selecteddeparts:  [{ required: true, message: '请选择村民所在村' }],
+          zhenId:  [{ required: true, message: '请选择村民所在镇' }],
+          idnumber: [{required: true, message: '请输入身份证号!'}, {validator: this.validateIdnumber}],
         },
         departIdShow:false,
         title:"操作",
@@ -494,6 +512,81 @@
             })
           }else{
             callback("请输入正确格式的手机号码!");
+          }
+        }
+      },
+      validateIdnumber(rule, value, callback){
+        if(!value){
+          callback()
+        }else{
+          var checkCode = function (value) {
+            var p = /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
+            var factor = [ 7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2 ];
+            var parity = [ 1, 0, 'X', 9, 8, 7, 6, 5, 4, 3, 2 ];
+            var code = value.substring(17);
+            if(p.test(value)) {
+              var sum = 0;
+              for(var i=0;i<17;i++) {
+                sum += value[i]*factor[i];
+              }
+              if(parity[sum % 11] == code.toUpperCase()) {
+                return true;
+              }
+            }
+            return false;
+          }
+          var checkDate = function (value) {
+            var pattern = /^(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)$/;
+            if(pattern.test(value)) {
+              var year = value.substring(0, 4);
+              var month = value.substring(4, 6);
+              var date = value.substring(6, 8);
+              var date2 = new Date(year+"-"+month+"-"+date);
+              if(date2 && date2.getMonth() == (parseInt(month) - 1)) {
+                return true;
+              }
+            }
+            return false;
+          }
+          var checkProv = function (value) {
+            var pattern = /^[1-9][0-9]/;
+            var provs = {11:"北京",12:"天津",13:"河北",14:"山西",15:"内蒙古",21:"辽宁",22:"吉林",23:"黑龙江 ",31:"上海",32:"江苏",33:"浙江",34:"安徽",35:"福建",36:"江西",37:"山东",41:"河南",42:"湖北 ",43:"湖南",44:"广东",45:"广西",46:"海南",50:"重庆",51:"四川",52:"贵州",53:"云南",54:"西藏 ",61:"陕西",62:"甘肃",63:"青海",64:"宁夏",65:"新疆",71:"台湾",81:"香港",82:"澳门"};
+            if(pattern.test(value)) {
+              if(provs[value]) {
+                return true;
+              }
+            }
+            return false;
+          }
+          var checkID = function (value) {
+            if(checkCode(value)) {
+              var date = value.substring(6,14);
+              if(checkDate(date)) {
+                if(checkProv(value.substring(0,2))) {
+                  return true;
+                }
+              }
+            }
+            return false;
+          }
+          if(checkID(value)){
+            console.log("validate")
+            var params = {
+              tableName: 'sys_user',
+              fieldName: 'idnumber',
+              fieldVal: value,
+              dataId: this.userId
+            };
+            duplicateCheck(params).then((res) => {
+              if (res.success) {
+                //console.log(res)
+                callback()
+              } else {
+                callback("身份证号已存在!")
+              }
+            })
+          }else{
+            callback("请输入正确的身份证号!");
           }
         }
       },

@@ -204,9 +204,11 @@ export function getFileAccessHttpUrl(avatar,subStr) {
   try {
     if(avatar && avatar.startsWith(subStr)){
       return avatar;
-    }else{
+    }else if(avatar.startsWith('window') || avatar.startsWith('people')) {
+      return window._CONFIG['staticDomainURL'] + "/" + avatar;
+    } else{
       if(avatar &&　avatar.length>0 && avatar.indexOf('[')==-1){
-        return window._CONFIG['staticDomainURL'] + "/" + avatar;
+        return window._CONFIG['ossFileUrl'] + "/" + avatar;
       }
     }
   }catch(err){
