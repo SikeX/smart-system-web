@@ -6,6 +6,7 @@
     :maskClosable="false"
     switchFullscreen
     @ok="handleOk"
+    okText="保存"
     :okButtonProps="{ class:{'jee-hidden': disableSubmit} }"
     @cancel="handleCancel">
     <a-row type="flex" justify="center">
