@@ -70,7 +70,7 @@
           </a-col>
           <a-col :span="12">
             <a-form-model-item label="婚宴场所名" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="weddingVenue">
-              <a-input v-model="model.weddingVenue" placeholder="请输入婚宴场所名"></a-input>
+              <a-input v-model="model.weddingVenue" placeholder="请填写婚宴场所名"></a-input>
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
@@ -80,22 +80,22 @@
               :wrapperCol="wrapperCol"
               prop="weddingVenueAddr"
             >
-              <a-input v-model="model.weddingVenueAddr" placeholder="请输入婚宴场所地址"></a-input>
+              <a-input v-model="model.weddingVenueAddr" placeholder="请填写婚宴场所地址"></a-input>
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
             <a-form-model-item label="宴请人数" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="guestsNumber">
-              <a-input-number v-model="model.guestsNumber" placeholder="请输入宴请人数" style="width: 100%" />
+              <a-input-number v-model="model.guestsNumber" placeholder="请填写宴请人数" style="width: 100%" />
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
             <a-form-model-item label="宴请人员范围" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="guestsScope">
-              <a-input v-model="model.guestsScope" placeholder="请输入宴请人员范围"></a-input>
+              <a-input v-model="model.guestsScope" placeholder="请填写宴请人员范围"></a-input>
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
             <a-form-model-item label="宴请费用(元)" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="weddingCost">
-              <a-input-number v-model="model.weddingCost" placeholder="请输入宴请费用(元)" style="width: 100%" />
+              <a-input-number v-model="model.weddingCost" placeholder="请填写宴请费用(元)" style="width: 100%" />
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
@@ -107,7 +107,7 @@
             >
               <a-input-number
                 v-model="model.weddingCarNumber"
-                placeholder="请输入婚礼用车数量(辆)"
+                placeholder="请填写婚礼用车数量(辆)"
                 style="width: 100%"
               />
             </a-form-model-item>
@@ -116,7 +116,7 @@
             <a-form-model-item label="公车数量(辆)" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="govCarNumber">
               <a-input-number
                 v-model="model.govCarNumber"
-                placeholder="请输入公车数量(婚礼用车中有多少辆公车)"
+                placeholder="请填写公车数量(婚礼用车中有多少辆公车)"
                 style="width: 100%"
               />
             </a-form-model-item>
@@ -130,7 +130,7 @@
             >
               <a-input-number
                 v-model="model.illegalMoney"
-                placeholder="请输入不符合规定收受礼金(元)"
+                placeholder="请填写不符合规定收受礼金(元)"
                 style="width: 100%"
               />
             </a-form-model-item>
@@ -144,19 +144,19 @@
             >
               <a-input-number
                 v-model="model.illegalGiftNumber"
-                placeholder="请输入不符合规定收受礼品件数(件)"
+                placeholder="请填写不符合规定收受礼品件数(件)"
                 style="width: 100%"
               />
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
             <a-form-model-item
-              label="违规收礼品处置情况"
+              label="违规礼品处置情况"
               :labelCol="labelCol"
               :wrapperCol="wrapperCol"
               prop="disposalDescribe"
             >
-              <a-input v-model="model.disposalDescribe" placeholder="请输入违规收礼品处置情况"></a-input>
+              <a-input v-model="model.disposalDescribe" placeholder="请填写违规收受礼品处置情况"></a-input>
             </a-form-model-item>
           </a-col>
           <a-col :span="12">
@@ -166,7 +166,7 @@
               :wrapperCol="wrapperCol"
               prop="otherViolations"
             >
-              <a-input v-model="model.otherViolations" placeholder="请输入有无其他违诺行为"></a-input>
+              <a-input v-model="model.otherViolations" placeholder="请填写有无其他违诺行为"></a-input>
             </a-form-model-item>
           </a-col>
          <a-col :span="12">
