@@ -6,6 +6,7 @@
     :maskClosable="false"
     switchFullscreen
     @ok="handleOk"
+    okText="保存"
     :okButtonProps="{ class: { 'jee-hidden': disableSubmit } }"
     @cancel="handleCancel"
   >
@@ -61,24 +62,24 @@ export default {
       this.$emit('close')
       this.visible = false
     },
-    // handleOk() {
-    //   this.$refs.realForm.submitForm()
-    // },
-
-     handleOk() {
-      let that = this
-      
-       this.$confirm({
-        title: '确认提交？',
-        content: '提交后无法更改，请仔细核对！',
-        onOk() {
-          that.$refs.realForm.submitForm()
-        },
-        onCancel() {},
-      });
-
-      
+    handleOk() {
+      this.$refs.realForm.submitForm()
     },
+
+    //  handleOk() {
+    //   let that = this
+      
+    //    this.$confirm({
+    //     title: '确认提交？',
+    //     content: '提交后无法更改，请仔细核对！',
+    //     onOk() {
+    //       that.$refs.realForm.submitForm()
+    //     },
+    //     onCancel() {},
+    //   });
+
+      
+    // },
     submitCallback() {
       this.$emit('ok')
       this.visible = false
