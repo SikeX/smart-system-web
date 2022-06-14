@@ -4,7 +4,7 @@
       <div id="loader"></div>
       <div class="loader-section section-left"></div>
       <div class="loader-section section-right"></div>
-      <div class="load_title">正在登录智慧村务平台，请耐心等待</div>
+      <div class="load_title">正在登录智慧纪检大数据平台，请耐心等待</div>
     </div>
   </div>
 </template>
@@ -28,7 +28,7 @@ export default {
   beforeCreate() {
     // 如果当前 不是 OAuth2APP环境，就重定向到 /user/login 页面
     if (!isOAuth2AppEnv()) {
-      this.$router.replace({path: '/user/login'})
+      this.$router.replace({ path: '/user/login' })
     }
   },
   created() {
@@ -73,7 +73,7 @@ export default {
       let param = {}
       param.thirdType = this.thirdType
       param.token = token
-      this.ThirdLogin(param).then(res => {
+      this.ThirdLogin(param).then((res) => {
         if (res.success) {
           this.loginSuccess()
         } else {
@@ -83,7 +83,7 @@ export default {
     },
     loginSuccess() {
       // 登陆成功，重定向到主页
-      this.$router.replace({path: INDEX_MAIN_PAGE_PATH})
+      this.$router.replace({ path: INDEX_MAIN_PAGE_PATH })
       // TODO 这个提示是否还需要？
       this.$notification.success({
         message: '欢迎',
@@ -120,11 +120,9 @@ export default {
       url += `?state=${encodeURIComponent(window.location.origin)}`
       window.location.href = url
     },
-
   },
 }
 </script>
 
 <style scoped>
-
 </style>
