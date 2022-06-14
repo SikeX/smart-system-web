@@ -195,7 +195,7 @@
       edit (record) {
 
           // this.model = Object.assign({}, this.defaultModel, record)
-          this.loadTreeData();
+        this.loadTreeData();
         this.loadNaturalTreeData();
         this.visible = true;
           // this.loadNaturalTreeData();
@@ -246,7 +246,6 @@
         }else{
           callback("您的手机号码格式不正确!");
         }
-
       }
     }
   }
