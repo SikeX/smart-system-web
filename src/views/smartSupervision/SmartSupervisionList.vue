@@ -102,13 +102,16 @@
         </template>
 
         <span slot="action" slot-scope="text, record">
-          <a v-show="record.verifyStatus == '3'" @click="handleEdit(record)">编辑</a>
-
-          <a-divider type="vertical" />
+          <a-popconfirm title="确定提交吗，提交后不可再修改?" @confirm="() => submitVerify(record)">
+            <a v-if="record.verifyStatus === '4'">提交审核</a>
+          </a-popconfirm>
+          <a-divider v-if="record.verifyStatus === '4'" type="vertical" />
+          <a v-show="record.verifyStatus === '3' || record.verifyStatus === '4'" @click="handleEdit(record)">编辑</a>
+          <a-divider v-show="record.verifyStatus === '3' || record.verifyStatus === '4'" type="vertical" />
           <a @click="handleDetail(record)">详情</a>
           <a-divider type="vertical" />
           <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
-            <a v-show="record.verifyStatus == '3'">删除</a>
+            <a v-show="record.verifyStatus == '3' || record.verifyStatus === '4'">删除</a>
           </a-popconfirm>
         </span>
       </a-table>
@@ -182,19 +185,11 @@ export default {
               return '待审核'
             } else if (text == '3') {
               return '免审'
+            } else if (text == '4') {
+              return '待提交'
             }
           },
         },
-        // {
-        //   title:'创建人员工号',
-        //   align:"center",
-        //   dataIndex: 'creatorNo'
-        // },
-        // {
-        //   title:"所属部门",
-        //   align:"center",
-        //   dataIndex:"sysOrgCode"
-        // },
         {
           title: '操作',
           dataIndex: 'action',
@@ -210,6 +205,7 @@ export default {
         deleteBatch: '/smartSupervision/smartSupervision/deleteBatch',
         exportXlsUrl: '/smartSupervision/smartSupervision/exportXls',
         importExcelUrl: 'smartSupervision/smartSupervision/importExcel',
+        verify: '/smartSupervision/smartSupervision/submitVerify',
       },
       dictOptions: {},
       superFieldList: [],

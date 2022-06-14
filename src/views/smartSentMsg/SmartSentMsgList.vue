@@ -182,6 +182,18 @@
             dataIndex: 'tittle'
           },
           {
+            title:'发送状态',
+            align:"center",
+            dataIndex: 'status',
+            customRender:function (text) {
+              if (text == '0') {
+                return "成功"
+              } else {
+                return "失败"
+              }
+            }
+          },
+          {
             title: '操作',
             dataIndex: 'action',
             align:"center",
@@ -222,6 +234,7 @@
         fieldList.push({type:'date',value:'sendTime',text:'发送时间'})
         fieldList.push({type:'string',value:'sendType',text:'发送类型',dictCode:''})
         fieldList.push({type:'string',value:'tittle',text:'标题',dictCode:''})
+        fieldList.push({type:'string',value:'status',text:'发送状态',dictCode:''})
         this.superFieldList = fieldList
       }
     }
