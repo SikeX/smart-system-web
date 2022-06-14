@@ -88,23 +88,36 @@
           </a-button>
         </template>
 
-        <span slot="action" slot-scope="text, record">
+        <!-- <span slot="action" slot-scope="text, record">
           <a v-show="record.verifyStatus === '3'" @click="handleEdit(record)">编辑</a>
 
           <a-divider type="vertical" />
-          <!-- <a-dropdown> -->
-            <!-- <a class="ant-dropdown-link">更多 <a-icon type="down" /></a> -->
-            <!-- <a-menu slot="overlay"> -->
-              <!-- <a-menu-item> -->
+          <a-dropdown>
+            <a class="ant-dropdown-link">更多 <a-icon type="down" /></a>
+            <a-menu slot="overlay">
+              <a-menu-item>
                 <a @click="handleDetail(record)">详情</a>
-              <!-- </a-menu-item> -->
-              <!-- <a-menu-item> -->
+              </a-menu-item>
+              <a-menu-item>
                 <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
                   <a v-show="record.verifyStatus === '3'">删除</a>
                 </a-popconfirm>
-              <!-- </a-menu-item> -->
-            <!-- </a-menu> -->
-          <!-- </a-dropdown> -->
+              </a-menu-item>
+            </a-menu>
+          </a-dropdown>
+        </span> -->
+        <span slot="action" slot-scope="text, record">
+          <a-popconfirm title="确定提交吗，提交后不可再修改?" @confirm="() => submitVerify(record)">
+            <a v-if="record.verifyStatus === '4'">提交审核</a>
+          </a-popconfirm>
+          <a-divider v-if="record.verifyStatus === '4'" type="vertical" />
+          <a v-show="record.verifyStatus === '3' || record.verifyStatus === '4'" @click="handleEdit(record)">编辑</a>
+          <a-divider v-show="record.verifyStatus === '3' || record.verifyStatus === '4'" type="vertical" />
+          <a @click="handleDetail(record)">详情</a>
+          <a-divider type="vertical" />
+          <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
+            <a v-show="record.verifyStatus == '3' || record.verifyStatus === '4'">删除</a>
+          </a-popconfirm>
         </span>
 
       </a-table>
@@ -153,8 +166,10 @@
                 return '通过'
               } else if (text == '2') {
                 return '待审核'
-              } else {
+              } else if (text == '3') {
                 return '免审'
+              } else if (text == '4') {
+                return '待提交'
               }
             }
           },
@@ -233,8 +248,8 @@
           delete: "/smartThreeMeetingOneLesson/smartThreeMeetingOneLesson/delete",
           deleteBatch: "/smartThreeMeetingOneLesson/smartThreeMeetingOneLesson/deleteBatch",
           exportXlsUrl: "/smartThreeMeetingOneLesson/smartThreeMeetingOneLesson/exportXls",
-          importExcelUrl: "smartThreeMeetingOneLesson/smartThreeMeetingOneLesson/importExcel",
-          
+          importExcelUrl: "/smartThreeMeetingOneLesson/smartThreeMeetingOneLesson/importExcel",
+          verify: '/smartThreeMeetingOneLesson/smartThreeMeetingOneLesson/submitVerify',
         },
         dictOptions:{},
         superFieldList:[],
