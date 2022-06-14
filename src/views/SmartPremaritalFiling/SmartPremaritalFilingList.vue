@@ -59,7 +59,6 @@
       </a-dropdown>
 
       <a-button @click="saveFiles" type="primary" icon="download">导出word</a-button>
-
     </div>
 
     <!-- table区域-begin -->
@@ -105,21 +104,22 @@
           </a-button>
         </template>
 
-        <span slot="action" slot-scope="text, record">
-          <!-- <a-divider type="vertical"/>
-           <a @click="postAdd(record)">婚后报备</a>
-           <a-divider type="vertical" />  -->
-           <!-- <a v-show="record.verifyStatus == '3'" @click="handleEdit(record)">编辑</a>         
-           <a-divider type="vertical"/> -->
-           <a @click="handleDetail(record)">详情</a>        
-           <a-divider type="vertical" />        
-           <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
-           <a v-show="record.verifyStatus == '3'">删除</a>     
-           </a-popconfirm>
+       	<span slot="action" slot-scope="text, record">
+          <a-popconfirm title="确定提交吗，提交后不可再修改?" @confirm="() => submitVerify(record)">
+            <a v-if="record.verifyStatus === '4'">提交审核</a>
+          </a-popconfirm>
+          <a-divider v-if="record.verifyStatus === '4'" type="vertical" />
+          <a v-show="record.verifyStatus === '3' || record.verifyStatus === '4'" @click="handleEdit(record)">编辑</a>
+          <a-divider v-show="record.verifyStatus === '3' || record.verifyStatus === '4'" type="vertical" />
+          <a @click="handleDetail(record)">详情</a>
+          <a-divider type="vertical" />
+          <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
+            <a v-show="record.verifyStatus == '3' || record.verifyStatus === '4'">删除</a>
+          </a-popconfirm>
         </span>
       </a-table>
     </div>
-    
+
     <smart-post-marriage-report-modal ref="postForm"></smart-post-marriage-report-modal>
     <smart-premarital-filing-modal ref="modalForm" @ok="modalFormOk" />
   </a-card>
@@ -142,7 +142,7 @@ export default {
   },
   data() {
     return {
-      showAddPost:false,
+      showAddPost: false,
       description: '8项规定婚前报备表管理页面',
       // 表头
       columns: [
@@ -157,8 +157,10 @@ export default {
               return '通过'
             } else if (text == '2') {
               return '待审核'
-            } else {
+            } else if (text == '3') {
               return '免审'
+            } else if (text == '4') {
+              return '待提交'
             }
           },
         },
@@ -299,35 +301,35 @@ export default {
           dataIndex: 'marrySpoUnitPos',
         },
         {
-            title:'结婚人配偶父亲姓名',
-            align:"center",
-            dataIndex: 'marrySpoMaleName'
-          },
-          {
-            title:'结婚人配偶母亲姓名',
-            align:"center",
-            dataIndex: 'marrySpoFemaleName'
-          },
-          {
-            title:'结婚人配偶父亲单位',
-            align:"center",
-            dataIndex: 'marrySpoMaleUnit'
-          },
-          {
-            title:'结婚人配偶母亲单位',
-            align:"center",
-            dataIndex: 'marrySpoFemaleUnit'
-          },
-          {
-            title:'结婚人配偶父亲职务',
-            align:"center",
-            dataIndex: 'marrySpoMaleUnitPos'
-          },
-          {
-            title:'结婚人配偶母亲职务',
-            align:"center",
-            dataIndex: 'marrySpoFemaleUnitPos'
-          },
+          title: '结婚人配偶父亲姓名',
+          align: 'center',
+          dataIndex: 'marrySpoMaleName',
+        },
+        {
+          title: '结婚人配偶母亲姓名',
+          align: 'center',
+          dataIndex: 'marrySpoFemaleName',
+        },
+        {
+          title: '结婚人配偶父亲单位',
+          align: 'center',
+          dataIndex: 'marrySpoMaleUnit',
+        },
+        {
+          title: '结婚人配偶母亲单位',
+          align: 'center',
+          dataIndex: 'marrySpoFemaleUnit',
+        },
+        {
+          title: '结婚人配偶父亲职务',
+          align: 'center',
+          dataIndex: 'marrySpoMaleUnitPos',
+        },
+        {
+          title: '结婚人配偶母亲职务',
+          align: 'center',
+          dataIndex: 'marrySpoFemaleUnitPos',
+        },
         // {
         //   title: '结婚人配偶父母姓名',
         //   align: 'center',
@@ -376,6 +378,7 @@ export default {
         deleteBatch: '/smartPremaritalFiling/smartPremaritalFiling/deleteBatch',
         exportXlsUrl: '/smartPremaritalFiling/smartPremaritalFiling/exportXls',
         importExcelUrl: 'smartPremaritalFiling/smartPremaritalFiling/importExcel',
+        verify: '/smartPremaritalFiling/smartPremaritalFiling/submitVerify',
       },
       dictOptions: {},
       superFieldList: [],
@@ -390,11 +393,10 @@ export default {
     },
   },
   methods: {
-    postAdd(record){
+    postAdd(record) {
       console.log(record)
-      
-      this.$refs.postForm.postAdd(record)
 
+      this.$refs.postForm.postAdd(record)
     },
     initDictConfig() {},
     getSuperFieldList() {
@@ -404,7 +406,7 @@ export default {
       fieldList.push({ type: 'string', value: 'peopleSex', text: '人员性别', dictCode: '	sex' })
       fieldList.push({ type: 'int', value: 'peopleAge', text: '人员年龄', dictCode: '' })
       fieldList.push({ type: 'string', value: 'politicCou', text: '政治面貌', dictCode: 'political_status' })
-      fieldList.push({ type: 'string', value: 'departId', text: '单位ID', dictCode: '' })
+      fieldList.push({ type: 'string', value: 'departId', text: '单位', dictCode: '' })
       fieldList.push({ type: 'string', value: 'post', text: '职务', dictCode: 'sys_position,name,code' })
       fieldList.push({ type: 'string', value: 'postRank', text: '职级', dictCode: 'position_rank' })
       fieldList.push({ type: 'string', value: 'spoName', text: '配偶姓名', dictCode: '' })
@@ -436,9 +438,9 @@ export default {
     saveFiles() {
       //记录id
       console.log(this.selectedRowKeys)
-      let ids = this.selectedRowKeys.join(",")
+      let ids = this.selectedRowKeys.join(',')
 
-      if(ids.length == 0){
+      if (ids.length == 0) {
         this.$message.error('请选择要导出的数据！')
         return
       }

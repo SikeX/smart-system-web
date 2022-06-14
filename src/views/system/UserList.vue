@@ -17,7 +17,7 @@
             </a-form-item>
           </a-col>-->
           <!--按照单位查询 (设置返回值，默认返回ID：customReturnField='orgCode'),系统管理员、纪委管理员可按照单位查询-->
-          <a-col :md="6" :sm="8"  v-if="roleId.indexOf('1467143903808229378') !== -1 || roleId.indexOf('1467031291382349825') !== -1">
+          <a-col :md="6" :sm="8"  v-has="'user:departSelect'">
             <a-form-item label="单位" >
               <j-select-depart placeholder="请选择单位"  v-model="queryParam.departId" customReturnField='id' :multi="true" :treeOpera="true"></j-select-depart>
             </a-form-item>
@@ -33,7 +33,15 @@
                 <j-input placeholder="请输入手机号码" v-model="queryParam.phone"></j-input>
               </a-form-item>
             </a-col>
-
+          <a-col :md="6" :sm="8" v-has="'user:fzSelect'">
+            <a-form-item label="单位负责人" >
+              <a-select v-model="queryParam.userIdentity" placeholder="请选择是否为单位负责人">
+                <a-select-option value="">请选择</a-select-option>
+                <a-select-option value=1>否</a-select-option>
+                <a-select-option value=2>是</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
 
           <!--下拉搜索（可配置字典）：j-search-select-tag -->
             <a-col :md="6" :sm="8">
@@ -148,9 +156,9 @@
                 <a href="javascript:;" @click="handleDetail(record)">详情</a>
               </a-menu-item>
 
-<!--              <a-menu-item>-->
-<!--                <a href="javascript:;" @click="handleChangePassword(record.username)">修改密码</a>-->
-<!--              </a-menu-item>-->
+              <a-menu-item v-has="'user:updatePassword'">
+                <a href="javascript:;" @click="handleChangePassword(record.username)">修改密码</a>
+              </a-menu-item>
 
               <a-menu-item>
                 <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
@@ -204,6 +212,7 @@
   import JThirdAppButton from '@/components/jeecgbiz/thirdApp/JThirdAppButton'
   import JSelectDepartModal from '../../components/jeecgbiz/modal/JSelectDepartModal'
   import { mapGetters } from 'vuex'
+  import { colAuthFilter } from "@/utils/authFilter"
 
   export default {
     name: "UserList",
@@ -216,7 +225,7 @@
       PasswordModal,
       JInput,
       UserRecycleBinModal,
-      JSuperQuery
+      JSuperQuery,
     },
     data() {
       return {
@@ -374,7 +383,9 @@
     },
     created(){
       this.roleId=this.userInfo().roleId
-      console.log("roleId:"+this.roleId);
+      //console.log("roleId:"+this.roleId);
+      this.columns = colAuthFilter(this.columns,'userList:');
+      this.loadData();
     },
     computed: {
       importExcelUrl: function(){

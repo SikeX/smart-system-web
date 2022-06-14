@@ -4,7 +4,7 @@
  * data中url定义 list为查询列表  delete为删除单条记录  deleteBatch为批量删除
  */
 import { filterObj } from '@/utils/util';
-import { deleteAction, getAction,downFile,getFileAccessHttpUrl } from '@/api/manage'
+import { deleteAction, postAction, getAction,downFile,getFileAccessHttpUrl } from '@/api/manage'
 import Vue from 'vue'
 import { ACCESS_TOKEN, TENANT_ID } from "@/store/mutation-types"
 import store from '@/store'
@@ -265,6 +265,16 @@ export const JeecgListMixin = {
       this.$refs.modalForm.edit(record);
       this.$refs.modalForm.title="详情";
       this.$refs.modalForm.disableSubmit = true;
+    },
+    submitVerify:function(record){
+      postAction(this.url.verify,record).then((res)=>{
+         if(res.success){
+           this.$message.success("提交成功");
+           this.loadData();
+         }else{
+           this.$message.warning(res.message);
+         }
+      })
     },
     /* 导出 */
     handleExportXls2(){
