@@ -119,7 +119,7 @@ import Smart_8DiningList from './Smart_8DiningList'
 import Smart_8ListList from './Smart_8ListList'
 import { initDictOptions, filterMultiDictText } from '@/components/dict/JDictSelectUtil'
 import '@/assets/less/TableExpand.less'
-import { postAction} from '@/api/manage'
+import { postAction } from '@/api/manage'
 
 export default {
   name: 'SmartReceptionList',
@@ -207,6 +207,24 @@ export default {
             return !text ? '' : text.length > 10 ? text.substr(0, 10) : text
           },
         },
+        {
+          title: '审核状态',
+          align: 'center',
+          dataIndex: 'verifyStatus',
+          customRender: function (text) {
+            if (text == '0') {
+              return '不通过'
+            } else if (text == '1') {
+              return '通过'
+            } else if (text == '2') {
+              return '待审核'
+            } else if (text == '3') {
+              return '免审'
+            } else if (text == '4') {
+              return '待提交'
+            }
+          },
+        },
         // {
         //   title: '更新人',
         //   align: 'center',
@@ -228,24 +246,6 @@ export default {
           width: 147,
           scopedSlots: { customRender: 'action' },
         },
-        {
-          title: '审核状态',
-          align: 'center',
-          dataIndex: 'verifyStatus',
-          customRender: function (text) {
-            if (text == '0') {
-              return '不通过'
-            } else if (text == '1') {
-              return '通过'
-            } else if (text == '2') {
-              return '待审核'
-            } else if (text == '3') {
-              return '免审'
-            } else if (text == '4') {
-              return '待提交'
-            }
-          },
-        },
       ],
       url: {
         list: '/smart_reception/smartReception/list',
@@ -253,7 +253,7 @@ export default {
         deleteBatch: '/smart_reception/smartReception/deleteBatch',
         exportXlsUrl: '/smart_reception/smartReception/exportXls',
         importExcelUrl: 'smart_reception/smartReception/importExcel',
-        verify:'/smart_reception/smartReception/submitVerify',
+        verify: '/smart_reception/smartReception/submitVerify',
       },
       dictOptions: {
         departmentId: [],
@@ -284,14 +284,14 @@ export default {
     },
   },
   methods: {
-    submitVerify(record){
-      postAction(this.url.verify,record).then((res)=>{
-         if(res.success){
-           this.$message.success("提交成功");
-           this.loadData();
-         }else{
-           this.$message.warning(res.message);
-         }
+    submitVerify(record) {
+      postAction(this.url.verify, record).then((res) => {
+        if (res.success) {
+          this.$message.success('提交成功')
+          this.loadData()
+        } else {
+          this.$message.warning(res.message)
+        }
       })
     },
 
