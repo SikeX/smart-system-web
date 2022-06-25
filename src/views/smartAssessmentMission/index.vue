@@ -91,7 +91,6 @@
       <smartAssessmentMission-modal ref='modalForm' @ok='modalFormOk'></smartAssessmentMission-modal>
     </a-card>
     <smart-answer-info-list style='margin-bottom: 20px'/>
-    <smart-answer-info-history-list/>
   </div>
 </template>
 

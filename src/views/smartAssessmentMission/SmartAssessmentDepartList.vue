@@ -146,6 +146,14 @@
             dataIndex: 'deadline'
           },
           {
+            title:'是否查看评分详情',
+            align:"center",
+            dataIndex: 'isShowScore',
+            customRender:function (t,r,index) {
+              return t == 1 ? '是':'否'
+            }
+          },
+          {
             title:'签收状态',
             align:"center",
             dataIndex: 'signStatus'

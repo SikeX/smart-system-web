@@ -14,7 +14,6 @@
 <!--          >-->
 <!--          </a-tree>-->
           <a-menu
-            style='width: 256px'
             mode='inline'
             @openChange='handleChange'
             @click='handleClick'

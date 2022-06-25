@@ -44,7 +44,7 @@
         @expand='handleExpand'>
 
         <template slot='nameSlot' slot-scope='text, record'>
-          <span v-if='record.isKey === 0'>{{ text }}</span>
+          <span v-if='record.isKey === 0 || record == null'>{{ text }}</span>
           <a-badge v-else>
             <a-tooltip>
               <template slot='title'>
@@ -53,8 +53,6 @@
               <span> {{ text }} <a-icon slot='count' type='star' theme='twoTone'/></span>
             </a-tooltip>
           </a-badge>
-          <img v-else :src='getImgView(text)' height='25px' alt=''
-               style='max-width:80px;font-size: 12px;font-style: italic;'/>
         </template>
 
         <template slot='imgSlot' slot-scope='text'>
