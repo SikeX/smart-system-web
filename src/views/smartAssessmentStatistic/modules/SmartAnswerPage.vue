@@ -14,7 +14,6 @@
 <!--          >-->
 <!--          </a-tree>-->
           <a-menu
-            style='width: 256px'
             mode='inline'
             @openChange='handleChange'
             @click='handleClick'
@@ -103,8 +102,10 @@ export default {
       immediate: true,
       handler(val) {
         this.clearList()
-        this.queryParam['mainId'] = val
-        this.loadData(1)
+        if (val) {
+          this.queryParam['mainId'] = val
+          this.loadData(1)
+        }
       }
     }
   },

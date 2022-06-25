@@ -1,5 +1,5 @@
 <template>
-  <a-card :bordered='false' title="历史考核任务">
+  <a-card :bordered='false' title="本单位历史考核任务">
     <!-- 查询区域 -->
     <div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery">
@@ -90,11 +90,14 @@
       </a-table>
     </div>
 
-    <div>
-      <a-row v-if='selectedMainId'>
+    <a-tabs v-if='selectedMainId' defaultActiveKey='1'>
+      <a-tab-pane tab='上传内容' key='1'>
         <smart-answer-page :main-id='selectedMainId' :main-info='selectionRows[0]'></smart-answer-page>
-      </a-row>
-    </div>
+      </a-tab-pane>
+      <a-tab-pane v-if='selectionRows[0].isShowScore == 1' tab='得分详情' key='2'>
+        <ScoreDetailList :main-id='selectedMainId' :main-info='selectionRows[0]'/>
+      </a-tab-pane>
+    </a-tabs>
 
     <smart-answer-info-modal ref='modalForm' @ok='modalFormOk'></smart-answer-info-modal>
   </a-card>
@@ -110,11 +113,13 @@ import SmartAssessmentContentModal from '@views/smartAssessmentContent/modules/S
 import { getAction, putAction } from '@api/manage'
 import SmartAssessmentContentForm from '@views/smartAnswerInfo/modules/SmartAssessmentContentForm'
 import SmartAnswerPage from "./modules/SmartAnswerPage";
+import ScoreDetailList from '@views/smartAssessmentStatistic/scoreDetail/ScoreDetailList'
 
 export default {
   name: 'SmartAnswerInfoHistoryList',
   mixins: [JeecgListMixin, mixinDevice],
   components: {
+    ScoreDetailList,
     SmartAnswerPage,
     SmartAssessmentContentForm,
     SmartAssessmentContentModal,
