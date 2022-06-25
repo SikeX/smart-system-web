@@ -33,21 +33,28 @@
           <a-form-model-item v-if='model.isKey === 1' label='评分考核单位' :labelCol='labelCol' :wrapperCol='wrapperCol'
                              prop='assDepart'>
             <!--          <j-select-user-by-dep v-model='model.assDepartUser' />-->
-            <a-select
-              placeholder="请选择"
-              showSearch
-              @change="handleChange"
+<!--            <a-select-->
+<!--              placeholder="请选择"-->
+<!--              showSearch-->
+<!--              @change="handleChange"-->
+<!--              v-model="model.assDepart"-->
+<!--              :filterOption="filterOption"-->
+<!--              :disabled="disableSubmit"-->
+<!--              allowClear>-->
+<!--              <a-spin v-if="loading" slot="notFoundContent" size="small"/>-->
+<!--              <a-select-option v-for="d in departOptions" :key="d.value" :value="d.value">{{ d.text }}</a-select-option>-->
+<!--            </a-select>-->
+            <j-multi-select-tag
               v-model="model.assDepart"
-              :filterOption="filterOption"
+              :options="departOptions"
               :disabled="disableSubmit"
-              allowClear>
-              <a-spin v-if="loading" slot="notFoundContent" size="small"/>
-              <a-select-option v-for="d in departOptions" :key="d.value" :value="d.value">{{ d.text }}</a-select-option>
-            </a-select>
+              placeholder="请做出你的选择">
+            </j-multi-select-tag>
           </a-form-model-item>
           <a-form-model-item v-if='model.isKey === 1' label='评分考核组' :labelCol='labelCol' :wrapperCol='wrapperCol'
                              prop='assTeam' >
-            <j-search-select-tag v-model='model.assTeam' dict='smart_assessment_teamwheredel_flag=0,team_name,id' :disabled="disableSubmit"/>
+<!--            <j-search-select-tag v-model='model.assTeam' dict='smart_assessment_teamwheredel_flag=0,team_name,id' :disabled="disableSubmit"/>-->
+            <j-multi-select-tag v-model='model.assTeam' dictCode='smart_assessment_team,team_name,id,del_flag=0' :disabled="disableSubmit" placeholder="请做出你的选择"/>
           </a-form-model-item>
           <a-form-model-item v-show='false' label='是否考核要点' :labelCol='labelCol' :wrapperCol='wrapperCol' prop='isKey'>
             <j-switch v-model='model.isKey' :options='[1, 0]' :disabled="disableSubmit"></j-switch>
