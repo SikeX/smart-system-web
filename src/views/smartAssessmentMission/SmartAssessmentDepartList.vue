@@ -136,11 +136,6 @@
             dataIndex: 'assessmentDepart_dictText',
           },
           {
-            title:'被考核单位登录账号',
-            align:"center",
-            dataIndex: 'departUser_dictText'
-          },
-          {
             title:'截止时间',
             align:"center",
             dataIndex: 'deadline'
