@@ -229,10 +229,11 @@ export default {
       var params = this.getQueryParams();//查询条件
       params['missionId'] = this.missionId;
       let assessInfo = Vue.ls.get("assessInfo")
+      console.log(assessInfo)
       if (assessInfo) {
-        params['depart'] = assessInfo.departs || assessInfo.responsibleDepart;
         params['contentId'] = this.contentId;
         params['type'] = assessInfo.type
+        params['roleId'] = assessInfo.id
       } else {
         this.$message.warning('没有评分权限!')
         return
