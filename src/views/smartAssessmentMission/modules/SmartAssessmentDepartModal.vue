@@ -13,7 +13,7 @@
         <a-row>
           <a-col :span="24">
             <a-form-model-item label="被考核单位" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="assessmentDepart">
-              <j-select-depart v-model="model.assessmentDepart" :multi="model.id == null" :disabled="false" v-decorator="['assessmentDepart', validatorRules.assessmentDepart ]"/>
+              <j-select-depart v-model="model.assessmentDepart" :multi="model.id == null" :disabled="isDisabled" v-decorator="['assessmentDepart', validatorRules.assessmentDepart ]"/>
             </a-form-model-item>
           </a-col>
 <!--          <a-col :span="24" v-if="model.assessmentDepart">-->

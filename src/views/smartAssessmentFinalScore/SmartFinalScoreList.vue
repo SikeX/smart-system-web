@@ -77,11 +77,14 @@
       </a-table>
     </div>
 
-    <div>
-      <a-row v-if='selectedMainId'>
+    <a-tabs v-if='selectedMainId' defaultActiveKey='1'>
+      <a-tab-pane tab='上传内容' key='1'>
         <smart-final-score-page :main-id='selectedMainId'></smart-final-score-page>
-      </a-row>
-    </div>
+      </a-tab-pane>
+      <a-tab-pane tab='总分排名' key='2'>
+        <DepartRankList :main-id='selectedMainId'></DepartRankList>
+      </a-tab-pane>
+    </a-tabs>
   </a-card>
 </template>
 
@@ -94,11 +97,13 @@ import '@/assets/less/TableExpand.less'
 import SmartFinalScorePage from './modules/SmartFinalScorePage'
 import SmartScoreInfoModal from './modules/SmartScoreInfoModal'
 import Vue from "vue";
+import DepartRankList from '@views/smartAssessmentFinalScore/modules/DepartRankList'
 
 export default {
   name: "SmartFinalScoreList",
   mixins: [JeecgListMixin],
   components: {
+    DepartRankList,
     SmartScoreInfoModal,
     SmartFinalScorePage,
     SmartAssessmentContentList,

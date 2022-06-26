@@ -6,6 +6,7 @@
     :confirmLoading="confirmLoading"
     switchFullscreen
     @ok="handleOk"
+    :okButtonProps="{ class:{'jee-hidden': true} }"
     @cancel="handleCancel"
     cancelText="关闭">
     <a-spin :spinning="confirmLoading">
