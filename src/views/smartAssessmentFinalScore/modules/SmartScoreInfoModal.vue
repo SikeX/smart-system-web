@@ -5,7 +5,7 @@
     :visible="visible"
     switchFullscreen
     @ok="handleOk"
-    :okButtonProps="{ class:{'jee-hidden': disableSubmit} }"
+    :okButtonProps="{ class:{'jee-hidden': true} }"
     @cancel="handleCancel"
     cancelText="关闭">
     <smart-score-file-list :main-id='answerAssContentId'></smart-score-file-list>
