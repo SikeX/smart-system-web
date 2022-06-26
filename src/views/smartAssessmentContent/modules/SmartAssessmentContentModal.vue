@@ -133,7 +133,8 @@ export default {
       },
       url: {
         add: '/smartAssessmentContent/smartAssessmentContent/add',
-        edit: '/smartAssessmentContent/smartAssessmentContent/edit'
+        edit: '/smartAssessmentContent/smartAssessmentContent/edit',
+        dict: '/smartAssessmentContent/smartAssessmentContent/dict'
       },
       expandedRowKeys: [],
       pidField: 'pid',
@@ -157,25 +158,45 @@ export default {
   },
   methods: {
     initDict() {
-      let dictStr = 'smart_assessment_content,name,id'
-      if (this.curLevel === 2) {
-        dictStr = 'smart_assessment_content,name,id,pid=\'0\' and is_key=0 and mission_id=\'' + this.mainId + '\''
-      } else if (this.curLevel === 3) {
-        dictStr = 'smart_assessment_content,name,id,pid<>\'0\' and is_key=0 and mission_id=\'' + this.mainId + '\''
+      if (this.curLevel == 2) {
+        this.loadContentDict()
+      } else if (this.curLevel == 3) {
+        this.loadContentDict()
       } else {
         return
       }
-      ajaxGetDictItems(dictStr, null).then((res) => {
+    },
+    loadContentDict() {
+      this.contentOptions = []
+      this.loading = true
+      let params = {
+        missionId: this.mainId,
+        level: this.curLevel - 1
+      }
+      getAction(this.url.dict, params).then(res => {
         if (res.success) {
           if (this.disableSubmit) {
             this.disableSubmit = !this.disableSubmit
-            this.contentOptions = res.result
+            for (const resultKey in res.result) {
+              this.contentOptions.push({
+                text: res.result[resultKey].name,
+                value: res.result[resultKey].id
+              })
+            }
             this.disableSubmit = !this.disableSubmit
           } else {
-            this.contentOptions = res.result
+            for (const resultKey in res.result) {
+              this.contentOptions.push({
+                text: res.result[resultKey].name,
+                value: res.result[resultKey].id
+              })
+            }
           }
-
+        } else {
+          this.$message.warning(res.message)
         }
+      }).finally(res => {
+        this.loading = false
       })
     },
     loadDepartDict() {
