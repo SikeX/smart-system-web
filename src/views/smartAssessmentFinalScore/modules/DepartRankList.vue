@@ -26,7 +26,7 @@
 
     <!-- 操作按钮区域 -->
     <div class="table-operator">
-      <a-button @click="updateRank" type="primary">更新排名</a-button>
+      <a-button v-if='isShow' @click="updateRank" type="primary">更新排名</a-button>
       <!-- 高级查询区域 -->
       <j-super-query :fieldList="superFieldList" ref="superQueryModal" @handleSuperQuery="handleSuperQuery"></j-super-query>
     </div>
@@ -108,6 +108,11 @@
       mainId: {
         type: String,
         default: '',
+        required: false
+      },
+      isShow: {
+        type: Boolean,
+        default: true,
         required: false
       },
     },

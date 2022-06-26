@@ -6,30 +6,19 @@
         <a-form layout='inline' @keyup.enter.native='searchQuery'>
           <a-row :gutter='24'>
             <a-col :xl='6' :lg='7' :md='8' :sm='24'>
+              <a-form-item label='考核任务'>
+                <j-search-select-tag
+                  placeholder="全部"
+                  v-model="queryParam.missionId"
+                  dict="smart_assessment_mission,mission_name,id"
+                  :async="true">
+                </j-search-select-tag>
+              </a-form-item>
+            </a-col>
+            <a-col :xl='6' :lg='7' :md='8' :sm='24'>
               <a-form-item label='单位'>
-                <j-select-depart placeholder='请选择单位' v-model='queryParam.depart' customReturnField='id' :multi='false'
+                <j-select-depart placeholder='全部' v-model='queryParam.depart' customReturnField='id' :multi='false'
                                  :treeOpera='true'></j-select-depart>
-              </a-form-item>
-            </a-col>
-            <a-col :xl='6' :lg='7' :md='8' :sm='24'>
-              <a-form-item label='任务名称'>
-                <a-input placeholder='请输入任务名称' v-model='queryParam.missionName'></a-input>
-              </a-form-item>
-            </a-col>
-            <a-col :xl='6' :lg='7' :md='8' :sm='24'>
-              <a-form-item label='考核年份'>
-                <a-input placeholder='请输入考核年份' v-model='queryParam.assessmentYear'></a-input>
-              </a-form-item>
-            </a-col>
-            <a-col :xl='6' :lg='7' :md='8' :sm='24'>
-              <a-form-item label='任务状态'>
-                <a-select
-                  placeholder='全部'
-                  v-model:value='queryParam.missionStatus'>
-                  <a-select-option value='未发布'>未发布</a-select-option>
-                  <a-select-option value='已发布'>已发布</a-select-option>
-                  <a-select-option value='发布评分结果'>发布评分结果</a-select-option>
-                </a-select>
               </a-form-item>
             </a-col>
             <a-col :xl='6' :lg='7' :md='8' :sm='24'>
@@ -125,6 +114,9 @@
         <a-tab-pane tab='得分详情' key='2'>
           <ScoreDetailList :main-id='selectedMainId' :main-info='selectionRows[0]'/>
         </a-tab-pane>
+        <a-tab-pane tab='单位排名详情' key='3'>
+          <DepartRankList :main-id='selectionRows[0].missionId' :is-show='false'></DepartRankList>
+        </a-tab-pane>
       </a-tabs>
 
       <smart-answer-info-modal ref='modalForm' @ok='modalFormOk'></smart-answer-info-modal>
@@ -146,11 +138,13 @@ import SmartAssessmentContentForm from '@views/smartAnswerInfo/modules/SmartAsse
 import SmartAnswerPage from './modules/SmartAnswerPage'
 import SmartAnswerInfoHistoryList from '@views/smartAnswerInfo/SmartAnswerInfoHistoryList'
 import ScoreDetailList from './scoreDetail/ScoreDetailList'
+import DepartRankList from '@views/smartAssessmentFinalScore/modules/DepartRankList'
 
 export default {
   name: 'SmartAssessmentStatistic',
   mixins: [JeecgListMixin, mixinDevice],
   components: {
+    DepartRankList,
     ScoreDetailList,
     SmartAnswerInfoHistoryList,
     SmartAnswerPage,
