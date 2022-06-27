@@ -5,6 +5,15 @@
       <!--            <a-button style='margin-right: 20px' @click='getStatus'>获取设备状态</a-button>-->
       <!--            <a-button style='margin-right: 20px' @click='isConnect'>判断设备是否连接</a-button>-->
     </a-row>
+
+    <a-row>
+      <a-input v-model:value="defaultFileName" ref='defaultFileName' placeholder='请输入拍摄照片上传文件名'>
+        <template #addonBefore>
+          拍摄照片上传文件名
+        </template>
+      </a-input>
+    </a-row>
+
     <a-row style='margin-top: 20px'>
       <a-col :span='12'>
         <a-card title='主摄像头' hoverable style='width: 300px'>
@@ -118,16 +127,19 @@ export default {
         mainImages: [],
         subImages: []
       },
-      messages: []
+      messages: [],
+
+      // 拍摄照片默认文件名称
+      defaultFileName: 'eloam',
     }
   },
-  props:{
+  props: {
     /*这个属性用于控制文件上传的业务路径*/
-    bizPath:{
-      type:String,
-      required:false,
-      default:"temp"
-    },
+    bizPath: {
+      type: String,
+      required: false,
+      default: 'temp'
+    }
   },
   mounted() {
     isConnect().then(result => {
@@ -262,9 +274,14 @@ export default {
       })
     },
     submitForm() {
+      if (this.defaultFileName === '') {
+        this.$message.warning('请输入拍摄照片上传文件名!')
+        this.$refs['defaultFileName'].focus()
+        return
+      }
+      let filename = this.defaultFileName + '.jpg'
       for (let i = 0; i < this.images.length; i++) {
         let base64 = this.images[i]
-        let filename = 'eloam.jpg'
         this.uploadOne(base64, filename)
       }
       this.$emit('close')

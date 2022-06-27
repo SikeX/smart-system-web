@@ -22,7 +22,7 @@ export default {
   },
   data() {
     return {
-      title: '',
+      title: '高拍仪拍照',
       width: 800,
       visible: false,
       disableSubmit: false
