@@ -4,6 +4,22 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
+          <a-col :xl='6' :lg='7' :md='8' :sm='24'>
+            <a-form-item label='考核单位'>
+              <j-select-depart placeholder='全部' v-model='queryParam.departId' customReturnField='id' :multi='true'
+                               :treeOpera='true'></j-select-depart>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+              <a @click="handleToggleSearch" style="margin-left: 8px">
+                {{ toggleSearchStatus ? '收起' : '展开' }}
+                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+              </a>
+            </span>
+          </a-col>
         </a-row>
       </a-form>
     </div>
@@ -176,7 +192,6 @@
       getSuperFieldList(){
         let fieldList=[];
         fieldList.push({type:'sel_depart',value:'departId',text:'单位'})
-        fieldList.push({type:'sel_user',value:'departUser',text:'评分人员'})
         fieldList.push({type:'sel_depart',value:'responsibleDepart',text:'负责单位'})
         fieldList.push({type:'int',value:'responsibleAmount',text:'负责单位数量',dictCode:''})
         fieldList.push({type:'datetime',value:'createTime',text:'创建日期'})
