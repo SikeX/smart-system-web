@@ -109,7 +109,7 @@
 
       <a-tabs v-if='selectedMainId' defaultActiveKey='1'>
         <a-tab-pane tab='上传内容' key='1'>
-          <smart-answer-page :main-id='selectedMainId' :main-info='selectionRows[0]'></smart-answer-page>
+          <SmartAssessmentStaticPage :main-id='selectedMainId' :main-info='selectionRows[0]'></SmartAssessmentStaticPage>
         </a-tab-pane>
         <a-tab-pane tab='得分详情' key='2'>
           <ScoreDetailList :main-id='selectedMainId' :main-info='selectionRows[0]'/>
@@ -135,7 +135,7 @@ import SmartAnswerInfoModal from './modules/SmartAnswerInfoModal'
 import SmartAssessmentContentModal from '@views/smartAssessmentContent/modules/SmartAssessmentContentModal'
 import { getAction, putAction } from '@api/manage'
 import SmartAssessmentContentForm from '@views/smartAnswerInfo/modules/SmartAssessmentContentForm'
-import SmartAnswerPage from './modules/SmartAnswerPage'
+import SmartAssessmentStaticPage from './modules/SmartAssessmentStaticPage'
 import SmartAnswerInfoHistoryList from '@views/smartAnswerInfo/SmartAnswerInfoHistoryList'
 import ScoreDetailList from './scoreDetail/ScoreDetailList'
 import DepartRankList from '@views/smartAssessmentFinalScore/modules/DepartRankList'
@@ -147,7 +147,7 @@ export default {
     DepartRankList,
     ScoreDetailList,
     SmartAnswerInfoHistoryList,
-    SmartAnswerPage,
+    SmartAssessmentStaticPage,
     SmartAssessmentContentForm,
     SmartAssessmentContentModal,
     SmartAnswerInfoModal
