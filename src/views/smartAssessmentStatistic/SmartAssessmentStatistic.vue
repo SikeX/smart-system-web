@@ -17,7 +17,7 @@
             </a-col>
             <a-col :xl='6' :lg='7' :md='8' :sm='24'>
               <a-form-item label='单位'>
-                <j-select-depart placeholder='全部' v-model='queryParam.depart' customReturnField='id' :multi='false'
+                <j-select-depart placeholder='全部' v-model='queryParam.depart' customReturnField='id' :multi='true'
                                  :treeOpera='true'></j-select-depart>
               </a-form-item>
             </a-col>

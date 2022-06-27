@@ -15,7 +15,7 @@
           </a-col>
           <a-col :span="24">
             <a-form-model-item label="负责单位" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="responsibleDepart">
-              <j-select-depart v-model="model.responsibleDepart" multi v-decorator="['responsibleDepart', validatorRules.responsibleDepart]"  />
+              <j-select-depart v-model="model.responsibleDepart" :multi="true" :treeOpera="true"  />
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
@@ -77,7 +77,6 @@
           ],
           responsibleDepart: [
             { required: true, message: '请选择负责的单位!'},
-            {validator: this.validateResponsibleDepart}
           ],
         },
         url: {
