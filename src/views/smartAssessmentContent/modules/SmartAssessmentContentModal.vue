@@ -48,13 +48,13 @@
               v-model="model.assDepart"
               :options="departOptions"
               :disabled="disableSubmit"
-              placeholder="请做出你的选择">
+              placeholder="请选择评分考核单位">
             </j-multi-select-tag>
           </a-form-model-item>
           <a-form-model-item v-if='model.isKey === 1' label='评分考核组' :labelCol='labelCol' :wrapperCol='wrapperCol'
                              prop='assTeam' >
 <!--            <j-search-select-tag v-model='model.assTeam' dict='smart_assessment_teamwheredel_flag=0,team_name,id' :disabled="disableSubmit"/>-->
-            <j-multi-select-tag v-model='model.assTeam' dictCode='smart_assessment_team,team_name,id,del_flag=0' :disabled="disableSubmit" placeholder="请做出你的选择"/>
+            <j-multi-select-tag v-model='model.assTeam' dictCode='smart_assessment_team,team_name,id,del_flag=0' :disabled="disableSubmit" placeholder="请选择评分考核组"/>
           </a-form-model-item>
           <a-form-model-item v-show='false' label='是否考核要点' :labelCol='labelCol' :wrapperCol='wrapperCol' prop='isKey'>
             <j-switch v-model='model.isKey' :options='[1, 0]' :disabled="disableSubmit"></j-switch>
@@ -124,12 +124,12 @@ export default {
         point: [
           {required: true, message: '请输入考核要点分值!'},
         ],
-        assDepart: [
-          {required: true, message: '请选择负责该要点评分的考核单位!'},
-        ],
-        assTeam: [
-          {required: true, message: '请选择负责该要点评分的考核组!'},
-        ],
+        // assDepart: [
+        //   {required: true, message: '请选择负责该要点评分的考核单位!'},
+        // ],
+        // assTeam: [
+        //   {required: true, message: '请选择负责该要点评分的考核组!'},
+        // ],
       },
       url: {
         add: '/smartAssessmentContent/smartAssessmentContent/add',
