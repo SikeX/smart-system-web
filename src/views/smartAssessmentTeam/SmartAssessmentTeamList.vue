@@ -29,7 +29,7 @@
       <div class="table-operator">
         <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
         <a-button type="primary" icon="download" @click="handleExportXls('考核组')">导出</a-button>
-        <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
+        <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" accept='.xls,.xlsx' :action="importExcelUrl" @change="handleImportExcel">
           <a-button type="primary" icon="import">导入</a-button>
         </a-upload>
         <!-- 高级查询区域 -->

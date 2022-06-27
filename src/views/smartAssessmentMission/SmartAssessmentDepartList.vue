@@ -8,6 +8,7 @@
         v-if="mainInfo.missionStatus === isShowText"
         name="file"
         :showUploadList="false"
+        accept='.xls,.xlsx'
         :multiple="false"
         :headers="tokenHeader"
         :action="importExcelUrl"
