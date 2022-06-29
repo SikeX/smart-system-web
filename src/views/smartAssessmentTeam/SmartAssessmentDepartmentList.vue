@@ -87,6 +87,9 @@
           <a @click="handleEdit(record)">编辑</a>
 
           <a-divider type="vertical" />
+          <a @click="handleCopy(record)">复制负责单位</a>
+
+          <a-divider type="vertical" />
           <a-dropdown>
             <a class="ant-dropdown-link">更多 <a-icon type="down" /></a>
             <a-menu slot="overlay">
@@ -188,6 +191,15 @@
     },
     methods: {
       initDictConfig(){
+      },
+      handleCopy(record) {
+        let c_record = {
+          responsibleDepart: record['responsibleDepart']
+        }
+
+        this.$refs.modalForm.edit(c_record);
+        this.$refs.modalForm.title = "新增";
+        this.$refs.modalForm.disableSubmit = false;
       },
       getSuperFieldList(){
         let fieldList=[];
