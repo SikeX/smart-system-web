@@ -29,7 +29,7 @@
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
       <a-button type="primary" icon="download" @click="handleExportXls('负责评分的考核单位')">导出</a-button>
-      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
+      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" accept='.xls,.xlsx' :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
       <!-- 高级查询区域 -->
@@ -85,6 +85,9 @@
 
         <span slot="action" slot-scope="text, record">
           <a @click="handleEdit(record)">编辑</a>
+
+          <a-divider type="vertical" />
+          <a @click="handleCopy(record)">复制负责单位</a>
 
           <a-divider type="vertical" />
           <a-dropdown>
@@ -188,6 +191,15 @@
     },
     methods: {
       initDictConfig(){
+      },
+      handleCopy(record) {
+        let c_record = {
+          responsibleDepart: record['responsibleDepart']
+        }
+
+        this.$refs.modalForm.edit(c_record);
+        this.$refs.modalForm.title = "新增";
+        this.$refs.modalForm.disableSubmit = false;
       },
       getSuperFieldList(){
         let fieldList=[];

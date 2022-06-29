@@ -146,7 +146,7 @@ import ScoreDetailModal from './modules/ScoreDetailModal'
         ],
         url: {
           list: "/smartAnswerAssContent/smartAnswerAssContent/list",
-          rootList: "/smartAnswerAssContent/smartAnswerAssContent/rootList",
+          rootList: "/smartAnswerAssContent/smartAnswerAssContent/rootListWithScore",
           childList: "/smartAnswerAssContent/smartAnswerAssContent/childList",
           getChildListBatch: "/smartAnswerAssContent/smartAnswerAssContent/getChildListBatch",
           delete: "/smartAnswerAssContent/smartAnswerAssContent/delete",

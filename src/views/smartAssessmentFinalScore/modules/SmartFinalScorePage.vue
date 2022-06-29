@@ -131,7 +131,20 @@ export default {
       pidField: 'pid',
       dictOptions: {},
       loadParent: false,
-      superFieldList: []
+      superFieldList: [],
+
+      /* 分页参数 */
+      ipagination:{
+        current: 1,
+        pageSize: 100,
+        pageSizeOptions: ['10', '20', '30'],
+        showTotal: (total, range) => {
+          return range[0] + "-" + range[1] + " 共" + total + "条"
+        },
+        showQuickJumper: true,
+        showSizeChanger: true,
+        total: 0
+      },
     }
   },
   created() {
@@ -192,7 +205,7 @@ export default {
       }
       this.loading = true
       let params = this.getQueryParams()
-      params.hasQuery = 'true'
+      params.hasQuery = 'false'
       getAction(this.url.list, params).then(res => {
         if (res.success) {
           let result = res.result

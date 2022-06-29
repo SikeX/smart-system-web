@@ -18,7 +18,7 @@
         <a-button type='primary' icon='tool'>校正分数</a-button>
       </a-popconfirm>
       <a-button type='primary' icon='download' @click="handleExportXls('考核节点表')">导出</a-button>
-      <a-upload v-if='mainInfo.missionStatus === isShowText' name='file' :showUploadList='false' :multiple='false' :headers='tokenHeader' :action='importExcelUrl'
+      <a-upload v-if='mainInfo.missionStatus === isShowText' name='file' :showUploadList='false' :data='uploadData' :multiple='false' accept='.xls,.xlsx' :headers='tokenHeader' :action='importExcelUrl'
                 @change='handleImportExcel'>
         <a-button type='primary' icon='import'>导入</a-button>
       </a-upload>
@@ -137,6 +137,7 @@ export default {
           this.clearList()
         } else {
           this.queryParam['missionId'] = val
+          this.uploadData['missionId'] = val
           this.loadData(1)
         }
       }
@@ -147,6 +148,9 @@ export default {
       description: '考核节点表管理页面',
       disableMixinCreated: true,
       isShowText: '未发布',
+      uploadData: {
+        missionId: '',
+      },
       // 表头
       columns: [
         {
@@ -208,6 +212,9 @@ export default {
   methods: {
     clearList() {
       this.dataSource = []
+      this.uploadData = {
+        missionId: '',
+      }
       this.selectedRowKeys = []
       this.ipagination.current = 1
     },
