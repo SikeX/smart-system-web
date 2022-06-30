@@ -7,6 +7,7 @@
     @ok="handleOk"
     :okButtonProps="{ class:{'jee-hidden': disableSubmit} }"
     @cancel="handleCancel"
+    okText="上传"
     cancelText="关闭">
     <camera ref="realForm" @ok="submitCallback" @close="close" :disabled="disableSubmit" :biz-path="bizPath"></camera>
   </j-modal>
