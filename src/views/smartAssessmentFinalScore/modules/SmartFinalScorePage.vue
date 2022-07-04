@@ -126,6 +126,11 @@ export default {
         exportXlsUrl: '/smartAssessmentContent/smartAssessmentContent/exportXls',
         importExcelUrl: 'smartAssessmentContent/smartAssessmentContent/importExcel'
       },
+      /* 排序参数 */
+      isorter:{
+        column: 'createTime',
+        order: 'ASC',
+      },
       expandedRowKeys: [],
       hasChildrenField: 'hasChild',
       pidField: 'pid',
