@@ -48,7 +48,7 @@ export default {
   components: {
     SmartScoreDepartList,
     SmartAssessmentContentForm,
-    'sub-menu': SubMenu
+    SubMenu
   },
   props: {
     mainId: {
@@ -145,6 +145,12 @@ export default {
         showQuickJumper: true,
         showSizeChanger: true,
         total: 0
+      },
+
+      /* 排序参数 */
+      isorter:{
+        column: 'createTime',
+        order: 'ASC',
       },
     }
   },

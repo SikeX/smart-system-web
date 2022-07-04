@@ -183,6 +183,11 @@ export default {
         exportXlsUrl: '/smartAssessmentContent/smartAssessmentContent/exportXls',
         importExcelUrl: 'smartAssessmentContent/smartAssessmentContent/importExcel'
       },
+      /* 排序参数 */
+      isorter:{
+        column: 'createTime',
+        order: 'ASC',
+      },
       expandedRowKeys: [],
       hasChildrenField: 'hasChild',
       pidField: 'pid',
@@ -286,7 +291,7 @@ export default {
       }
       this.loading = true
       let params = this.getQueryParams()
-      params.hasQuery = 'true'
+      params.hasQuery = 'false'
       getAction(this.url.list, params).then(res => {
         if (res.success) {
           let result = res.result

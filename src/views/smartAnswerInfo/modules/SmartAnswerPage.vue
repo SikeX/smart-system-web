@@ -173,6 +173,12 @@ export default {
         showSizeChanger: true,
         total: 0
       },
+
+      /* 排序参数 */
+      isorter:{
+        column: 'createTime',
+        order: 'ASC',
+      },
     }
   },
   created() {
