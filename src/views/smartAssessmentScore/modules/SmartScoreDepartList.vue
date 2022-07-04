@@ -66,8 +66,14 @@
         </template>
 
         <span slot='action' slot-scope='text, record'>
-          <span v-if="disableSubmit(record.endTime)">未到截止时间</span>
+          <div v-if="disableSubmit(record.endTime)">
+            <a @click="handleDetail(record)">详情</a>
+            <a-divider type="vertical"/>
+            <span >未到截止时间</span>
+          </div>
           <div v-else>
+            <a @click="handleDetail(record)">详情</a>
+            <a-divider type="vertical"/>
             <a v-if="record.missionStatus==='未签收'" @click='signMission(record)'>代替签收</a>
             <a v-else @click='handleMark(record)'>评分</a>
           </div>
@@ -207,6 +213,12 @@ export default {
     disableSubmit(endTime) {
       let dateDiff = new Date(endTime).getTime() - new Date().getTime()
       return dateDiff > 0;
+    },
+    handleDetail:function(record){
+      // console.log(record)
+      this.$refs.modalForm.title="详情";
+      this.$refs.modalForm.disableSubmit = true;
+      this.$refs.modalForm.edit(this.contentId, record.id);
     },
     handleMark:function(record){
       // console.log(record)

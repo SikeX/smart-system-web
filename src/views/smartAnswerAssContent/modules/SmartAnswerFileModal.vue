@@ -26,6 +26,8 @@
           </a-col>
           <a-col :span='24'>
             <a-form-model-item label='附件' :labelCol='labelCol' :wrapperCol='wrapperCol' prop='attachment'>
+              <a-button v-if="!disableSubmit" icon="camera" @click="eloamScan">高拍仪拍照</a-button>
+              <eloam-modal ref="modalForm" @ok='scanOk'></eloam-modal>
               <j-upload v-model='model.attachment' :disabled='disableSubmit' :buttonVisible="!disableSubmit"></j-upload>
             </a-form-model-item>
           </a-col>
@@ -50,10 +52,13 @@
 
 import { httpAction } from '@/api/manage'
 import { validateDuplicateValue } from '@/utils/util'
+import EloamModal from "../../eloam/modules/EloamModal";
 
 export default {
   name: 'SmartAnswerFileModal',
-  components: {},
+  components: {
+    EloamModal
+  },
   props: {
     mainId: {
       type: String,
@@ -91,6 +96,23 @@ export default {
     this.modelDefault = JSON.parse(JSON.stringify(this.model))
   },
   methods: {
+    eloamScan() {
+      this.$refs.modalForm.open()
+    },
+    scanOk(url) {
+      let image = url
+      let dic_name = 'attachment'
+      if (image) {
+        let arr = []
+        // 考虑如果存在已经上传的文件，则拼接起来，没有则直接添加
+        if (this.model[dic_name]) {
+          arr.push(this.model[dic_name])
+        }
+        arr.push(image)
+        // 更新表单中文件url字段, files 为字段名称
+        this.$set(this.model, dic_name, arr.join())
+      }
+    },
     add() {
       this.edit(this.modelDefault)
     },

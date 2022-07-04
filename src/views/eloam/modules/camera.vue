@@ -274,17 +274,22 @@ export default {
       })
     },
     submitForm() {
+      if (this.images.length == 0) {
+        this.$message.warning("请先拍摄照片!")
+        return
+      }
       if (this.defaultFileName === '') {
         this.$message.warning('请输入拍摄照片上传文件名!')
         this.$refs['defaultFileName'].focus()
         return
       }
-      let filename = this.defaultFileName + '.jpg'
       for (let i = 0; i < this.images.length; i++) {
         let base64 = this.images[i]
+        let filename = this.defaultFileName + '_' + i + '.jpg'
         this.uploadOne(base64, filename)
       }
-      this.$emit('close')
+      this.images = []
+      // this.$emit('close')
     }
   }
 }
