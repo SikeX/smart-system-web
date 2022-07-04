@@ -283,9 +283,9 @@ export default {
         this.$refs['defaultFileName'].focus()
         return
       }
-      let filename = this.defaultFileName + '.jpg'
       for (let i = 0; i < this.images.length; i++) {
         let base64 = this.images[i]
+        let filename = this.defaultFileName + '_' + i + '.jpg'
         this.uploadOne(base64, filename)
       }
       this.images = []

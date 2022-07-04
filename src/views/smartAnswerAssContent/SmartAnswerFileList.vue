@@ -131,12 +131,6 @@
             dataIndex: 'workTime'
           },
           {
-            title:'附件',
-            align:"center",
-            dataIndex: 'attachment',
-            scopedSlots: {customRender: 'fileSlot'}
-          },
-          {
             title:'上报人',
             align:"center",
             dataIndex: 'uploadUser_dictText'

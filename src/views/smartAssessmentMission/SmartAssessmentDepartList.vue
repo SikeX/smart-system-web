@@ -1,5 +1,52 @@
 <template>
   <a-card :bordered="false" :class="'cust-erp-sub-tab'">
+    <!-- 查询区域 -->
+    <div v-if="mainId"  class='table-page-search-wrapper'>
+      <a-form layout='inline' @keyup.enter.native='searchQuery'>
+        <a-row :gutter='24'>
+          <a-col :xl='6' :lg='7' :md='8' :sm='24'>
+            <a-form-item label='单位'>
+              <j-select-depart placeholder='全部' v-model='queryParam.assessmentDepart' customReturnField='id' :multi='true'
+                               :treeOpera='true'></j-select-depart>
+            </a-form-item>
+          </a-col>
+          <a-col :xl='6' :lg='7' :md='8' :sm='24'>
+            <a-form-item label='是否查看评分详情'>
+              <a-select
+                placeholder="全部"
+                v-model:value="queryParam.isShowScore">
+                <a-select-option value="">全部</a-select-option>
+                <a-select-option value="1">是</a-select-option>
+                <a-select-option value="0">否</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+          <a-col :xl='6' :lg='7' :md='8' :sm='24'>
+            <a-form-item label='签收状态'>
+              <a-select
+                placeholder="全部"
+                v-model:value="queryParam.signStatus">
+                <a-select-option value="">全部</a-select-option>
+                <a-select-option value="0">未签收</a-select-option>
+                <a-select-option value="1">已签收</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+          <a-col :xl='6' :lg='7' :md='8' :sm='24'>
+            <span style='float: left;overflow: hidden;' class='table-page-search-submitButtons'>
+              <a-button type='primary' @click='searchQuery' icon='search'>查询</a-button>
+              <a-button type='primary' @click='searchReset' icon='reload' style='margin-left: 8px'>重置</a-button>
+              <a @click='handleToggleSearch' style='margin-left: 8px'>
+                {{ toggleSearchStatus ? '收起' : '展开' }}
+                <a-icon :type="toggleSearchStatus ? 'up' : 'down'" />
+              </a>
+            </span>
+          </a-col>
+        </a-row>
+      </a-form>
+    </div>
+    <!-- 查询区域-END -->
+
     <!-- 操作按钮区域 -->
     <div v-if="mainId" class="table-operator">
       <a-button v-if="mainInfo.missionStatus === isShowText" @click="handleAdd" type="primary" icon="plus">新增</a-button>
@@ -67,7 +114,7 @@
 
         <span slot="action" slot-scope="text, record">
           <a @click="handleEdit(record)">编辑</a>
-          <a-divider type="vertical" />
+          <a-divider v-if='mainId && mainInfo.missionStatus === isShowText' type="vertical" />
           <a-popconfirm v-if='mainId && mainInfo.missionStatus === isShowText' title="确定删除吗?" @confirm="() => handleDelete(record.id)">
             <a>删除</a>
           </a-popconfirm>
@@ -198,6 +245,12 @@
         this.$refs.modalForm.add(this.mainInfo);
         this.$refs.modalForm.title = "新增被考核单位";
         this.$refs.modalForm.disableSubmit = false;
+      },
+      searchReset() {
+        this.queryParam = {
+          missionId: this.mainId,
+        }
+        this.loadData(1);
       },
       clearList(){
         this.dataSource=[]
