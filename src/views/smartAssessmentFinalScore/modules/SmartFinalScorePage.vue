@@ -10,7 +10,10 @@
           >
             <template v-for='item in dataSource'>
               <a-menu-item v-if="item.isKey == 1" :key="item.id + ',' + item.missionId">
-                <span>{{ item.name }}</span>
+                <a-tooltip placement="topLeft">
+                  <template #title>{{ item.name }}</template>
+                  <span>{{ item.name }}</span>
+                </a-tooltip>
               </a-menu-item>
               <sub-menu v-else :key="item.id + ',' + item.missionId" :menu-info='item' />
             </template>
