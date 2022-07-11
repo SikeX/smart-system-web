@@ -97,6 +97,9 @@
                 <a @click="handleDetail(record)">详情</a>
               </a-menu-item>
               <a-menu-item>
+                <a @click="showDepartList(record)">查看负责单位列表</a>
+              </a-menu-item>
+              <a-menu-item>
                 <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
                   <a>删除</a>
                 </a-popconfirm>
@@ -108,6 +111,8 @@
       </a-table>
     </div>
 
+    <depart-list-modal ref="departListModal" store='responsibleDepart' text='responsibleDepart_dictText'></depart-list-modal>
+
     <smart-assessment-department-modal ref="modalForm" @ok="modalFormOk"></smart-assessment-department-modal>
   </a-card>
 </template>
@@ -118,11 +123,13 @@
   import { mixinDevice } from '@/utils/mixin'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import SmartAssessmentDepartmentModal from './modules/SmartAssessmentDepartmentModal'
+  import DepartListModal from '@views/smartAssessmentTeam/modules/DepartListModal'
 
   export default {
     name: 'SmartAssessmentDepartmentList',
     mixins:[JeecgListMixin, mixinDevice],
     components: {
+      DepartListModal,
       SmartAssessmentDepartmentModal
     },
     data () {
@@ -191,6 +198,9 @@
     },
     methods: {
       initDictConfig(){
+      },
+      showDepartList(record) {
+        this.$refs.departListModal.edit(record)
       },
       handleCopy(record) {
         let c_record = {
