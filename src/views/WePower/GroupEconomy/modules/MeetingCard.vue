@@ -2,7 +2,7 @@
   <a-card :title="name" style="width: 100%">
     <a-col :span="24">
       <a-form-model-item label="会议材料" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="file">
-        <j-upload v-model="meetFile"></j-upload>
+        <j-upload v-model="meetFile" :multiple="false"></j-upload>
       </a-form-model-item>
     </a-col>
     <a-col :span="24">

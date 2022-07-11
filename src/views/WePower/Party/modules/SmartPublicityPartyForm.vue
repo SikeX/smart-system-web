@@ -26,7 +26,7 @@
           </a-col>
           <a-col :span="24">
             <a-form-model-item label="附件" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="file">
-              <j-upload v-model="model.file"></j-upload>
+              <j-upload v-model="model.file" :multiple="false"></j-upload>
               <a-button icon="camera" @click="eloamScan">高拍仪拍照</a-button>
             </a-form-model-item>
           </a-col>
@@ -50,44 +50,44 @@ export default {
     SelectVillageDepart
   },
   props: {
-    //表单禁用
+    // 表单禁用
     disabled: {
       type: Boolean,
       default: false,
-      required: false,
-    },
+      required: false
+    }
   },
   data() {
     return {
       model: {},
       labelCol: {
         xs: { span: 24 },
-        sm: { span: 5 },
+        sm: { span: 5 }
       },
       wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 16 },
+        sm: { span: 16 }
       },
       confirmLoading: false,
       validatorRules: {
         type: [{ required: true, message: '请选择类型' }],
         location: [{ required: true, message: '请选择村镇' }],
-        title: [{ required: true, message: '请输入标题' }],
+        title: [{ required: true, message: '请输入标题' }]
       },
       url: {
         add: '/smartPublicityParty/smartPublicityParty/add',
         edit: '/smartPublicityParty/smartPublicityParty/edit',
-        queryById: '/smartPublicityParty/smartPublicityParty/queryById',
-      },
+        queryById: '/smartPublicityParty/smartPublicityParty/queryById'
+      }
     }
   },
   computed: {
     formDisabled() {
       return this.disabled
-    },
+    }
   },
   created() {
-    //备份model原始值
+    // 备份model原始值
     this.modelDefault = JSON.parse(JSON.stringify(this.model))
   },
   methods: {
@@ -143,7 +143,7 @@ export default {
             })
         }
       })
-    },
-  },
+    }
+  }
 }
 </script>

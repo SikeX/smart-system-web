@@ -16,7 +16,7 @@
           </a-col>
           <a-col :span="24">
             <a-form-model-item label="附件" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="file">
-              <j-upload v-model="model.file"></j-upload>
+              <j-upload v-model="model.file" :multiple="false"></j-upload>
               <a-button icon="camera" @click="eloamScan">高拍仪拍照</a-button>
             </a-form-model-item>
           </a-col>
@@ -60,9 +60,7 @@ export default {
       },
       confirmLoading: false,
       validatorRules: {
-        title: [
-          { required: true, message: '请输入标题', trigger: 'blur' },
-        ],
+        title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
         location: [{ required: true, message: '请选择主管部门', trigger: 'blur' }],
       },
       url: {

@@ -69,19 +69,19 @@
                 :wrapperCol="wrapperCol"
                 prop="file2"
               >
-                <j-upload v-model="model.file2"></j-upload>
+                <j-upload v-model="model.file2" :multiple="false"></j-upload>
                 <a-button icon="camera" @click="eloamScan(2)">高拍仪拍照</a-button>
               </a-form-model-item>
             </a-col>
             <a-col :span="24">
               <a-form-model-item label="合同" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="file3">
-                <j-upload v-model="model.file3"></j-upload>
+                <j-upload v-model="model.file3" :multiple="false"></j-upload>
                 <a-button icon="camera" @click="eloamScan(3)">高拍仪拍照</a-button>
               </a-form-model-item>
             </a-col>
             <a-col :span="24">
               <a-form-model-item label="验收材料" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="file4">
-                <j-upload v-model="model.file4"></j-upload>
+                <j-upload v-model="model.file4" :multiple="false"></j-upload>
                 <a-button icon="camera" @click="eloamScan(4)">高拍仪拍照</a-button>
               </a-form-model-item>
             </a-col>
@@ -174,11 +174,11 @@ export default {
   components: {
     EloamModal,
     MeetingCard,
-    SelectVillageDepart
+    SelectVillageDepart,
   },
   data() {
     return {
-       labelCol: {
+      labelCol: {
         xs: { span: 24 },
         sm: { span: 6 },
       },
