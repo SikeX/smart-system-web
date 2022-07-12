@@ -87,6 +87,9 @@
           <a @click="handleEdit(record)">编辑</a>
 
           <a-divider type="vertical" />
+            <a @click="showDepartList(record)">查看负责单位列表</a>
+
+          <a-divider type="vertical" />
           <a-dropdown>
             <a class="ant-dropdown-link">更多 <a-icon type="down" /></a>
             <a-menu slot="overlay">
@@ -106,6 +109,8 @@
       </div>
 
       <smart-assessment-team-modal ref="modalForm" @ok="modalFormOk"></smart-assessment-team-modal>
+
+      <depart-list-modal ref="departListModal" store='departs' text='departs_dictText'></depart-list-modal>
     </a-card>
 
     <smart-assessment-department-list style='margin-top: 20px'></smart-assessment-department-list>
@@ -119,11 +124,13 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import SmartAssessmentTeamModal from './modules/SmartAssessmentTeamModal'
   import SmartAssessmentDepartmentList from '@views/smartAssessmentTeam/SmartAssessmentDepartmentList'
+  import DepartListModal from '@views/smartAssessmentTeam/modules/DepartListModal'
 
   export default {
     name: 'SmartAssessmentTeamList',
     mixins:[JeecgListMixin, mixinDevice],
     components: {
+      DepartListModal,
       SmartAssessmentDepartmentList,
       SmartAssessmentTeamModal
     },
@@ -197,6 +204,9 @@
       },
     },
     methods: {
+      showDepartList(record) {
+        this.$refs.departListModal.edit(record)
+      },
       initDictConfig(){
       },
       getSuperFieldList(){
