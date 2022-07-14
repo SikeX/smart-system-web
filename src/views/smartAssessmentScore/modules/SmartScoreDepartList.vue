@@ -246,6 +246,9 @@ export default {
         params['contentId'] = this.contentId;
         params['type'] = assessInfo.type
         params['roleId'] = assessInfo.id
+        if (params['markedContent']) {
+          params['markedContent'] += '_'+ assessInfo.id
+        }
       } else {
         this.$message.warning('没有评分权限!')
         return
