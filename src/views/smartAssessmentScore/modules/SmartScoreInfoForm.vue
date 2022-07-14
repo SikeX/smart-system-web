@@ -18,8 +18,13 @@
               <a-textarea v-model='model.comment' rows='4' placeholder='请输入评语'/>
             </a-form-model-item>
           </a-col>
+          <a-col :span="24">
+            <a-form-model-item label="评分人" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="ratingUser">
+              <j-select-user-by-dep v-model="model.ratingUser" store='id' text='realname' disabled/>
+            </a-form-model-item>
+          </a-col>
           <a-col v-if='model.updateTime' :span='24'>
-            <a-form-model-item label='上次更新时间' :labelCol='labelCol' :wrapperCol='wrapperCol' prop='updateTime'>
+            <a-form-model-item label='最后更新评分时间' :labelCol='labelCol' :wrapperCol='wrapperCol' prop='updateTime'>
               <j-date placeholder='无更新时间' v-model='model.updateTime' :show-time='true' date-format='YYYY-MM-DD HH:mm:ss'
                       style='width: 100%' disabled/>
             </a-form-model-item>
@@ -69,7 +74,7 @@ export default {
 
           let params = {
             mainId: val,
-            ratingUser: store.getters.userInfo.id,
+            // ratingUser: store.getters.userInfo.id,
             roleId: assessInfo.id,
             roleType: assessInfo.type === 'team' ? 0 : 1
           }
