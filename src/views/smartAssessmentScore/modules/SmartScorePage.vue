@@ -11,6 +11,8 @@
           >
             <template v-for='item in dataSource'>
               <a-menu-item v-if="item.isKey == 1" :key="item.id + ',' + item.missionId">
+                <a-icon v-if='item.sortNo == 0' type='check-square' theme='twoTone' />
+                <a-badge v-else title="未评分单位数目" :count="item.sortNo" :number-style="{ backgroundColor: '#108ee9' }" />
                 <a-tooltip placement="topLeft">
                   <template #title>{{ item.name }}</template>
                   <span>{{ item.name }}</span>
