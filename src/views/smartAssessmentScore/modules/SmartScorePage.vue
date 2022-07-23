@@ -3,6 +3,7 @@
     <a-row :gutter='20'>
       <a-col :xs='24' :sm='24' :md='6' :lg='6' :xl='6'>
         <a-card title='考核内容目录'>
+          <template #extra><a-button @click='exchangeContent'>切换目录</a-button></template>
           <a-menu
             mode='inline'
             @openChange='handleChange'
@@ -80,6 +81,7 @@ export default {
         this.clearList()
         this.queryParam['missionId'] = val
         this.loadData(1)
+        this.loadDataInCharge(1)
       }
     }
   },
@@ -123,6 +125,7 @@ export default {
       ],
       url: {
         list: '/smartAssessmentContent/smartAssessmentContent/rootList',
+        listInCharge: '/smartAssessmentContent/smartAssessmentContent/listInCharge',
         childList: '/smartAssessmentContent/smartAssessmentContent/childList',
         getChildListBatch: '/smartAssessmentContent/smartAssessmentContent/getChildListBatch',
         delete: '/smartAssessmentContent/smartAssessmentContent/delete',
@@ -155,6 +158,8 @@ export default {
         column: 'createTime',
         order: 'ASC',
       },
+
+      tempData: [],
     }
   },
   created() {
@@ -209,7 +214,42 @@ export default {
       })
       this.loadDataByExpandedRows(this.dataSource)
     },
-
+    exchangeContent() {
+      let temp = this.dataSource
+      this.dataSource = this.tempData
+      this.tempData = temp
+    },
+    loadDataInCharge(arg) {
+      if (arg == 1) {
+        this.ipagination.current = 1
+      }
+      this.loading = true
+      let params = this.getQueryParams()
+      let assessInfo = Vue.ls.get("assessInfo")
+      if (assessInfo) {
+        params['roleType'] = assessInfo.type
+        params['roleId'] = assessInfo.id
+      } else {
+        this.$message.warning('没有评分权限!')
+        return
+      }
+      getAction(this.url.listInCharge, params).then(res => {
+        if (res.success) {
+          let result = res.result
+          if (Number(result.length) > 0) {
+            this.ipagination.total = Number(result.length)
+            this.tempData = this.getDataByResult(result)
+          } else {
+            this.ipagination.total = 0
+            this.tempData = []
+          }
+        } else {
+          this.$message.warning(res.message)
+        }
+      }).finally(() => {
+        this.loading = false
+      })
+    },
     loadData(arg) {
       if (arg == 1) {
         this.ipagination.current = 1
