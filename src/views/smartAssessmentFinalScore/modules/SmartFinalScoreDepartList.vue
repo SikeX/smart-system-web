@@ -1,5 +1,5 @@
 <template>
-  <a-card :title='description' v-if='contentId' :bordered='false'>
+  <a-card v-if='contentId' :bordered='false'>
     <a-modal v-model="isShowModal" title="请选择最终得分方式">
       <template slot="footer">
         <a-button key="back" @click="isShowModal=false">
