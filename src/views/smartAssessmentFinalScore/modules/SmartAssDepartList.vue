@@ -12,18 +12,20 @@
           </a-form-item>
         </a-row>
         <a-row :gutter='24'>
-          <a-col v-if='roleType == "team"' :xl="6" :lg="7" :md="8" :sm="24">
+          <a-col v-show='roleType == "team"' :xl="6" :lg="7" :md="8" :sm="24">
             <a-form-item label="考核组">
               <j-search-select-tag
+                ref='team'
                 placeholder="请选择考核组,可输入过滤"
                 v-model="queryParam.roleId"
                 :dictOptions="teamOptions">
               </j-search-select-tag>
             </a-form-item>
           </a-col>
-          <a-col v-if='roleType == "depart"' :xl="6" :lg="7" :md="8" :sm="24">
+          <a-col v-show='roleType == "depart"' :xl="6" :lg="7" :md="8" :sm="24">
             <a-form-item label="考核单位">
               <j-search-select-tag
+                ref='depart'
                 placeholder="请选择考核单位,可输入过滤"
                 v-model="queryParam.roleId"
                 :dictOptions="departOptions">
@@ -239,7 +241,18 @@ export default {
   methods: {
     loadDict(contentId) {
       this.departOptions = []
-      this.loading = true
+      this.teamOptions = []
+
+      if (this.$refs.team) {
+        this.$refs.team.setCurrentDictOptions(this.teamOptions)
+      }
+      if (this.$refs.depart) {
+        this.$refs.depart.setCurrentDictOptions(this.departOptions)
+      }
+
+      // this.$refs.team.setCurrentDictOptions(this.teamOptions)
+      // this.$refs.depart.setCurrentDictOptions(this.departOptions)
+
       getAction('/smartAssessmentContent/smartAssessmentContent/departmentDictByContentId', {contentId}).then(res => {
         if (res.success) {
           for (let i = 0; i < res.result.records.length; i++) {
@@ -249,6 +262,7 @@ export default {
             })
           }
         } else {
+          this.departOptions = []
           this.$message.warning(res.message)
         }
 
@@ -256,8 +270,6 @@ export default {
         this.loading = false
       })
 
-      this.teamOptions = []
-      this.loading = true
       getAction('/smartAssessmentContent/smartAssessmentContent/teamDictByContentId', {contentId}).then(res => {
         if (res.success) {
           for (let i = 0; i < res.result.length; i++) {
@@ -267,6 +279,7 @@ export default {
             })
           }
         } else {
+          this.teamOptions = []
           this.$message.warning(res.message)
         }
 
@@ -286,6 +299,8 @@ export default {
     },
     clearList() {
       this.queryParam = {}
+      this.teamRoleId = null
+      this.departRoleId = null
       this.dataSource = [];
     },
     searchReset() {
@@ -300,6 +315,11 @@ export default {
       if (arg === 1) {
         this.ipagination.current = 1;
       }
+      // if (this.roleType == 'team') {
+      //   this.queryParam.roleId = this.teamRoleId
+      // } else {
+      //   this.queryParam.roleId = this.departRoleId
+      // }
       var params = this.getQueryParams();//查询条件
       params['missionId'] = this.missionId;
       params['contentId'] = this.contentId;
