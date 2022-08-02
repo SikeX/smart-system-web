@@ -133,7 +133,7 @@ export default {
           },
         },
         {
-          title: '所属村',
+          title: '所属村(街道)',
           align: 'center',
           dataIndex: 'village_dictText',
         },

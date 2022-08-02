@@ -10,8 +10,8 @@
             </a-form-item>
           </a-col>
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
-            <a-form-item label="村镇">
-              <select-village-depart placeholder="请选择村镇" v-model="queryParam.location" />
+            <a-form-item label="村镇(街道)">
+              <select-village-street-depart placeholder="请选择村镇(街道)" v-model="queryParam.location" />
               <!-- <j-select-depart placeholder="请选择村镇" v-model="queryParam.location" /> -->
             </a-form-item>
           </a-col>
@@ -164,14 +164,14 @@ import { mixinDevice } from '@/utils/mixin'
 import { JeecgListMixin } from '@/mixins/JeecgListMixin'
 import SmartPublicityPartyModal from './modules/SmartPublicityPartyModal'
 import { filterMultiDictText } from '@/components/dict/JDictSelectUtil'
-import SelectVillageDepart from '../../../components/common/SelectVillageDepart.vue'
+import SelectVillageStreetDepart from '../../../components/common/SelectVillageStreetDepart.vue'
 
 export default {
   name: 'SmartPublicityPartyList',
   mixins: [JeecgListMixin, mixinDevice],
   components: {
     SmartPublicityPartyModal,
-    SelectVillageDepart,
+    SelectVillageStreetDepart,
   },
   data() {
     return {
@@ -200,7 +200,7 @@ export default {
           width: 200,
         },
         {
-          title: '村镇',
+          title: '村镇(街道)',
           align: 'center',
           dataIndex: 'location_dictText',
           width: 200,

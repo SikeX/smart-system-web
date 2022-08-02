@@ -10,7 +10,7 @@
           </a-col>
           <a-col :span="24">
             <a-form-model-item label="主管部门" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="location">
-              <select-village-depart v-model="model.location" />
+              <select-village-street-depart v-model="model.location" />
               <!-- <j-select-depart v-model="model.location" multi /> -->
             </a-form-model-item>
           </a-col>
@@ -31,13 +31,13 @@
 import { httpAction, getAction } from '@/api/manage'
 import { validateDuplicateValue } from '@/utils/util'
 import EloamModal from '@views/eloam/modules/EloamModal'
-import SelectVillageDepart from '../../../../components/common/SelectVillageDepart.vue'
+import SelectVillageStreetDepart from '../../../../components/common/SelectVillageStreetDepart.vue'
 
 export default {
   name: 'SmartPublicityPowerForm',
   components: {
     EloamModal,
-    SelectVillageDepart,
+    SelectVillageStreetDepart,
   },
   props: {
     //表单禁用

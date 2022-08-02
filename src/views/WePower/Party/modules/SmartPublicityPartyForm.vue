@@ -14,8 +14,8 @@
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
-            <a-form-model-item label="村镇" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="location">
-              <select-village-depart v-model="model.location" />
+            <a-form-model-item label="村镇(街道)" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="location">
+              <select-village-street-depart v-model="model.location" />
               <!-- <j-select-depart v-model="model.location" multi /> -->
             </a-form-model-item>
           </a-col>
@@ -41,50 +41,50 @@
 import { httpAction, getAction } from '@/api/manage'
 import { validateDuplicateValue } from '@/utils/util'
 import EloamModal from '@views/eloam/modules/EloamModal'
-import SelectVillageDepart from '@/components/common/SelectVillageDepart'
+import SelectVillageStreetDepart from '@/components/common/SelectVillageStreetDepart.vue'
 
 export default {
   name: 'SmartPublicityPartyForm',
   components: {
     EloamModal,
-    SelectVillageDepart
+    SelectVillageStreetDepart,
   },
   props: {
     // 表单禁用
     disabled: {
       type: Boolean,
       default: false,
-      required: false
-    }
+      required: false,
+    },
   },
   data() {
     return {
       model: {},
       labelCol: {
         xs: { span: 24 },
-        sm: { span: 5 }
+        sm: { span: 5 },
       },
       wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 16 }
+        sm: { span: 16 },
       },
       confirmLoading: false,
       validatorRules: {
         type: [{ required: true, message: '请选择类型' }],
-        location: [{ required: true, message: '请选择村镇' }],
-        title: [{ required: true, message: '请输入标题' }]
+        location: [{ required: true, message: '请选择村镇(街道)' }],
+        title: [{ required: true, message: '请输入标题' }],
       },
       url: {
         add: '/smartPublicityParty/smartPublicityParty/add',
         edit: '/smartPublicityParty/smartPublicityParty/edit',
-        queryById: '/smartPublicityParty/smartPublicityParty/queryById'
-      }
+        queryById: '/smartPublicityParty/smartPublicityParty/queryById',
+      },
     }
   },
   computed: {
     formDisabled() {
       return this.disabled
-    }
+    },
   },
   created() {
     // 备份model原始值
@@ -143,7 +143,7 @@ export default {
             })
         }
       })
-    }
-  }
+    },
+  },
 }
 </script>

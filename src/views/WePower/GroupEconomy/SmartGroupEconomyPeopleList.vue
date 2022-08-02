@@ -129,7 +129,7 @@ export default {
           },
         },
         {
-          title: '所在村',
+          title: '所在村镇(街道)',
           align: 'center',
           dataIndex: 'depart_dictText',
         },
