@@ -209,7 +209,9 @@
               } else if (text == '4') {
                 return '待提交'
               }
+            },
           },
+
           {
             title: '操作',
             dataIndex: 'action',
