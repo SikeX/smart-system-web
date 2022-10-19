@@ -139,10 +139,16 @@
            reportingTime: [
               { required: true, message: '请输入上报时间!'},
            ],
-           hostName: [
+          hostId: [
+              { required: true, message: '请选择主持人!'},
+           ],
+          hostName: [
               { required: true, message: '请输入主持人姓名!'},
            ],
-           recorderName: [
+           recorderId: [
+              { required: true, message: '请选择会议记录人!'},
+           ],
+          recorderName: [
               { required: true, message: '请输入会议记录人姓名!'},
            ],
            summary: [

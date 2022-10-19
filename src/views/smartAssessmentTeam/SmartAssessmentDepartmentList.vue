@@ -4,6 +4,22 @@
     <div class="table-page-search-wrapper">
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
+          <a-col :xl='6' :lg='7' :md='8' :sm='24'>
+            <a-form-item label='考核单位'>
+              <j-select-depart placeholder='全部' v-model='queryParam.departId' customReturnField='id' :multi='true'
+                               :treeOpera='true'></j-select-depart>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+              <a @click="handleToggleSearch" style="margin-left: 8px">
+                {{ toggleSearchStatus ? '收起' : '展开' }}
+                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+              </a>
+            </span>
+          </a-col>
         </a-row>
       </a-form>
     </div>
@@ -13,9 +29,9 @@
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
       <a-button type="primary" icon="download" @click="handleExportXls('负责评分的考核单位')">导出</a-button>
-      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
-        <a-button type="primary" icon="import">导入</a-button>
-      </a-upload>
+<!--      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" accept='.xls,.xlsx' :action="importExcelUrl" @change="handleImportExcel">-->
+<!--        <a-button type="primary" icon="import">导入</a-button>-->
+<!--      </a-upload>-->
       <!-- 高级查询区域 -->
       <j-super-query :fieldList="superFieldList" ref="superQueryModal" @handleSuperQuery="handleSuperQuery"></j-super-query>
       <a-dropdown v-if="selectedRowKeys.length > 0">
@@ -71,11 +87,17 @@
           <a @click="handleEdit(record)">编辑</a>
 
           <a-divider type="vertical" />
+          <a @click="handleCopy(record)">复制负责单位</a>
+
+          <a-divider type="vertical" />
           <a-dropdown>
             <a class="ant-dropdown-link">更多 <a-icon type="down" /></a>
             <a-menu slot="overlay">
               <a-menu-item>
                 <a @click="handleDetail(record)">详情</a>
+              </a-menu-item>
+              <a-menu-item>
+                <a @click="showDepartList(record)">查看负责单位列表</a>
               </a-menu-item>
               <a-menu-item>
                 <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
@@ -89,6 +111,8 @@
       </a-table>
     </div>
 
+    <depart-list-modal ref="departListModal" store='responsibleDepart' text='responsibleDepart_dictText'></depart-list-modal>
+
     <smart-assessment-department-modal ref="modalForm" @ok="modalFormOk"></smart-assessment-department-modal>
   </a-card>
 </template>
@@ -99,11 +123,13 @@
   import { mixinDevice } from '@/utils/mixin'
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import SmartAssessmentDepartmentModal from './modules/SmartAssessmentDepartmentModal'
+  import DepartListModal from '@views/smartAssessmentTeam/modules/DepartListModal'
 
   export default {
     name: 'SmartAssessmentDepartmentList',
     mixins:[JeecgListMixin, mixinDevice],
     components: {
+      DepartListModal,
       SmartAssessmentDepartmentModal
     },
     data () {
@@ -173,10 +199,21 @@
     methods: {
       initDictConfig(){
       },
+      showDepartList(record) {
+        this.$refs.departListModal.edit(record)
+      },
+      handleCopy(record) {
+        let c_record = {
+          responsibleDepart: record['responsibleDepart']
+        }
+
+        this.$refs.modalForm.edit(c_record);
+        this.$refs.modalForm.title = "新增";
+        this.$refs.modalForm.disableSubmit = false;
+      },
       getSuperFieldList(){
         let fieldList=[];
         fieldList.push({type:'sel_depart',value:'departId',text:'单位'})
-        fieldList.push({type:'sel_user',value:'departUser',text:'评分人员'})
         fieldList.push({type:'sel_depart',value:'responsibleDepart',text:'负责单位'})
         fieldList.push({type:'int',value:'responsibleAmount',text:'负责单位数量',dictCode:''})
         fieldList.push({type:'datetime',value:'createTime',text:'创建日期'})

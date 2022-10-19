@@ -169,11 +169,12 @@ export default {
   },
   methods: {
     checkScore(record) {
+      this.$refs.rankModal.title = record.missionName + '得分排名'
       this.$refs.rankModal.edit(record)
     },
     changeColumnVisible(record) {
       this.$refs.visibleModal.show(record)
-      this.$refs.visibleModal.title = "修改可见字段"
+      this.$refs.visibleModal.title = '修改可见字段'
     },
     initDictConfig() {},
     clickThenSelect(record) {

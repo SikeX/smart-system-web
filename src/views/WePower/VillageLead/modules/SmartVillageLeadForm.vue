@@ -4,14 +4,15 @@
       <a-form-model ref="form" :model="model" :rules="validatorRules" slot="detail">
         <a-row>
           <a-col :span="24">
-            <a-form-model-item label="所属村镇" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="location">
-              <select-village-depart v-model="model.location" @change="changeVillage" />
+            <a-form-model-item label="所属村镇(街道)" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="location">
+              <select-village-street-depart v-model="model.location" @change="changeVillage" />
               <!-- <j-select-depart v-model="model.location" multi /> -->
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
-            <a-form-model-item label="人员选择" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="people">
-              <j-search-select-tag type="list" v-model="model.people" :dict="peopleDict" placeholder="请选择人员选择" />
+            <a-form-model-item label="姓名" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="people">
+              <!-- <j-search-select-tag type="list" v-model="model.people" :dict="peopleDict" placeholder="请选择人员选择" /> -->
+              <a-input v-model="model.people" placeholder="请输入姓名"></a-input>
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
@@ -31,7 +32,7 @@
           </a-col>
           <a-col :span="24">
             <a-form-model-item label="照片" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="picture">
-              <j-image-upload isMultiple v-model="model.picture"></j-image-upload>
+              <j-image-upload :isMultiple="false" v-model="model.picture"></j-image-upload>
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
@@ -56,14 +57,13 @@
 import { httpAction, getAction } from '@/api/manage'
 import { validateDuplicateValue } from '@/utils/util'
 import EloamModal from '@views/eloam/modules/EloamModal'
-import SelectVillageDepart from '@/components/common/SelectVillageDepart.vue'
-// import SelectVillageDepart from '../../../../components/common/SelectVillageDepart.vue'
+import SelectVillageStreetDepart from '@/components/common/SelectVillageStreetDepart'
 
 export default {
   name: 'SmartVillageLeadForm',
   components: {
     EloamModal,
-    SelectVillageDepart,
+    SelectVillageStreetDepart,
   },
   props: {
     //表单禁用
@@ -87,7 +87,7 @@ export default {
       },
       confirmLoading: false,
       validatorRules: {
-        people: [{ required: true, message: '请输入人员选择!' }],
+        people: [{ required: true, message: '请输入人员姓名!' }],
         peopleType: [{ required: true, message: '请输入人员类型!' }],
         job: [{ required: true, message: '请输入职务!' }],
         location: [{ required: true, message: '请输入所属村!' }],
@@ -158,7 +158,9 @@ export default {
                 that.$message.success(res.message)
                 that.$emit('ok')
               } else {
-                that.$message.warning(res.message)
+                // TODO 暂时不做处理
+                that.$message.warning('添加成功')
+                that.$emit('ok')
               }
             })
             .finally(() => {

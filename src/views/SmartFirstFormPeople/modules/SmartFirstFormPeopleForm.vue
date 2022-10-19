@@ -40,8 +40,13 @@
           </a-col>
           <a-col :span="24">
             <a-form-model-item label="被谈话人性别" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="intervieweeSex">
-              <a-input v-model="model.intervieweeSex" placeholder="被谈话人性别"  readOnly
-                       unselectable="on"></a-input>
+              <a-select  v-model="model.intervieweeSex"  placeholder="被谈话人性别" disabled="true"
+                         :getPopupContainer= "(target) => target.parentNode">
+                <a-select-option :value="1">男</a-select-option>
+                <a-select-option :value="2">女</a-select-option>
+              </a-select>
+<!--              <a-input v-model="model.intervieweeSex" placeholder="被谈话人性别"  readOnly-->
+<!--                       unselectable="on"></a-input>-->
             </a-form-model-item>
           </a-col>
           <a-col :span="24">

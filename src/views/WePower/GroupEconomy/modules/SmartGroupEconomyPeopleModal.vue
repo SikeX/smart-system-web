@@ -13,8 +13,8 @@
       <a-form-model ref="form" :model="model" :rules="validatorRules">
         <a-row>
           <a-col :span="24">
-            <a-form-model-item label="所在村" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="depart">
-              <select-village-depart v-model="model.depart" />
+            <a-form-model-item label="所在村镇(街道)" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="depart">
+              <select-village-street-depart v-model="model.depart" />
               <!-- <j-select-depart v-model="model.depart" multi /> -->
             </a-form-model-item>
           </a-col>
@@ -40,8 +40,12 @@
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
-            <a-form-model-item label="任期结束时间" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="termEndDate"
-            class="termEndDate"
+            <a-form-model-item
+              label="任期结束时间"
+              :labelCol="labelCol"
+              :wrapperCol="wrapperCol"
+              prop="termEndDate"
+              class="termEndDate"
             >
               <j-date placeholder="请选择任期结束时间" v-model="model.termEndDate" style="width: 100%" />
             </a-form-model-item>
@@ -53,7 +57,7 @@
           </a-col>
           <a-col :span="24">
             <a-form-model-item label="照片" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="pic">
-              <j-image-upload isMultiple v-model="model.pic"></j-image-upload>
+              <j-image-upload :isMultiple="false" v-model="model.pic"></j-image-upload>
             </a-form-model-item>
           </a-col>
         </a-row>
@@ -67,13 +71,13 @@ import { httpAction } from '@/api/manage'
 import moment from 'moment'
 import JDate from '@/components/jeecg/JDate'
 import { validateDuplicateValue } from '@/utils/util'
-import SelectVillageDepart from '@/components/common/SelectVillageDepart'
+import SelectVillageStreetDepart from '@/components/common/SelectVillageStreetDepart'
 
 export default {
   name: 'SmartGroupEconomyPeopleModal',
   components: {
     JDate,
-    SelectVillageDepart,
+    SelectVillageStreetDepart,
   },
   props: {
     mainId: {
@@ -100,7 +104,7 @@ export default {
       confirmLoading: false,
       // TODO 先放开必填项
       validatorRules: {
-        depart: [{ required: true, message: '请输入所在村!' }],
+        depart: [{ required: true, message: '请输入所在村镇(街道)!' }],
         name: [{ required: true, message: '请输入姓名!' }],
         job: [{ required: true, message: '请输入职务!' }],
         // termStartDate: [{ required: true, message: '请输入任期开始时间!' }],

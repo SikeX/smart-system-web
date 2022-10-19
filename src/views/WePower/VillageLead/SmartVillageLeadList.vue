@@ -5,8 +5,8 @@
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
-            <a-form-item label="所属村镇">
-              <select-village-depart placeholder="请选择所属村镇" v-model="queryParam.location" />
+            <a-form-item label="所属村镇(街道)">
+              <select-village-street-depart placeholder="请选择所属村镇(街道)" v-model="queryParam.location" />
               <!-- <j-select-depart placeholder="请选择所属村" v-model="queryParam.location"/> -->
             </a-form-item>
           </a-col>
@@ -72,7 +72,7 @@
         :action="importExcelUrl"
         @change="handleImportExcel"
       >
-        <a-button type="primary" icon="import">导入</a-button>
+        <!-- <a-button type="primary" icon="import">导入</a-button> -->
       </a-upload>
       <!-- 高级查询区域 -->
       <j-super-query
@@ -164,7 +164,7 @@ import SmartVillageLeadModal from './modules/SmartVillageLeadModal'
 import { filterMultiDictText } from '@/components/dict/JDictSelectUtil'
 import SmartVillageLead2Modal from './modules/SmartVillageLead2Modal'
 import SmartVillageLead2List from './SmartVillageLead2List'
-import SelectVillageDepart from '../../../components/common/SelectVillageDepart.vue'
+import SelectVillageStreetDepart from '@/components/common/SelectVillageStreetDepart.vue'
 
 export default {
   name: 'SmartVillageLeadList',
@@ -173,7 +173,7 @@ export default {
     SmartVillageLeadModal,
     SmartVillageLead2Modal,
     SmartVillageLead2List,
-    SelectVillageDepart,
+    SelectVillageStreetDepart,
   },
   data() {
     return {
@@ -193,7 +193,7 @@ export default {
         {
           title: '姓名',
           align: 'center',
-          dataIndex: 'people_dictText',
+          dataIndex: 'people',
         },
         {
           title: '职务',
@@ -217,7 +217,7 @@ export default {
           dataIndex: 'title',
         },
         {
-          title: '所属村',
+          title: '所属村(街道)',
           align: 'center',
           dataIndex: 'location_dictText',
         },
@@ -277,7 +277,7 @@ export default {
       fieldList.push({ type: 'string', value: 'picture', text: '照片', dictCode: '' })
       fieldList.push({ type: 'string', value: 'createBy', text: '上传人', dictCode: '' })
       fieldList.push({ type: 'string', value: 'title', text: '标题', dictCode: '' })
-      fieldList.push({ type: 'sel_depart', value: 'location', text: '所属村' })
+      fieldList.push({ type: 'sel_depart', value: 'location', text: '所属村(街道)' })
       fieldList.push({
         type: 'string',
         value: 'sysOrgCode',

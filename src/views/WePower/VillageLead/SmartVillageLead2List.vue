@@ -20,7 +20,7 @@
         :action="importExcelUrl"
         @change="handleImportExcel"
       >
-        <a-button type="primary" icon="import">导入</a-button>
+        <!-- <a-button type="primary" icon="import">导入</a-button> -->
       </a-upload>
       <!-- 高级查询区域 -->
       <j-super-query
@@ -133,7 +133,7 @@ export default {
           },
         },
         {
-          title: '所属村',
+          title: '所属村(街道)',
           align: 'center',
           dataIndex: 'village_dictText',
         },

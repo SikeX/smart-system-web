@@ -4,8 +4,8 @@
       <a-form-model ref="form" :model="model" :rules="validatorRules" slot="detail">
         <a-row>
           <a-col :span="24">
-            <a-form-model-item label="所属村镇" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="village">
-              <select-village-depart v-model="model.village" />
+            <a-form-model-item label="所属村镇(街道)" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="village">
+              <select-village-street-depart v-model="model.village" />
               <!-- <j-select-depart v-model="model.village" multi  /> -->
             </a-form-model-item>
           </a-col>
@@ -31,7 +31,7 @@
           </a-col>
           <a-col :span="24">
             <a-form-model-item label="照片" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="pic">
-              <j-image-upload isMultiple v-model="model.pic"></j-image-upload>
+              <j-image-upload :isMultiple="false" v-model="model.pic"></j-image-upload>
             </a-form-model-item>
           </a-col>
         </a-row>
@@ -43,12 +43,12 @@
 <script>
 import { httpAction, getAction } from '@/api/manage'
 import { validateDuplicateValue } from '@/utils/util'
-import SelectVillageDepart from '@/components/common/SelectVillageDepart'
+import SelectVillageStreetDepart from '@/components/common/SelectVillageStreetDepart'
 
 export default {
   name: 'SmartVillageLead2Form',
   components: {
-    SelectVillageDepart,
+    SelectVillageStreetDepart,
   },
   props: {
     //表单禁用

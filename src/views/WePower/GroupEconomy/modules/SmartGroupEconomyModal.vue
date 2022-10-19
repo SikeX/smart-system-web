@@ -78,7 +78,7 @@ export default {
         type: [{ required: true, message: '请输入农村集体经济组织类型!' }],
         name: [{ required: true, message: '请输入农村集体经济组织名称!' }],
         credit: [
-          { required: true, message: '请输入授权额度!' },
+          { required: false, message: '请输入授权额度!' },
           { pattern: /^(([1-9][0-9]*)|([0]\.\d{0,2}|[1-9][0-9]*\.\d{0,2}))$/, message: '请输入正确的金额!' },
         ],
       },

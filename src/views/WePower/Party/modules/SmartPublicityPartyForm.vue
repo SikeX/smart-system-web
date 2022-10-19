@@ -14,8 +14,8 @@
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
-            <a-form-model-item label="村镇" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="location">
-              <select-village-depart v-model="model.location" />
+            <a-form-model-item label="村镇(街道)" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="location">
+              <select-village-street-depart v-model="model.location" />
               <!-- <j-select-depart v-model="model.location" multi /> -->
             </a-form-model-item>
           </a-col>
@@ -26,7 +26,7 @@
           </a-col>
           <a-col :span="24">
             <a-form-model-item label="附件" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="file">
-              <j-upload v-model="model.file"></j-upload>
+              <j-upload v-model="model.file" :multiple="false"></j-upload>
               <a-button icon="camera" @click="eloamScan">高拍仪拍照</a-button>
             </a-form-model-item>
           </a-col>
@@ -41,16 +41,16 @@
 import { httpAction, getAction } from '@/api/manage'
 import { validateDuplicateValue } from '@/utils/util'
 import EloamModal from '@views/eloam/modules/EloamModal'
-import SelectVillageDepart from '@/components/common/SelectVillageDepart'
+import SelectVillageStreetDepart from '@/components/common/SelectVillageStreetDepart.vue'
 
 export default {
   name: 'SmartPublicityPartyForm',
   components: {
     EloamModal,
-    SelectVillageDepart
+    SelectVillageStreetDepart,
   },
   props: {
-    //表单禁用
+    // 表单禁用
     disabled: {
       type: Boolean,
       default: false,
@@ -71,7 +71,7 @@ export default {
       confirmLoading: false,
       validatorRules: {
         type: [{ required: true, message: '请选择类型' }],
-        location: [{ required: true, message: '请选择村镇' }],
+        location: [{ required: true, message: '请选择村镇(街道)' }],
         title: [{ required: true, message: '请输入标题' }],
       },
       url: {
@@ -87,7 +87,7 @@ export default {
     },
   },
   created() {
-    //备份model原始值
+    // 备份model原始值
     this.modelDefault = JSON.parse(JSON.stringify(this.model))
   },
   methods: {

@@ -18,10 +18,6 @@
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
               <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
-              <a @click="handleToggleSearch" style="margin-left: 8px">
-                {{ toggleSearchStatus ? '收起' : '展开' }}
-                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-              </a>
             </span>
           </a-col>
         </a-row>
@@ -66,8 +62,14 @@
         </template>
 
         <span slot='action' slot-scope='text, record'>
-          <span v-if="disableSubmit(record.endTime)">未到截止时间</span>
+          <div v-if="disableSubmit(record.endTime)">
+            <a @click="handleDetail(record)">详情</a>
+            <a-divider type="vertical"/>
+            <span >未到截止时间</span>
+          </div>
           <div v-else>
+            <a @click="handleDetail(record)">详情</a>
+            <a-divider type="vertical"/>
             <a v-if="record.missionStatus==='未签收'" @click='signMission(record)'>代替签收</a>
             <a v-else @click='handleMark(record)'>评分</a>
           </div>
@@ -128,12 +130,13 @@ export default {
       immediate: true,
       handler(val) {
         if (val && this.missionId) {
+          this.queryParam.markedContent = '!' + val
           this.loadData(1);
         } else {
           this.clearList();
         }
       }
-    }
+    },
   },
   data() {
     return {
@@ -192,7 +195,7 @@ export default {
       dictOptions: {},
       selectedMainId: '',
       selectionRows: [],
-      superFieldList: []
+      superFieldList: [],
     }
   },
   created() {
@@ -207,6 +210,12 @@ export default {
     disableSubmit(endTime) {
       let dateDiff = new Date(endTime).getTime() - new Date().getTime()
       return dateDiff > 0;
+    },
+    handleDetail:function(record){
+      // console.log(record)
+      this.$refs.modalForm.title="详情";
+      this.$refs.modalForm.disableSubmit = true;
+      this.$refs.modalForm.edit(this.contentId, record.id);
     },
     handleMark:function(record){
       // console.log(record)
@@ -230,9 +239,12 @@ export default {
       params['missionId'] = this.missionId;
       let assessInfo = Vue.ls.get("assessInfo")
       if (assessInfo) {
-        params['depart'] = assessInfo.departs || assessInfo.responsibleDepart;
         params['contentId'] = this.contentId;
         params['type'] = assessInfo.type
+        params['roleId'] = assessInfo.id
+        if (params['markedContent']) {
+          params['markedContent'] += '_'+ assessInfo.id
+        }
       } else {
         this.$message.warning('没有评分权限!')
         return

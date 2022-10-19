@@ -1,7 +1,7 @@
 <template>
   <a-card :bordered='false'>
     <a-row :gutter='20'>
-      <a-col :xs='24' :sm='24' :md='6' :lg='6' :xl='6'>
+      <a-col :xs='24' :sm='24' :md='8' :lg='8' :xl='8'>
         <a-card title='考核内容目录'>
 <!--          <a-tree-->
 <!--            :treeData='dataSource'-->
@@ -14,7 +14,6 @@
 <!--          >-->
 <!--          </a-tree>-->
           <a-menu
-            style='width: 256px'
             mode='inline'
             @openChange='handleChange'
             @click='handleClick'
@@ -22,14 +21,22 @@
             <template v-for='item in dataSource'>
               <a-menu-item v-if="item.isKey === 1" :key="item.id + ',' + item.assContentId">
                 <div v-if='item.uploadCount'>
-                  <a-icon type='check-square' theme='twoTone' />
-                  <span>{{ item.assContentId_dictText }}</span>
-                  <el-badge :value="item.uploadCount" :max="99" type="primary"/>
+<!--                  <el-badge :value="item.uploadCount" :max="99" type="primary"/>-->
+                  <a-badge title="此要点上传数目" :count="item.uploadCount" :number-style="{ backgroundColor: '#52c41a' }" />
+<!--                  <a-icon type='check-square' theme='twoTone' />-->
+                  <a-tooltip placement="topLeft">
+                    <template #title>{{ item.assContentId_dictText }}</template>
+                    <span>{{ item.assContentId_dictText }}</span>
+                  </a-tooltip>
                 </div>
                 <div v-else>
-                  <a-icon type="edit" theme="twoTone" />
-                  <span>{{ item.assContentId_dictText }}</span>
-                  <el-badge :value="item.uploadCount" :max="99" />
+<!--                  <el-badge :value="item.uploadCount" :max="99" />-->
+                  <a-badge title="此要点暂未上传任何内容" show-zero :count="item.uploadCount" />
+<!--                  <a-icon type="edit" theme="twoTone" />-->
+                  <a-tooltip placement="topLeft">
+                    <template #title>{{ item.assContentId_dictText }}</template>
+                    <span>{{ item.assContentId_dictText }}</span>
+                  </a-tooltip>
                 </div>
 
               </a-menu-item>
@@ -54,7 +61,7 @@
           </a-menu>
         </a-card>
       </a-col>
-      <a-col :xs='24' :sm='24' :md='18' :lg='18' :xl='18'>
+      <a-col :xs='24' :sm='24' :md='16' :lg='16' :xl='16'>
         <a-row>
           <smart-assessment-content-form ref='modalForm1' :mainId='selectedContentKeys' />
         </a-row>
@@ -160,7 +167,26 @@ export default {
       pidField: 'pid',
       dictOptions: {},
       loadParent: false,
-      superFieldList: []
+      superFieldList: [],
+
+      /* 分页参数 */
+      ipagination:{
+        current: 1,
+        pageSize: 100,
+        pageSizeOptions: ['10', '20', '30'],
+        showTotal: (total, range) => {
+          return range[0] + "-" + range[1] + " 共" + total + "条"
+        },
+        showQuickJumper: true,
+        showSizeChanger: true,
+        total: 0
+      },
+
+      /* 排序参数 */
+      isorter:{
+        column: 'createTime',
+        order: 'ASC',
+      },
     }
   },
   created() {
@@ -197,7 +223,7 @@ export default {
     showDetail(selectedKeys, e) {
       let nodeData = e.node.dataRef
       let selected = e.selected
-      if (selected && nodeData.hasChild === '0') {
+      if (selected && nodeData.isKey == '1') {
         this.selectedContentKeys = e.node.dataRef.assContentId
         this.selectedAnswerAssContentKeys = e.node.dataRef.id
       }
@@ -357,11 +383,15 @@ export default {
       if (expanded) {
         this.expandedRowKeys.push(record.assContentId)
         if (record.children.length > 0 && record.children[0].isLoading === true) {
-          let params = this.getQueryParams(1)//查询条件
-          params[this.pidField] = record.assContentId
-          params.hasQuery = 'false'
-          params.superQueryParams = ''
-          getAction(this.url.childList, params).then((res) => {
+          // let params = this.getQueryParams(1)//查询条件
+          // params[this.pidField] = record.assContentId
+          // params.hasQuery = 'false'
+          // params.superQueryParams = ''
+          let params = {
+            parentIds : record.assContentId,
+            mainId : this.mainId
+          }
+          getAction(this.url.getChildListBatchWithMainId, params).then((res) => {
             if (res.success) {
               if (res.result.records) {
                 record.children = this.getDataByResult(res.result.records)

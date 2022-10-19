@@ -6,7 +6,7 @@
         <a-row :gutter="24">
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
             <a-form-item label="主管部门">
-              <select-village-depart placeholder="请选择主管部门" v-model="queryParam.location" />
+              <select-village-street-depart placeholder="请选择主管部门" v-model="queryParam.location" />
               <!-- <j-select-depart placeholder="请选择主管部门" v-model="queryParam.location"/> -->
             </a-form-item>
           </a-col>
@@ -71,7 +71,7 @@
         :action="importExcelUrl"
         @change="handleImportExcel"
       >
-        <a-button type="primary" icon="import">导入</a-button>
+        <!-- <a-button type="primary" icon="import">导入</a-button> -->
       </a-upload>
       <!-- 高级查询区域 -->
       <j-super-query
@@ -161,14 +161,14 @@ import { mixinDevice } from '@/utils/mixin'
 import { JeecgListMixin } from '@/mixins/JeecgListMixin'
 import SmartPublicityPowerModal from './modules/SmartPublicityPowerModal'
 import { filterMultiDictText } from '@/components/dict/JDictSelectUtil'
-import SelectVillageDepart from '../../../components/common/SelectVillageDepart.vue'
+import SelectVillageStreetDepart from '../../../components/common/SelectVillageStreetDepart.vue'
 
 export default {
   name: 'SmartPublicityPowerList',
   mixins: [JeecgListMixin, mixinDevice],
   components: {
     SmartPublicityPowerModal,
-    SelectVillageDepart,
+    SelectVillageStreetDepart,
   },
   data() {
     return {

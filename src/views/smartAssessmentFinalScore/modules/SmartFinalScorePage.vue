@@ -10,7 +10,10 @@
           >
             <template v-for='item in dataSource'>
               <a-menu-item v-if="item.isKey == 1" :key="item.id + ',' + item.missionId">
-                <span>{{ item.name }}</span>
+                <a-tooltip placement="topLeft">
+                  <template #title>{{ item.name }}</template>
+                  <span>{{ item.name }}</span>
+                </a-tooltip>
               </a-menu-item>
               <sub-menu v-else :key="item.id + ',' + item.missionId" :menu-info='item' />
             </template>
@@ -21,8 +24,15 @@
         <a-row>
           <smart-assessment-content-form ref='modalForm1' @ok='modalFormOk' :mainId='selectedContentKeys' />
         </a-row>
-        <a-row style='margin-top: 20px'>
-          <SmartFinalScoreDepartList :mission-id='mainId' :max-score="maxScore" :content-id='selectedContentKeys'></SmartFinalScoreDepartList>
+        <a-row v-if='selectedContentKeys' style='margin-top: 20px'>
+          <a-tabs defaultActiveKey='1'>
+            <a-tab-pane tab='全部评分' key='1'>
+              <SmartFinalScoreDepartList :mission-id='mainId' :max-score="maxScore" :content-id='selectedContentKeys'></SmartFinalScoreDepartList>
+            </a-tab-pane>
+            <a-tab-pane tab='考核组和考核单位评分' key='2'>
+              <SmartAssDepartList :mission-id='mainId' :max-score="maxScore" :content-id='selectedContentKeys'></SmartAssDepartList>
+            </a-tab-pane>
+          </a-tabs>
         </a-row>
       </a-col>
     </a-row>
@@ -38,6 +48,7 @@ import { filterObj } from '@/utils/util'
 import SmartAssessmentContentForm from '@views/smartAnswerInfo/modules/SmartAssessmentContentForm'
 import SubMenu from './SubMenu'
 import SmartFinalScoreDepartList from './SmartFinalScoreDepartList'
+import SmartAssDepartList from '@views/smartAssessmentFinalScore/modules/SmartAssDepartList'
 
 
 
@@ -45,6 +56,7 @@ export default {
   name: 'SmartFinalScorePage',
   mixins: [JeecgListMixin],
   components: {
+    SmartAssDepartList,
     SmartFinalScoreDepartList,
     SmartAssessmentContentForm,
     'sub-menu': SubMenu
@@ -126,12 +138,30 @@ export default {
         exportXlsUrl: '/smartAssessmentContent/smartAssessmentContent/exportXls',
         importExcelUrl: 'smartAssessmentContent/smartAssessmentContent/importExcel'
       },
+      /* 排序参数 */
+      isorter:{
+        column: 'createTime',
+        order: 'ASC',
+      },
       expandedRowKeys: [],
       hasChildrenField: 'hasChild',
       pidField: 'pid',
       dictOptions: {},
       loadParent: false,
-      superFieldList: []
+      superFieldList: [],
+
+      /* 分页参数 */
+      ipagination:{
+        current: 1,
+        pageSize: 100,
+        pageSizeOptions: ['10', '20', '30'],
+        showTotal: (total, range) => {
+          return range[0] + "-" + range[1] + " 共" + total + "条"
+        },
+        showQuickJumper: true,
+        showSizeChanger: true,
+        total: 0
+      },
     }
   },
   created() {
@@ -192,7 +222,7 @@ export default {
       }
       this.loading = true
       let params = this.getQueryParams()
-      params.hasQuery = 'true'
+      params.hasQuery = 'false'
       getAction(this.url.list, params).then(res => {
         if (res.success) {
           let result = res.result

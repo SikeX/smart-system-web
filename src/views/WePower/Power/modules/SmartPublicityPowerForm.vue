@@ -10,13 +10,13 @@
           </a-col>
           <a-col :span="24">
             <a-form-model-item label="主管部门" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="location">
-              <select-village-depart v-model="model.location" />
+              <select-village-street-depart v-model="model.location" />
               <!-- <j-select-depart v-model="model.location" multi /> -->
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
             <a-form-model-item label="附件" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="file">
-              <j-upload v-model="model.file"></j-upload>
+              <j-upload v-model="model.file" :multiple="false"></j-upload>
               <a-button icon="camera" @click="eloamScan">高拍仪拍照</a-button>
             </a-form-model-item>
           </a-col>
@@ -31,13 +31,13 @@
 import { httpAction, getAction } from '@/api/manage'
 import { validateDuplicateValue } from '@/utils/util'
 import EloamModal from '@views/eloam/modules/EloamModal'
-import SelectVillageDepart from '../../../../components/common/SelectVillageDepart.vue'
+import SelectVillageStreetDepart from '../../../../components/common/SelectVillageStreetDepart.vue'
 
 export default {
   name: 'SmartPublicityPowerForm',
   components: {
     EloamModal,
-    SelectVillageDepart,
+    SelectVillageStreetDepart,
   },
   props: {
     //表单禁用
@@ -60,9 +60,7 @@ export default {
       },
       confirmLoading: false,
       validatorRules: {
-        title: [
-          { required: true, message: '请输入标题', trigger: 'blur' },
-        ],
+        title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
         location: [{ required: true, message: '请选择主管部门', trigger: 'blur' }],
       },
       url: {

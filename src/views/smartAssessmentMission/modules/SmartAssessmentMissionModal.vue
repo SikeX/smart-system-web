@@ -104,6 +104,9 @@
       edit (record) {
         this.model = Object.assign({}, record);
         this.visible = true;
+        if (this.model.id) {
+          this.$message.info("修改考核时间后会同步修改所有被考核单位的截止时间，请谨慎操作！", 5);
+        }
       },
       close () {
         this.$emit('close');

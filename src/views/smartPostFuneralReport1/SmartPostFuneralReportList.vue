@@ -91,26 +91,27 @@
         </template>
 
         <span slot="action" slot-scope="text, record">
-<!--          <a  @click="viewPre(record)">查看口头报备</a>-->
-<!--          <a-divider type="vertical" />-->
+          <a-popconfirm title="确定提交吗，提交后不可再修改?" @confirm="() => submitVerify(record)">
+            <a v-if="record.verifyStatus === '4'&& roleId.indexOf('f6817f48af4fb3af11b9e8bf182f618b') != -1">提交审核</a>
+          </a-popconfirm>
+          <a-divider v-if="record.verifyStatus === '4'&& roleId.indexOf('f6817f48af4fb3af11b9e8bf182f618b') != -1" type="vertical" />
+
           <a v-show="record.ifReport == '0'" @click="postAdd(record)">事后报备</a>
            <a v-show="record.ifReport == '1'" @click="postDetail(record.id)">详情</a>
                     <a-divider  type="vertical" />
            <a-dropdown>
             <a class="ant-dropdown-link">更多 <a-icon type="down" /></a>
             <a-menu slot="overlay">
-              <a-menu-item v-show="record.verifyStatus == '3' && roleId.indexOf('f6817f48af4fb3af11b9e8bf182f618b') != -1">
+              <a-menu-item v-show="(record.verifyStatus == '3'||record.verifyStatus == '4') && roleId.indexOf('f6817f48af4fb3af11b9e8bf182f618b') != -1">
                  <a @click="postEdit(record.id)">编辑</a>
               </a-menu-item>
-              <a-menu-item v-show="record.verifyStatus == '3' && roleId.indexOf('f6817f48af4fb3af11b9e8bf182f618b') != -1">
+              <a-menu-item v-show="(record.verifyStatus == '3'||record.verifyStatus == '4') && roleId.indexOf('f6817f48af4fb3af11b9e8bf182f618b') != -1">
                 <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
                   <a>删除</a>
                 </a-popconfirm>
               </a-menu-item>
             </a-menu>
           </a-dropdown>
-
-
         </span>
 
       </a-table>
@@ -202,6 +203,8 @@
                 return '待审核'
               } else if (text == '3') {
                 return '免审'
+              } else if (text == '4') {
+                return '待提交'
               }
             },
           },
@@ -216,6 +219,7 @@
         ],
         roleId: [],
         url: {
+          verify:"/smartPostFuneralReport/smartPostFuneralReport/submitVerify",
           list: "/smartFuneralReport/smartFuneralReport/list",
           delete: "/smartPostFuneralReport/smartPostFuneralReport/delete",
           deleteBatch: "/smartPostFuneralReport/smartPostFuneralReport/deleteBatch",

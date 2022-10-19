@@ -25,7 +25,7 @@ import { JeecgListMixin } from '@/mixins/JeecgListMixin'
 import { filterObj } from '@/utils/util'
 
 export default {
-  name: 'SmartAssessmentContentList',
+  name: 'SmartAssessmentContentForm',
   mixins: [JeecgListMixin],
   components: {},
   props: {

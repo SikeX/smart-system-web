@@ -18,7 +18,7 @@
         <a-button type='primary' icon='tool'>校正分数</a-button>
       </a-popconfirm>
       <a-button type='primary' icon='download' @click="handleExportXls('考核节点表')">导出</a-button>
-      <a-upload v-if='mainInfo.missionStatus === isShowText' name='file' :showUploadList='false' :multiple='false' :headers='tokenHeader' :action='importExcelUrl'
+      <a-upload v-if='mainInfo.missionStatus === isShowText' name='file' :showUploadList='false' :data='uploadData' :multiple='false' accept='.xls,.xlsx' :headers='tokenHeader' :action='importExcelUrl'
                 @change='handleImportExcel'>
         <a-button type='primary' icon='import'>导入</a-button>
       </a-upload>
@@ -44,7 +44,7 @@
         @expand='handleExpand'>
 
         <template slot='nameSlot' slot-scope='text, record'>
-          <span v-if='record.isKey === 0'>{{ text }}</span>
+          <span v-if='record.isKey === 0 || record == null'>{{ text }}</span>
           <a-badge v-else>
             <a-tooltip>
               <template slot='title'>
@@ -53,8 +53,6 @@
               <span> {{ text }} <a-icon slot='count' type='star' theme='twoTone'/></span>
             </a-tooltip>
           </a-badge>
-          <img v-else :src='getImgView(text)' height='25px' alt=''
-               style='max-width:80px;font-size: 12px;font-style: italic;'/>
         </template>
 
         <template slot='imgSlot' slot-scope='text'>
@@ -139,6 +137,7 @@ export default {
           this.clearList()
         } else {
           this.queryParam['missionId'] = val
+          this.uploadData['missionId'] = val
           this.loadData(1)
         }
       }
@@ -149,6 +148,9 @@ export default {
       description: '考核节点表管理页面',
       disableMixinCreated: true,
       isShowText: '未发布',
+      uploadData: {
+        missionId: '',
+      },
       // 表头
       columns: [
         {
@@ -181,6 +183,11 @@ export default {
         exportXlsUrl: '/smartAssessmentContent/smartAssessmentContent/exportXls',
         importExcelUrl: 'smartAssessmentContent/smartAssessmentContent/importExcel'
       },
+      /* 排序参数 */
+      isorter:{
+        column: 'createTime',
+        order: 'ASC',
+      },
       expandedRowKeys: [],
       hasChildrenField: 'hasChild',
       pidField: 'pid',
@@ -210,6 +217,9 @@ export default {
   methods: {
     clearList() {
       this.dataSource = []
+      this.uploadData = {
+        missionId: '',
+      }
       this.selectedRowKeys = []
       this.ipagination.current = 1
     },
@@ -281,7 +291,7 @@ export default {
       }
       this.loading = true
       let params = this.getQueryParams()
-      params.hasQuery = 'true'
+      params.hasQuery = 'false'
       getAction(this.url.list, params).then(res => {
         if (res.success) {
           let result = res.result

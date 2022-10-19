@@ -25,7 +25,7 @@
           </a-col>
           <a-col :span="24">
             <a-form-model-item label="负责单位" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="departs">
-              <j-select-depart v-model="model.departs" multi v-decorator="['departs', validatorRules.departs]" />
+              <j-select-depart v-model="model.departs" :multi="true" :treeOpera="true" v-decorator="['departs', validatorRules.departs]" />
             </a-form-model-item>
           </a-col>
           <a-col :span="24">

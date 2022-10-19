@@ -13,17 +13,25 @@
         <a-row>
           <a-col :span="24">
             <a-form-model-item label="被考核单位" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="assessmentDepart">
-              <j-select-depart v-model="model.assessmentDepart" :multi="false" :disabled="false" v-decorator="['assessmentDepart', validatorRules.assessmentDepart ]"/>
+              <j-select-depart v-model="model.assessmentDepart" :multi="model.id == null" :treeOpera="true" :disabled="isDisabled" v-decorator="['assessmentDepart', validatorRules.assessmentDepart ]"/>
             </a-form-model-item>
           </a-col>
-          <a-col :span="24" v-if="model.assessmentDepart">
-            <a-form-model-item label="被考核单位登录账号" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="departUser">
-              <my-select-user-by-dep v-model="model.departUser" :multi="false" :depart-id="model.assessmentDepart" store="id" text="realname" />
-            </a-form-model-item>
-          </a-col>
+<!--          <a-col :span="24" v-if="model.assessmentDepart">-->
+<!--            <a-form-model-item label="被考核单位登录账号" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="departUser">-->
+<!--              <my-select-user-by-dep v-model="model.departUser" :multi="false" :depart-id="model.assessmentDepart" store="id" text="realname" />-->
+<!--            </a-form-model-item>-->
+<!--          </a-col>-->
           <a-col :span="24">
             <a-form-model-item label="截止时间" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="deadline">
               <j-date placeholder="请选择截止时间" v-model="model.deadline" :show-time="true" date-format="YYYY-MM-DD HH:mm:ss" style="width: 100%" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="24">
+            <a-form-model-item label="是否查看评分详情" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="isShowScore">
+              <a-radio-group v-model:value="model.isShowScore" button-style="solid">
+                <a-radio-button value="1">是</a-radio-button>
+                <a-radio-button value="0">否</a-radio-button>
+              </a-radio-group>
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
@@ -88,9 +96,6 @@ import { getAction, httpAction } from '@/api/manage'
            assessmentDepart: [
               { required: true, message: '请选择被考核单位!'},
              {validator: this.validateAssessmentDepart}
-           ],
-           departUser: [
-              { required: true, message: '请输入被考核单位登录账号!'},
            ],
         },
         url: {
