@@ -6,7 +6,8 @@
     :arrowPointAtCenter="true"
     overlayClassName="header-notice-wrapper"
     @visibleChange="handleHoverChange"
-    :overlayStyle="{ width: '400px', top: '50px' }">
+    :overlayStyle="{ width: '400px', top: '50px' }"
+  >
     <template slot="content">
       <a-spin :spinning="loadding">
         <a-tabs>
@@ -72,7 +73,7 @@
                   <a-tag @click="showAnnouncement(record)" v-if="record.priority === 'H'" color="red">紧急消息</a-tag>
                 </div>
               </a-list-item>
-              <div style="margin-top: 5px;text-align: center">
+              <div style="margin-top: 5px; text-align: center">
                 <a-button @click="toMyAnnouncement()" type="dashed" block>查看更多</a-button>
               </div>
             </a-list>
@@ -80,17 +81,24 @@
           <a-tab-pane :tab="msg3Title" key="3">
             <a-list>
               <a-list-item :key="index" v-for="(record, index) in announcement3">
-                <div style="margin-left: 5%;width: 80%">
-                  <p><a @click="showAnnouncement(record)">{{ record.titile }}</a></p>
-                  <p style="color: rgba(0,0,0,.45);margin-bottom: 0px">{{ record.createTime }} 发布</p>
+                <div style="margin-left: 5%; width: 80%">
+                  <p>
+                    <a @click="showAnnouncement(record)">{{ record.titile }}</a>
+                  </p>
+                  <p style="color: rgba(0, 0, 0, 0.45); margin-bottom: 0px">{{ record.createTime }} 发布</p>
                 </div>
                 <div style="text-align: right">
                   <a-tag @click="showAnnouncement(record)" v-if="record.priority === 'L'" color="blue">一般消息</a-tag>
-                  <a-tag @click="showAnnouncement(record)" v-if="record.priority === 'M'" color="orange">重要消息</a-tag>
+                  <a-tag
+                    @click="showAnnouncement(record)"
+                    v-if="record.priority === 'M'"
+                    color="orange"
+                  >重要消息</a-tag
+                  >
                   <a-tag @click="showAnnouncement(record)" v-if="record.priority === 'H'" color="red">紧急消息</a-tag>
                 </div>
               </a-list-item>
-              <div style="margin-top: 5px;text-align: center">
+              <div style="margin-top: 5px; text-align: center">
                 <a-button @click="toMyAnnouncement()" type="dashed" block>查看更多</a-button>
               </div>
             </a-list>
@@ -103,8 +111,8 @@
         <a-icon style="font-size: 16px; padding: 4px" type="bell" />
       </a-badge>
     </span>
-    <audio ref="audioTip" style="display:none">
-      <source :src="audio.src">
+    <audio ref="audioTip" style="display: none">
+      <source :src="audio.src" />
     </audio>
     <show-announcement ref="ShowAnnouncement" @ok="modalFormOk"></show-announcement>
     <dynamic-notice ref="showDynamNotice" :path="openPath" :formData="formData" />
@@ -116,9 +124,9 @@ import { getAction, putAction } from '@/api/manage'
 import ShowAnnouncement from './ShowAnnouncement'
 import store from '@/store/'
 import DynamicNotice from './DynamicNotice'
-  import {
-    notification
-  } from 'ant-design-vue'
+import Vue from 'vue'
+import { ACCESS_TOKEN } from '@/store/mutation-types'
+import { notification } from 'ant-design-vue'
 
 export default {
   name: 'HeaderNotice',
@@ -137,13 +145,13 @@ export default {
       hovered: false,
       announcement1: [],
       announcement2: [],
-        announcement3: [],
-        msg1Count: '0',
-        msg2Count: '0',
-        msg3Count: '0',
-        msg1Title: '通知(0)',
-        msg2Title: '',
-        msg3Title: '',
+      announcement3: [],
+      msg1Count: '0',
+      msg2Count: '0',
+      msg3Count: '0',
+      msg1Title: '通知(0)',
+      msg2Title: '',
+      msg3Title: '',
       stopTimer: false,
       websock: null,
       lockReconnect: false,
@@ -152,15 +160,16 @@ export default {
       heartCheck: null,
       formData: {},
       openPath: '',
-        audio: { // 消息通知
-          src: require('../../assets/alert.mp3')
-        }
+      audio: {
+        // 消息通知
+        src: require('../../assets/alert.mp3')
+      }
     }
   },
   computed: {
     msgTotal() {
-        return parseInt(this.msg1Count) + parseInt(this.msg2Count) + parseInt(this.msg3Count)
-      }
+      return parseInt(this.msg1Count) + parseInt(this.msg2Count) + parseInt(this.msg3Count)
+    }
   },
   mounted() {
     this.loadData()
@@ -184,15 +193,16 @@ export default {
         this.loadData()
       }, 6000)
     },
-      // 2021-12-12 @Author CabbSir
-      alertReportMessage() {
-        this.$refs.audioTip.load()
-        this.$refs.audioTip.play()
-      },
+    // 2021-12-12 @Author CabbSir
+    alertReportMessage() {
+      this.$refs.audioTip.load()
+      this.$refs.audioTip.play()
+    },
     loadData() {
       try {
         // 获取系统消息
-          getAction(this.url.listCementByUser).then((res) => {
+        getAction(this.url.listCementByUser)
+          .then((res) => {
             if (res.success) {
               this.announcement1 = res.result.anntMsgList
               this.msg1Count = res.result.anntMsgTotal

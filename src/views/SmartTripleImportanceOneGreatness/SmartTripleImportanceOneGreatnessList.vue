@@ -114,6 +114,13 @@
             <a v-show="record.verifyStatus == '3' || record.verifyStatus === '4'">删除</a>
           </a-popconfirm>
         </span>
+        <span slot="verify" slot-scope="text">
+          <a-tag v-if="text == '0'" color="#f14c4c">不通过</a-tag>
+          <a-tag v-if="text == '1'" color="#10bc79">通过</a-tag>
+          <a-tag v-if="text == '2'" color="#29b8db">待审核</a-tag>
+          <a-tag v-if="text == '3'" color="green">免审</a-tag>
+          <a-tag v-if="text == '4'" color="gray">待提交</a-tag>
+        </span>
       </a-table>
     </div>
 
@@ -213,19 +220,7 @@ export default {
           title: '审核状态',
           align: 'center',
           dataIndex: 'verifyStatus',
-          customRender: function (text) {
-            if (text == '0') {
-              return '不通过'
-            } else if (text == '1') {
-              return '通过'
-            } else if (text == '2') {
-              return '待审核'
-            } else if (text == '3') {
-              return '免审'
-            } else if (text == '4') {
-              return '待提交'
-            }
-          },
+          scopedSlots: { customRender: 'verify' },
         },
         {
           title: '操作',
