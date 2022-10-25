@@ -209,7 +209,7 @@ export default {
         {
           title: '上传人',
           align: 'center',
-          dataIndex: 'createBy',
+          dataIndex: 'createBy_dictText',
         },
         {
           title: '职能',

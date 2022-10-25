@@ -26,7 +26,7 @@ import JSlider from './JSlider.vue'
 import JSwitch from './JSwitch.vue'
 import JTime from './JTime.vue'
 import JTreeTable from './JTreeTable.vue'
-import JEasyCron from '@/components/jeecg/JEasyCron'
+import JEasyCron from '@/components/jeecg/JEasyCron'  
 //jeecgbiz
 import JSelectDepart from '../jeecgbiz/JSelectDepart.vue'
 import JSelectMultiUser from '../jeecgbiz/JSelectMultiUser.vue'

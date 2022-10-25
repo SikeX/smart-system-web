@@ -11,7 +11,8 @@
           </a-col>
           <a-col :span="24">
             <a-form-model-item label="正文" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="content">
-              <j-editor v-model="model.content" />
+              <j-editor v-show="!formDisabled" v-model="model.content" />
+              <div v-html="model.content" v-show="formDisabled" />
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
@@ -31,8 +32,8 @@
           </a-col> -->
           <a-col :span="24">
             <a-form-model-item label="附件" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="file">
-              <!-- <j-upload v-model="model.file"></j-upload> -->
-              <vue-core-image-upload
+              <j-upload v-model="model.file"></j-upload>
+              <!-- <vue-core-image-upload
                 :class="['btn', 'btn-primary']"
                 :crop="false"
                 @imageuploaded="imageuploaded"
@@ -40,7 +41,7 @@
                 :max-file-size="5242880"
                 url="your server url"
               >
-              </vue-core-image-upload>
+              </vue-core-image-upload> -->
               <a-button icon="camera" @click="eloamScan">高拍仪拍照</a-button>
             </a-form-model-item>
           </a-col>
