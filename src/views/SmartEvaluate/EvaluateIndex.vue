@@ -484,7 +484,7 @@
                 item: '',
                 count:"无数据！"
               })
-              this.$message.warning("无数据!")
+              // this.$message.warning("无数据!")
             }
 
           } else{
@@ -517,7 +517,7 @@
                 name: "",
                 total:"无数据"
               })
-              this.$message.warning("无数据!")
+              // this.$message.warning("无数据!")
             }
 
           } else{
@@ -549,7 +549,7 @@
                 name: "",
                 total:"无数据"
               })
-              this.$message.warning("无数据!")
+              // this.$message.warning("无数据!")
             }
           } else{
             this.$message.warning("系统错误!")
