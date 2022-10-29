@@ -11,7 +11,8 @@
           </a-col>
           <a-col :span="24">
             <a-form-model-item label="正文" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="content">
-              <j-editor v-model="model.content" />
+              <j-editor v-show="!formDisabled" v-model="model.content" />
+              <div v-html="model.content" v-show="formDisabled" />
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
@@ -32,6 +33,15 @@
           <a-col :span="24">
             <a-form-model-item label="附件" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="file">
               <j-upload v-model="model.file"></j-upload>
+              <!-- <vue-core-image-upload
+                :class="['btn', 'btn-primary']"
+                :crop="false"
+                @imageuploaded="imageuploaded"
+                :data="data"
+                :max-file-size="5242880"
+                url="your server url"
+              >
+              </vue-core-image-upload> -->
               <a-button icon="camera" @click="eloamScan">高拍仪拍照</a-button>
             </a-form-model-item>
           </a-col>
@@ -46,11 +56,13 @@
 import { httpAction, getAction } from '@/api/manage'
 import { validateDuplicateValue } from '@/utils/util'
 import EloamModal from '@views/eloam/modules/EloamModal'
+import VueCoreImageUpload from 'vue-core-image-upload'
 
 export default {
   name: 'SmartSupervisionForm',
   components: {
     EloamModal,
+    VueCoreImageUpload,
   },
   data() {
     return {
@@ -107,6 +119,11 @@ export default {
   },
   created() {},
   methods: {
+    imageuploaded(res) {
+      if (res.errcode == 0) {
+        this.src = 'http://img1.vued.vanthink.cn/vued751d13a9cb5376b89cb6719e86f591f3.png'
+      }
+    },
     add() {
       this.edit(this.modelDefault)
     },

@@ -1,12 +1,12 @@
 <template>
   <div>
     <div style="width: 50%; padding: 10px 10px">
-      <select-village-depart v-model="location" @change="getData" />
+      <select-village-street-depart placeholder="请选择村镇(街道)" v-model="location" @change="getData" />
     </div>
     <a-card title="村镇信息" :bordered="false" style="width: 100%">
       <h3>名称: {{ model.locationName }}</h3>
-      <h3>户数: {{ model.homeNumber }}</h3>
-      <h3>人口数量: {{ model.population }}</h3>
+      <!-- <h3>户数: {{ model.homeNumber }}</h3>
+      <h3>人口数量: {{ model.population }}</h3> -->
       <div style="padding: 20px 0">
         <a-collapse v-model="activeKey">
           <a-collapse-panel key="1" header="村党支部名单">
@@ -36,6 +36,7 @@
         </a-collapse>
       </div>
     </a-card>
+    <a-card title="三资信息" :bordered="false" style="width: 100%"> </a-card>
   </div>
 </template>
 
@@ -43,14 +44,16 @@
 import { getAction } from '../../api/manage'
 import SelectVillageDepart from '../../components/common/SelectVillageDepart.vue'
 import HomeList from './modules/HomeList.vue'
+import SelectVillageStreetDepart from '@/components/common/SelectVillageStreetDepart'
 
 export default {
   name: 'Home',
   components: {
     SelectVillageDepart,
-    HomeList
+    HomeList,
+    SelectVillageStreetDepart,
   },
-  created () {
+  created() {
     // this.getData()
   },
   data() {
@@ -61,14 +64,14 @@ export default {
   },
   methods: {
     getData() {
-      getAction('/wePowerInfo/getInfo',{locationId: this.location}).then(res => {
-        if(res.success) {
+      getAction('/wePowerInfo/getInfo', { locationId: this.location }).then((res) => {
+        if (res.success) {
           this.model = res.result
         } else {
           this.$message.error(res.message)
         }
       })
-    }
+    },
   },
 }
 </script>

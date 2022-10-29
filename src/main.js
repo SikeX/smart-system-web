@@ -7,8 +7,6 @@ import Storage from 'vue-ls'
 import router from './router'
 import store from './store/'
 import { VueAxios } from "@/utils/request"
-// import Buefy from "buefy";
-// import "buefy/dist/buefy.css";
 // import 'element-ui/lib/theme-chalk/index.css';
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css';
