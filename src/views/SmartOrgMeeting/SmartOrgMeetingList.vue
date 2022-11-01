@@ -39,6 +39,7 @@
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
       <a-button type="primary" icon="download" @click="handleExportXls('组织生活会')">导出</a-button>
+      <a-button type="primary" icon="download" @click="downlModel">下载导入模板</a-button>
       <a-upload
         name="file"
         :showUploadList="false"
@@ -188,12 +189,12 @@ export default {
         {
           title: '主持人',
           align: 'center',
-          dataIndex: 'hostName',
+          dataIndex: 'hostId_dictText',
         },
         {
           title: '会议记录人',
           align: 'center',
-          dataIndex: 'recorderName',
+          dataIndex: 'recorderId_dictText',
         },
         {
           title: '会议内容摘要',
@@ -208,7 +209,7 @@ export default {
         {
           title: '创建人',
           align: 'center',
-          dataIndex: 'createBy',
+          dataIndex: 'createBy_dictText',
         },
         {
           title: '创建时间',
@@ -252,6 +253,9 @@ export default {
   },
   methods: {
     initDictConfig() {},
+    downlModel() {
+      window.open(`${window._CONFIG['staticDomainURL']}/models/组织生活会导入模板.xls`)
+    },
     getSuperFieldList() {
       let fieldList = []
       fieldList.push({ type: 'string', value: 'departId', text: '单位', dictCode: '' })
