@@ -10,6 +10,18 @@
             </a-form-item>
           </a-col>
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="开始展示日期">
+              <j-date placeholder="请选择开始展示日期" v-model="queryParam.beginDate"></j-date>
+            </a-form-item>
+          </a-col>
+          <template v-if="toggleSearchStatus">
+            <a-col :xl="6" :lg="7" :md="8" :sm="24">
+              <a-form-item label="结束展示日期">
+                <j-date placeholder="请选择结束展示日期" v-model="queryParam.endDate"></j-date>
+              </a-form-item>
+            </a-col>
+          </template>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
             <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
               <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
@@ -27,7 +39,7 @@
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" @click="handleExportXls('app功能模块')">导出</a-button>
+      <a-button type="primary" icon="download" @click="handleExportXls('app banner表')">导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
         <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
@@ -123,7 +135,7 @@
     },
     data () {
       return {
-        description: 'app功能模块管理页面',
+        description: 'app banner表管理页面',
         // 表头
         columns: [
           {
@@ -148,10 +160,22 @@
             scopedSlots: {customRender: 'imgSlot'}
           },
           {
-            title:'排序',
+            title:'开始展示日期',
             align:"center",
             sorter: true,
-            dataIndex: 'sort'
+            dataIndex: 'beginDate',
+            customRender:function (text) {
+              return !text?"":(text.length>10?text.substr(0,10):text)
+            }
+          },
+          {
+            title:'结束展示日期',
+            align:"center",
+            sorter: true,
+            dataIndex: 'endDate',
+            customRender:function (text) {
+              return !text?"":(text.length>10?text.substr(0,10):text)
+            }
           },
           {
             title: '操作',
@@ -189,7 +213,8 @@
         let fieldList=[];
         fieldList.push({type:'string',value:'title',text:'banner备注标题',dictCode:''})
         fieldList.push({type:'string',value:'url',text:'图片链接',dictCode:''})
-        fieldList.push({type:'string',value:'sort',text:'排序',dictCode:''})
+        fieldList.push({type:'date',value:'beginDate',text:'开始展示日期'})
+        fieldList.push({type:'date',value:'endDate',text:'结束展示日期'})
         this.superFieldList = fieldList
       }
     }
