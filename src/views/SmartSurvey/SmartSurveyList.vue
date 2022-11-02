@@ -85,6 +85,11 @@
           <a-divider type="vertical" />
           <a @click="editTestPaper(record.id)" :class="isDisabled(record)">修改问卷</a>
           <a-divider type="vertical" />
+          <a-popconfirm title="确定取消吗?" @confirm="() => handleUnIssueSurvey(record.id)">
+            <a :class="isunDisabled(record)">取消发布</a>
+          </a-popconfirm>
+<!--          <a @click="handleUnIssueSurvey(record.id)" :class="isunDisabled(record)">取消发布</a>-->
+          <a-divider type="vertical" />
           <a @click="showScore(record)">查看调查结果</a>
         </span>
 
@@ -163,10 +168,22 @@
             dataIndex: 'creatorName',
             sorter: true
           },
+          // {
+          //   title:'命卷日期',
+          //   align:"center",
+          //   dataIndex: 'createTime',
+          //   sorter: true
+          // },
           {
-            title:'命卷日期',
+            title:'问卷开始时间',
             align:"center",
-            dataIndex: 'createTime',
+            dataIndex: 'examStarttime',
+            sorter: true
+          },
+          {
+            title:'问卷截止时间',
+            align:"center",
+            dataIndex: 'examEndtime',
             sorter: true
           },
           // {
@@ -243,6 +260,20 @@
           return "disabled";
         }
       },
+      isunDisabled(record){
+        //超过截止时间，不可取消
+        let currentDate = new Date().getTime();
+        let deadline = Date.parse(record.examEndtime);
+        let able = false
+        if(deadline !== {} && deadline < currentDate){
+          able = true
+        }
+        // console.log(able)
+        if ( record.paperStatus === "0"){
+          //未发布或问卷已开始，取消发布不可用
+          return "disabled";
+        }
+      },
       //去创建新试卷
       createTestPaper() {
         const { href } = this.$router.resolve({
@@ -291,6 +322,19 @@
         console.log(record)
         let paperId = record.id
         this.$refs.releaseTestDialog.releaseTest(paperId)
+      },
+      //取消发布
+      handleUnIssueSurvey(paperId){
+        let url = "/SmartExam/smartRelease/unreleaseSurvey/" + paperId;
+        postAction(url).then((res) => {
+          if (res.success) {
+            this.$message.success("取消发布成功！")
+          } else {
+            this.$message.error("取消发布失败！")
+          }
+        }).finally(() => {
+          this.loadData()
+        })
       },
       initDictConfig(){
       },
