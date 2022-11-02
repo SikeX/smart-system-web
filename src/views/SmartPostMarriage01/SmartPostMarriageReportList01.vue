@@ -45,7 +45,7 @@
         :action="importExcelUrl"
         @change="handleImportExcel"
       >
-        <a-button type="primary" icon="import">导入</a-button>
+        <!-- <a-button type="primary" icon="import">导入</a-button> -->
       </a-upload>
       <!-- 高级查询区域 -->
       <j-super-query
@@ -107,17 +107,36 @@
         </template>
 
         <span slot="action" slot-scope="text, record">
-          <!-- <a-divider type="vertical"/> -->
-           <a v-show="record.isReport == '0' || record.isReport == '15'" @click="postAdd(record)">婚后报备</a>
-          <!-- <a v-show="record.isReport == '1' || record.isReport == '15'" @click="postAdd(record)">已婚后报备</a> -->
-          <a v-show="record.isReport == '1'" @click="postAdd(record)">已婚后报备</a>
-          <!-- <a-divider type="vertical" />  -->
-          <!-- <a v-show="record.verifyStatus == '3'" @click="postEdit(record.id)">编辑</a>          -->
-           <a-divider type="vertical" />  <a @click="postDetail(record.id)">详情</a>        
-          <!-- <a-divider type="vertical" />         -->
-           <a-popconfirm title="确定删除吗?" @confirm="() => postDelete(record)">
-            <!-- <a v-show="record.verifyStatus == '3'">删除</a>      -->
+          <a-popconfirm title="确定提交吗，提交后不可再修改?" @confirm="() => submitVerify(record)">
+            <a v-if="record.verifyStatus === '4'">提交审核</a>
           </a-popconfirm>
+
+          <a v-show="record.isReport == '0' || record.isReport == '15'" @click="postAdd(record)">婚后报备</a>
+          <a v-show="record.isReport == '1'" @click="postAdd(record)">已婚后报备</a>
+
+          <!-- <a-divider type="vertical" />  -->
+
+          <a-divider v-if="record.verifyStatus === '3' || record.verifyStatus === '4'" type="vertical" />
+
+          <a v-show="record.verifyStatus === '3' || record.verifyStatus === '4'" @click="postEdit(record.id)">编辑</a>
+
+          <!--          <a-divider v-show="record.verifyStatus === '3' || record.verifyStatus === '4'" type="vertical" />-->
+          <a-divider type="vertical" />
+
+          <a @click="postDetail(record.id)">详情</a>
+
+          <a-divider type="vertical" />
+
+          <a-popconfirm title="确定删除吗?" @confirm="() => postDelete(record)">
+            <a v-show="record.verifyStatus == '3'">删除</a>
+          </a-popconfirm>
+        </span>
+        <span slot="verify" slot-scope="text">
+          <a-tag v-if="text == '0'" color="#f14c4c">不通过</a-tag>
+          <a-tag v-if="text == '1'" color="#10bc79">通过</a-tag>
+          <a-tag v-if="text == '2'" color="#29b8db">待审核</a-tag>
+          <a-tag v-if="text == '3'" color="green">免审</a-tag>
+          <a-tag v-if="text == '4'" color="gray">待提交</a-tag>
         </span>
       </a-table>
     </div>
@@ -154,17 +173,7 @@ export default {
           title: '审核状态',
           align: 'center',
           dataIndex: 'verifyStatus',
-          customRender: function (text) {
-            if (text == '0') {
-              return '不通过'
-            } else if (text == '1') {
-              return '通过'
-            } else if (text == '2') {
-              return '待审核'
-            } else {
-              return '免审'
-            }
-          },
+          scopedSlots: { customRender: 'verify' },
         },
         {
           title: '#',
@@ -380,6 +389,7 @@ export default {
         deleteBatch: '/smartPostMarriage/smartPostMarriageReport/deleteBatch',
         exportXlsUrl: '/smartPostMarriage/smartPostMarriageReport/exportXls',
         importExcelUrl: '/smartPostMarriage/smartPostMarriageReport/importExcel',
+        verify: '/smartPostMarriage/smartPostMarriageReport/submitVerify',
       },
       dictOptions: {},
       superFieldList: [],

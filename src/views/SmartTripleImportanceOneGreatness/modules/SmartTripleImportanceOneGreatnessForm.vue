@@ -74,7 +74,7 @@
           <a-col :span="24" >
             <a-form-model-item label="附件" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="files">
               <j-upload v-model="model.files"></j-upload>
-              <a-button icon="camera" @click="eloamScan">高拍仪拍照</a-button>
+              <a-button v-if='!disabled' icon="camera" @click="eloamScan">高拍仪拍照</a-button>
             </a-form-model-item>
           </a-col>
         </a-row>

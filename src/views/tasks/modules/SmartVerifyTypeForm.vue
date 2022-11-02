@@ -5,7 +5,7 @@
         <a-row>
           <a-col :span="24">
             <a-form-model-item label="任务类型名称" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="typeName">
-              <a-input v-model="model.typeName" placeholder="请输入任务类型名称"></a-input>
+              <a-input :disabled="true" v-model="model.typeName" placeholder="请输入任务类型名称"></a-input>
             </a-form-model-item>
           </a-col>
           <a-col :span="24">

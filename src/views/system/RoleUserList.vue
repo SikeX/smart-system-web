@@ -98,7 +98,11 @@
         <div class="table-page-search-wrapper">
           <a-form layout="inline">
             <a-row :gutter="24">
-
+              <a-col :md="12" :sm="12">
+                <a-form-item label="单位">
+                  <j-select-depart placeholder="请选择单位"  v-model="queryParam2.departIds" customReturnField='id' :multi="true" :treeOpera="true"></j-select-depart>
+                </a-form-item>
+              </a-col>
               <a-col :md="12" :sm="12">
                 <a-form-item label="用户账号">
                   <a-input placeholder="" v-model="queryParam2.username"></a-input>

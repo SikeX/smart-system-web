@@ -6,10 +6,7 @@
         <a-row :gutter="24">
           <a-col :span="6">
             <a-form-item label="消息类型">
-              <a-select
-                v-model="queryParam.msgCategory"
-                placeholder="请选择消息类型"
-              >
+              <a-select v-model="queryParam.msgCategory" placeholder="请选择消息类型">
                 <a-select-option value="1">通知公告</a-select-option>
                 <!-- <a-select-option value="2">系统消息</a-select-option> -->
                 <a-select-option value="2">廉政提醒</a-select-option>
@@ -95,7 +92,7 @@
                 </a-popconfirm>
               </a-menu-item>
               <a-menu-item v-if="record.sendStatus == 1">
-                  <a @click="checkDetail(record)">详情</a>
+                <a @click="checkDetail(record)">详情</a>
               </a-menu-item>
               <a-menu-item v-if="record.sendStatus == 0">
                 <a-popconfirm title="确定发布吗?" @confirm="() => releaseData(record.id)">
@@ -152,8 +149,7 @@ export default {
   components: {
     SysAnnouncementModal,
     TaskDetailModal,
-    ShowAnnouncement
-
+    ShowAnnouncement,
   },
   data() {
     return {
@@ -177,6 +173,15 @@ export default {
           title: '标题',
           align: 'center',
           dataIndex: 'titile',
+          customRender: (text, record) => {
+            if (text.match(/ldquo/)) {
+              text = text.replace(/\&ldquo;/g, '“')
+            }
+            if (text.match(/rdquo/)) {
+              text = text.replace(/\&rdquo;/g, '”')
+            }
+            return text
+          },
         },
         {
           title: '消息类型',
@@ -334,13 +339,13 @@ export default {
       getAction('sys/annountCement/syncNotic', { anntId: anntId })
     },
     handleDetail: function (record) {
-      this.$refs.ShowAnnouncement.detail(record);
+      this.$refs.ShowAnnouncement.detail(record)
       // const domain = window._CONFIG['domianURL']
       // const token = this.$ls.get(ACCESS_TOKEN)
       // this.detailModal.url = `${domain}/sys/annountCement/show/${record.id}?token=${token}`
       // this.detailModal.visible = true
     },
-    checkDetail(record){
+    checkDetail(record) {
       console.log(record)
       this.$refs.taskDetailModal.edit(record)
       // this.$refs.taskDetailModal.title = record.titile

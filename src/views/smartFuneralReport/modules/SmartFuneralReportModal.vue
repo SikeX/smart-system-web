@@ -5,6 +5,7 @@
     :visible="visible"
     switchFullscreen
     @ok="handleOk"
+    okText="保存"
     :okButtonProps="{ class:{'jee-hidden': disableSubmit} }"
     @cancel="handleCancel"
     cancelText="关闭">

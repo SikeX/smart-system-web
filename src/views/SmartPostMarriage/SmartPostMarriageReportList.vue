@@ -129,6 +129,13 @@
             <a v-show="record.verifyStatus == '3'">删除</a>
           </a-popconfirm>
         </span>
+        <span slot="verify" slot-scope="text">
+          <a-tag v-if="text == '0'" color="#f14c4c">不通过</a-tag>
+          <a-tag v-if="text == '1'" color="#10bc79">通过</a-tag>
+          <a-tag v-if="text == '2'" color="#29b8db">待审核</a-tag>
+          <a-tag v-if="text == '3'" color="green">免审</a-tag>
+          <a-tag v-if="text == '4'" color="gray">待提交</a-tag>
+        </span>
       </a-table>
     </div>
 
@@ -347,9 +354,9 @@ export default {
     saveFiles() {
       //记录id
       console.log(this.selectedRowKeys)
-      let ids = this.selectedRowKeys.join(",")
+      let ids = this.selectedRowKeys.join(',')
 
-      if(ids.length == 0){
+      if (ids.length == 0) {
         this.$message.error('请选择要导出的数据！')
         return
       }

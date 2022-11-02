@@ -61,6 +61,8 @@ const addVillageUser = (params)=>postAction("/sys/user/addVillage",params);
 const editVillageUser = (params)=>putAction("/sys/user/editVillage",params);
 const getVillageUserList = (params)=>getAction("/sys/user/villageList",params);
 const queryVillageIdTree = (params)=>getAction("/sys/sysDepart/queryVillageIdTree",params);
+const queryVillageAndStreetIdTree = (params)=>getAction("/sys/sysDepart/queryVillageAndStreetIdTree",params);
+
 
 //二级部门管理
 const queryDepartPermission = (params)=>getAction("/sys/permission/queryDepartPermission",params);
@@ -187,7 +189,8 @@ export {
   getUserNoticeInfo,
   getDictItemsFromCache,
   queryTopicList,
-  queryCommentList
+  queryCommentList,
+  queryVillageAndStreetIdTree
 }
 
 

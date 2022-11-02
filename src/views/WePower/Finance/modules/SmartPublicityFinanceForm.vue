@@ -32,7 +32,7 @@
           </a-col>
           <a-col :span="24">
             <a-form-model-item label="重大事项表" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="bigEventFile">
-              <j-upload v-model="model.bigEventFile"></j-upload>
+              <j-upload v-model="model.bigEventFile" :multiple="false"></j-upload>
               <a-button icon="camera" @click="eloamScan(3)">高拍仪拍照</a-button>
             </a-form-model-item>
           </a-col>
@@ -53,49 +53,49 @@ import EloamModal from '@views/eloam/modules/EloamModal'
 export default {
   name: 'SmartPublicityFinanceForm',
   components: {
-    EloamModal,
+    EloamModal
   },
   props: {
-    //表单禁用
+    // 表单禁用
     disabled: {
       type: Boolean,
       default: false,
-      required: false,
-    },
+      required: false
+    }
   },
   data() {
     return {
       model: {},
       labelCol: {
         xs: { span: 24 },
-        sm: { span: 5 },
+        sm: { span: 5 }
       },
       wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 16 },
+        sm: { span: 16 }
       },
       confirmLoading: false,
       validatorRules: {},
       url: {
         add: '/smartPublicityFinance/smartPublicityFinance/add',
         edit: '/smartPublicityFinance/smartPublicityFinance/edit',
-        queryById: '/smartPublicityFinance/smartPublicityFinance/queryById',
-      },
+        queryById: '/smartPublicityFinance/smartPublicityFinance/queryById'
+      }
     }
   },
   computed: {
     formDisabled() {
       return this.disabled
-    },
+    }
   },
   created() {
-    //备份model原始值
+    // 备份model原始值
     this.modelDefault = JSON.parse(JSON.stringify(this.model))
   },
   methods: {
     eloamScan(index) {
-      if(index == 1) {
-       this.$refs.modalForm1.open() 
+      if (index == 1) {
+        this.$refs.modalForm1.open()
       } else if (index == 2) {
         this.$refs.modalForm2.open()
       } else {
@@ -177,7 +177,7 @@ export default {
             })
         }
       })
-    },
-  },
+    }
+  }
 }
 </script>

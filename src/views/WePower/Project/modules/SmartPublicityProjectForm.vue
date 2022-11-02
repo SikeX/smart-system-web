@@ -17,7 +17,7 @@
             </a-col>
             <a-col :span="24">
               <a-form-model-item label="建设单位" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="location">
-                <select-village-depart v-model="model.location" />
+                <select-village-street-depart v-model="model.location" />
                 <!-- <j-select-depart v-model="model.location" multi /> -->
               </a-form-model-item>
             </a-col>
@@ -69,19 +69,19 @@
                 :wrapperCol="wrapperCol"
                 prop="file2"
               >
-                <j-upload v-model="model.file2"></j-upload>
+                <j-upload v-model="model.file2" :multiple="false"></j-upload>
                 <a-button icon="camera" @click="eloamScan(2)">高拍仪拍照</a-button>
               </a-form-model-item>
             </a-col>
             <a-col :span="24">
               <a-form-model-item label="合同" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="file3">
-                <j-upload v-model="model.file3"></j-upload>
+                <j-upload v-model="model.file3" :multiple="false"></j-upload>
                 <a-button icon="camera" @click="eloamScan(3)">高拍仪拍照</a-button>
               </a-form-model-item>
             </a-col>
             <a-col :span="24">
               <a-form-model-item label="验收材料" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="file4">
-                <j-upload v-model="model.file4"></j-upload>
+                <j-upload v-model="model.file4" :multiple="false"></j-upload>
                 <a-button icon="camera" @click="eloamScan(4)">高拍仪拍照</a-button>
               </a-form-model-item>
             </a-col>
@@ -166,7 +166,7 @@ import { JEditableTableModelMixin } from '@/mixins/JEditableTableModelMixin'
 import { validateDuplicateValue } from '@/utils/util'
 import EloamModal from '@views/eloam/modules/EloamModal'
 import MeetingCard from './MeetingCard.vue'
-import SelectVillageDepart from '../../../../components/common/SelectVillageDepart.vue'
+import SelectVillageStreetDepart from '@/components/common/SelectVillageStreetDepart'
 
 export default {
   name: 'SmartPublicityProjectForm',
@@ -174,11 +174,11 @@ export default {
   components: {
     EloamModal,
     MeetingCard,
-    SelectVillageDepart
+    SelectVillageStreetDepart,
   },
   data() {
     return {
-       labelCol: {
+      labelCol: {
         xs: { span: 24 },
         sm: { span: 6 },
       },

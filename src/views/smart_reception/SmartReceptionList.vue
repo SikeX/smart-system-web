@@ -75,19 +75,24 @@
         </template>
 
         <span slot="action" slot-scope="text, record">
-          <a @click="handleEdit(record)">编辑</a>
-
+          <a-popconfirm title="确定提交吗，提交后不可再修改?" @confirm="() => submitVerify(record)">
+            <a v-if="record.verifyStatus === '4'">提交审核</a>
+          </a-popconfirm>
+          <a-divider v-if="record.verifyStatus === '4'" type="vertical" />
+          <a v-show="record.verifyStatus === '3' || record.verifyStatus === '4'" @click="handleEdit(record)">编辑</a>
+          <a-divider v-show="record.verifyStatus === '3' || record.verifyStatus === '4'" type="vertical" />
+          <a @click="handleDetail(record)">详情</a>
           <a-divider type="vertical" />
-          <a-dropdown>
-            <a class="ant-dropdown-link">更多 <a-icon type="down" /></a>
-            <a-menu slot="overlay">
-              <a-menu-item>
-                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
-                  <a>删除</a>
-                </a-popconfirm>
-              </a-menu-item>
-            </a-menu>
-          </a-dropdown>
+          <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
+            <a v-show="record.verifyStatus == '3' || record.verifyStatus === '4'">删除</a>
+          </a-popconfirm>
+        </span>
+        <span slot="verify" slot-scope="text">
+          <a-tag v-if="text == '0'" color="#f14c4c">不通过</a-tag>
+          <a-tag v-if="text == '1'" color="#10bc79">通过</a-tag>
+          <a-tag v-if="text == '2'" color="#29b8db">待审核</a-tag>
+          <a-tag v-if="text == '3'" color="green">免审</a-tag>
+          <a-tag v-if="text == '4'" color="gray">待提交</a-tag>
         </span>
       </a-table>
     </div>
@@ -121,6 +126,7 @@ import Smart_8DiningList from './Smart_8DiningList'
 import Smart_8ListList from './Smart_8ListList'
 import { initDictOptions, filterMultiDictText } from '@/components/dict/JDictSelectUtil'
 import '@/assets/less/TableExpand.less'
+import { postAction } from '@/api/manage'
 
 export default {
   name: 'SmartReceptionList',
@@ -208,6 +214,12 @@ export default {
             return !text ? '' : text.length > 10 ? text.substr(0, 10) : text
           },
         },
+        {
+          title: '审核状态',
+          align: 'center',
+          dataIndex: 'verifyStatus',
+          scopedSlots: { customRender: 'verify' },
+        },
         // {
         //   title: '更新人',
         //   align: 'center',
@@ -236,6 +248,7 @@ export default {
         deleteBatch: '/smart_reception/smartReception/deleteBatch',
         exportXlsUrl: '/smart_reception/smartReception/exportXls',
         importExcelUrl: 'smart_reception/smartReception/importExcel',
+        verify: '/smart_reception/smartReception/submitVerify',
       },
       dictOptions: {
         departmentId: [],
@@ -266,6 +279,17 @@ export default {
     },
   },
   methods: {
+    submitVerify(record) {
+      postAction(this.url.verify, record).then((res) => {
+        if (res.success) {
+          this.$message.success('提交成功')
+          this.loadData()
+        } else {
+          this.$message.warning(res.message)
+        }
+      })
+    },
+
     handleAdd: function () {
       this.$refs.modalForm.add()
       this.$refs.modalForm.title = '新增'

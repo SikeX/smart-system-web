@@ -5,6 +5,21 @@
       <div class="table-page-search-wrapper">
         <a-form layout="inline" @keyup.enter.native="searchQuery">
           <a-row :gutter="24">
+            <a-col :xl="6" :lg="7" :md="8" :sm="24">
+              <a-form-item label="考核组名称">
+                <a-input placeholder="请输入考核组名称( *查询内容* 可模糊匹配 )" v-model="queryParam.teamName"></a-input>
+              </a-form-item>
+            </a-col>
+            <a-col :xl='6' :lg='7' :md='8' :sm='24'>
+            <span style='float: left;overflow: hidden;' class='table-page-search-submitButtons'>
+              <a-button type='primary' @click='searchQuery' icon='search'>查询</a-button>
+              <a-button type='primary' @click='searchReset' icon='reload' style='margin-left: 8px'>重置</a-button>
+              <a @click='handleToggleSearch' style='margin-left: 8px'>
+                {{ toggleSearchStatus ? '收起' : '展开' }}
+                <a-icon :type="toggleSearchStatus ? 'up' : 'down'" />
+              </a>
+            </span>
+            </a-col>
           </a-row>
         </a-form>
       </div>
@@ -14,9 +29,9 @@
       <div class="table-operator">
         <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
         <a-button type="primary" icon="download" @click="handleExportXls('考核组')">导出</a-button>
-        <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
-          <a-button type="primary" icon="import">导入</a-button>
-        </a-upload>
+<!--        <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" accept='.xls,.xlsx' :action="importExcelUrl" @change="handleImportExcel">-->
+<!--          <a-button type="primary" icon="import">导入</a-button>-->
+<!--        </a-upload>-->
         <!-- 高级查询区域 -->
         <j-super-query :fieldList="superFieldList" ref="superQueryModal" @handleSuperQuery="handleSuperQuery"></j-super-query>
         <a-dropdown v-if="selectedRowKeys.length > 0">
@@ -72,6 +87,9 @@
           <a @click="handleEdit(record)">编辑</a>
 
           <a-divider type="vertical" />
+            <a @click="showDepartList(record)">查看负责单位列表</a>
+
+          <a-divider type="vertical" />
           <a-dropdown>
             <a class="ant-dropdown-link">更多 <a-icon type="down" /></a>
             <a-menu slot="overlay">
@@ -91,6 +109,8 @@
       </div>
 
       <smart-assessment-team-modal ref="modalForm" @ok="modalFormOk"></smart-assessment-team-modal>
+
+      <depart-list-modal ref="departListModal" store='departs' text='departs_dictText'></depart-list-modal>
     </a-card>
 
     <smart-assessment-department-list style='margin-top: 20px'></smart-assessment-department-list>
@@ -104,11 +124,13 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import SmartAssessmentTeamModal from './modules/SmartAssessmentTeamModal'
   import SmartAssessmentDepartmentList from '@views/smartAssessmentTeam/SmartAssessmentDepartmentList'
+  import DepartListModal from '@views/smartAssessmentTeam/modules/DepartListModal'
 
   export default {
     name: 'SmartAssessmentTeamList',
     mixins:[JeecgListMixin, mixinDevice],
     components: {
+      DepartListModal,
       SmartAssessmentDepartmentList,
       SmartAssessmentTeamModal
     },
@@ -182,6 +204,9 @@
       },
     },
     methods: {
+      showDepartList(record) {
+        this.$refs.departListModal.edit(record)
+      },
       initDictConfig(){
       },
       getSuperFieldList(){

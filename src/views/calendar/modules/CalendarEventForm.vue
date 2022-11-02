@@ -104,7 +104,7 @@ export default {
       if (selectInfo) {
         this.modelDefault.allDay = selectInfo.allDay ? 1 : 0;
         this.modelDefault.startTime = this.$moment(selectInfo.startStr).format("YYYY-MM-DD HH:mm:ss");
-        this.modelDefault.endTime = this.$moment(selectInfo.endStr).format("YYYY-MM-DD HH:mm:ss");
+        this.modelDefault.endTime = this.$moment(selectInfo.endStr).subtract(1, 'seconds').format("YYYY-MM-DD HH:mm:ss");
       } else {
         this.modelDefault.allDay = 0;
       }

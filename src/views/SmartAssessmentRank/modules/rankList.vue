@@ -8,7 +8,7 @@
     </div>
     <!-- 查询区域-END -->
 
-    <a-button :style="{margin: '5px 0'}" type="primary" icon="download" @click="saveFiles('排名表')">导出</a-button>
+    <a-button :style="{ margin: '5px 0' }" type="primary" icon="download" @click="saveFiles('排名表')">导出</a-button>
     <!-- table区域-begin -->
     <div>
       <a-table
@@ -56,17 +56,22 @@ export default {
   components: {},
   props: {
     id: String,
+    title: {
+      type: String,
+      default: '',
+    },
   },
   data() {
     return {
       description: '附件测试主表管理页面',
+      // title: '得分排名附件',
       // 表头
       columns: [],
       dataSource: [],
       url: {
         list: '/smartAnswerInfo/rank/getRankById',
         importExcelUrl: 'testAttached/testAttached/importExcel',
-        exportWord: '/smartAnswerInfo/rank/exportWord'
+        exportWord: '/smartAnswerInfo/rank/exportWord',
       },
       dictOptions: {},
       superFieldList: [],
@@ -110,11 +115,11 @@ export default {
           },
         },
         {
-            title: '单位',
-            dataIndex: 'departName',
-            width:60,
-            align:"center",
-          }
+          title: '单位',
+          dataIndex: 'departName',
+          width: 60,
+          align: 'center',
+        },
       ]
 
       getAction('/smartRankVisible/smartRankVisible/queryByMissionId', { missionId: this.id }).then((res) => {
@@ -176,33 +181,32 @@ export default {
       })
     },
     saveFiles() {
-
-        //下载zip文件
-        myDownload(this.url.exportWord, this.id).then((res) => {
-          if (!res) {
-            console.log("lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll")
-            return
+      //下载zip文件
+      myDownload(this.url.exportWord, this.id).then((res) => {
+        if (!res) {
+          console.log('lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll')
+          return
+        }
+        // 创建文件临时存储地址
+        const url = window.URL.createObjectURL(new Blob([res], { type: 'application/msword' }))
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+          try {
+            window.navigator.msSaveOrOpenBlob(res, `${this.title}`.doc)
+          } catch (e) {
+            this.$message.error('下载附件失败')
           }
-          // 创建文件临时存储地址
-          const url = window.URL.createObjectURL(new Blob([res], { type: 'application/msword' }))
-          if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-            try {
-              window.navigator.msSaveOrOpenBlob(res, '附件.doc')
-            } catch (e) {
-              this.$message.error('下载附件失败')
-            }
-          } else {
-            const link = document.createElement('a')
-            link.style.display = 'none'
-            link.href = url
-            link.download = '附件.zip'
-            document.body.appendChild(link)
-            link.click()
-            URL.revokeObjectURL(link.href)
-            document.body.removeChild(link)
-          }
-        })
-      },
+        } else {
+          const link = document.createElement('a')
+          link.style.display = 'none'
+          link.href = url
+          link.download = '得分排名附件.doc'
+          document.body.appendChild(link)
+          link.click()
+          URL.revokeObjectURL(link.href)
+          document.body.removeChild(link)
+        }
+      })
+    },
     initDictConfig() {},
     getSuperFieldList() {
       let fieldList = []

@@ -3,7 +3,7 @@
     <div class="copyright">
       Copyright
       <a-icon type="copyright" />
-      2022 <span>智慧村务 </span><a class="icp" href="https://beian.miit.gov.cn/"> 黑ICP备2022003230号</a>
+      2022 <span>智慧纪检大数据平台 </span><a class="icp" href="https://beian.miit.gov.cn/"> 黑ICP备2022003230号</a>
     </div>
   </div>
 </template>
