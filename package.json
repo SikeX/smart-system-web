@@ -13,7 +13,6 @@
     "@antv/data-set": "^0.11.4",
     "@fullcalendar/core": "^5.10.1",
     "@fullcalendar/daygrid": "^5.10.1",
-    
     "@fullcalendar/interaction": "^5.10.1",
     "@fullcalendar/list": "^5.10.1",
     "@fullcalendar/timegrid": "^5.10.1",
@@ -55,6 +54,7 @@
     "vue-area-linkage": "^5.1.0",
     "vue-axios": "^3.4.0",
     "vue-carousel": "^0.18.0",
+    "vue-core-image-upload": "^2.4.13",
     "vue-cropper": "^0.5.4",
     "vue-i18n": "^8.7.0",
     "vue-loader": "^15.7.0",
