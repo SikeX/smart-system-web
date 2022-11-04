@@ -41,7 +41,7 @@
           <a-col :span="24" >
             <a-form-model-item label="附件" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="files">
 <!--              <a-button icon="camera" v-on:click="imgClick()">手机拍照</a-button>-->
-              <a-button icon="camera" @click="eloamScan">高拍仪拍照</a-button>
+              <a-button v-if='!disabled' icon="camera" @click="eloamScan">高拍仪拍照</a-button>
 <!--              <input-->
 <!--                style="float: left; display: none"-->
 <!--                type="file"-->
@@ -262,7 +262,7 @@
               that.confirmLoading = false;
             })
           }
-         
+
         })
       },
     }

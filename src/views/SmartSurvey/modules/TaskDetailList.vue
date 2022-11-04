@@ -1,13 +1,13 @@
 <template>
   <a-card :bordered="false">
     <!-- 操作按钮区域 -->
-    <div class="table-operator">
-      <!--<a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>-->
-      <a-button type="primary" icon="download" @click="handleExportXls('调查结果')">导出</a-button>
-      <!--      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">
-              <a-button type="primary" icon="import">导入</a-button>
-            </a-upload>-->
-    </div>
+<!--    <div class="table-operator">-->
+<!--      &lt;!&ndash;<a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>&ndash;&gt;-->
+<!--      <a-button type="primary" icon="download" @click="handleExportXls('调查结果')">导出</a-button>-->
+<!--      &lt;!&ndash;      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">-->
+<!--              <a-button type="primary" icon="import">导入</a-button>-->
+<!--            </a-upload>&ndash;&gt;-->
+<!--    </div>-->
     <!-- table区域-begin -->
     <!-- <div>
     <div class="ant-alert ant-alert-info" style="margin-bottom: 16px">
@@ -100,35 +100,69 @@ export default {
       queryParam: {},
       // 表头
       columns: [
+        // {
+        //   title: '#',
+        //   dataIndex: 'rowIndex',
+        //   key: 'rowIndex',
+        //   width: 60,
+        //   align: 'center',
+        //   customRender: function (t, r, index) {
+        //     return parseInt(index) + 1
+        //   },
+        // },
         {
-          title: '#',
-          dataIndex: '',
-          key: 'rowIndex',
-          width: 60,
+          title: '题目',
           align: 'center',
-          customRender: function (t, r, index) {
-            return parseInt(index) + 1
-          },
+          dataIndex: 'question',
+          key:'question',
+          customRender: (value, row, index) => {
+            const obj = {
+              children: value,
+              attrs: {},
+            };
+            obj.attrs.rowSpan = this.mergeCell(value,this.dataSource,Number(index)+Number(this.ipagination.pageSize * (this.ipagination.current - 1)),'question')
+            //执行renderData函数，对表格数据进行合并处理，其中tableData为表格的数据，pageSize为表格每一页有多少条数，current为当前页数,'xxx'为表格这一列的标识，即dataIndex
+            return obj;
+          }
         },
         {
-          title: '单位',
+          title: '详情',
           align: 'center',
-          dataIndex: 'deptName',
+          children: [
+            {
+              title: '选项',
+              dataIndex: 'choice',
+              key: 'choice',
+              align: 'center'
+            },
+            {
+              title: '人数',
+              dataIndex: 'counter',
+              key: 'counter',
+              align: 'center'
+            },
+            ]
         },
-        {
-          title: '答题人',
-          align: 'center',
-          dataIndex: 'personName',
-        },
-        {
-          title: '调查结果',
-          align: 'center',
-          dataIndex: 'examGrade',
-        },
+        // {
+        //   title: '单位',
+        //   align: 'center',
+        //   dataIndex: 'deptName',
+        // },
+        // {
+        //   title: '答题人',
+        //   align: 'center',
+        //   dataIndex: 'personName',
+        // },
+        // {
+        //   title: '调查结果',
+        //   align: 'center',
+        //   dataIndex: 'examGrade',
+        // },
       ],
       //   detailModal: { visible: false, url: '' },
       url: {
-        list: '/SmartPaper/smartPeople/getScoreByExamId',
+        // list: '/SmartPaper/smartPeople/getScoreByExamId',
+        list: '/SmartPaper/smartPeople/getCountByOptions',
         delete: '/sys/annountCement/delete',
         deleteBatch: '/sys/annountCement/deleteBatch',
         releaseDataUrl: '/sys/annountCement/doReleaseData',
@@ -157,6 +191,24 @@ export default {
     }
   },
   methods: {
+    //  合并单元格
+    mergeCell(text,dataSource,index,key){
+      if(dataSource.length > 0){
+        //判断上一行该列数据是否一样,这里需要判断是否分页，index % this.pageSize  == 0，表示分页后的第一条数据，需要将这条数据与前一页进行合并
+        if(index !== 0 && text === dataSource[index - 1][key] && index % this.ipagination.pageSize !== 0){
+          return 0
+        }
+        let rowSpan = 1
+        //判断下一行是否相等
+        for(let i = index + 1;i < dataSource.length;i++){
+          if(text !== dataSource[i][key]){
+            break
+          }
+          rowSpan++
+        }
+        return rowSpan
+      }
+    },
     edit(examId,paperName) {
       console.log(examId)
       this.examId = examId
@@ -164,11 +216,11 @@ export default {
       this.$nextTick(() => {
         // this.anntId = record.id
         // console.log(this.anntId)
-        this.loadData(1, examId)
+        this.loadData( examId,1)
       })
       //   this.$emit('ok')
     },
-    loadData(arg, examId) {
+    loadData(examId,arg) {
       if (!this.url.list) {
         this.$message.error('请设置url.list属性!')
         return
@@ -213,7 +265,8 @@ export default {
         this.isorter.order = 'ascend' == sorter.order ? 'asc' : 'desc'
       }
       this.ipagination = pagination
-      this.loadData()
+      // console.log(this.examId)
+      this.loadData(this.examId)
     },
     onSelectChange(selectedRowKeys, selectionRows) {
       this.selectedRowKeys = selectedRowKeys

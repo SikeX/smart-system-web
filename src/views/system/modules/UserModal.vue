@@ -703,13 +703,14 @@
 
       },
       validateBirthday(rule, value, callback){
-        console.log(typeof (value))
-        if(value && typeof (value) == 'object') {
+        // console.log(typeof (value))
+        if(value) {
           //判断出生日期时间
           let nowDate = new Date().getTime();
-          let birthday = this.model.birthday._d;
-          let birthdayDate = birthday.getTime();
-          console.log(birthdayDate)
+          // let birthday = this.model.birthday._d;
+          let birthdayDate = Date.parse(value);
+          // console.log("birthdayDate:"+birthdayDate)
+          // console.log(nowDate)
           //出生日期大于当前时间
           if (birthdayDate > nowDate) {
             callback("出生日期大于当前日期，请输入正确的出生日期！")
@@ -721,17 +722,14 @@
         }
       },
       validateJoinPartyDate(rule, value, callback){
-        console.log(typeof (value))
-        if(value && typeof (value) == 'object'){
+        // console.log(typeof (value))
+        if(value){
           //判断入党日期时间
           let time = new Date();
           let currentDate = new Date().getTime();
-          console.log(time,currentDate)
-          let joinParty = this.model.joinPartyDate._d;
-          console.log(typeof (value),typeof (this.model.joinPartyDate))
-          console.log(joinParty)
-          let joinPartyDate = joinParty.getTime();
-          console.log(joinPartyDate)
+          // let joinParty = this.model.joinPartyDate._d;
+          let joinPartyDate = Date.parse(value);
+          // console.log(joinPartyDate)
           //入党日期大于当前时间
           if ( joinPartyDate > currentDate ) {
             callback("入党日期大于当前日期，请输入正确的入党日期！")

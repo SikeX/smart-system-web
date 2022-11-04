@@ -94,7 +94,7 @@
                   <!-- 单项选择题 -->
                   <div class="userAnswer" v-if="s_topics.type==0">
                     <div class="radios">
-                      <el-radio v-for="(item, index) in t.choice" :key="index" v-model="t.correctAnswer" :label="getOption(index)" :disabled="isRead">
+                      <el-radio v-for="(item, index) in t.choice" :key="index" v-model="t.correctAnswer" :label="getOption(index)" >
                         <span class="topicNavIndex">{{String.fromCharCode(65+index)}}、</span>
                         <span v-if="editInedx.type==0&&editInedx.index==tIndex">
                           <el-input v-model="t.choice[index]" type="textarea" autosize placeholder="请输入选项内容" :disabled="isRead"></el-input>
@@ -281,7 +281,8 @@
         isFixed: false,
         topic_nav_style: "top:0px",
         isRead: false, //是否为只读模式
-        isShow:true //是否展示添加选项按钮
+        isShow:true, //是否展示添加选项按钮
+        isPick:true//选择题是否可选
       };
     },
 
