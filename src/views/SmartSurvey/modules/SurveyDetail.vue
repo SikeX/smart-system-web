@@ -353,11 +353,11 @@
           //处理试卷的题目数据
           if(testData.smartTopicVoList) {
             testData.smartTopicVoList.forEach((item) => {
-              if (item.topicType == 1 || item.topicType == 3){
+              if (item.topicType === 1 || item.topicType === 3){
                 item.submitAnswer = item.submitAnswer.split(/[\n]/g);
               }
               //按换行符分割字符串
-              if(item.topicType == 0 || item.topicType == 1) {
+              if(item.topicType === 0 || item.topicType === 1) {
                 item.choice = item.choice.split(/[\n]/g);
                 //item.required = item.required === 1 ? true : false;
               }
