@@ -10,17 +10,16 @@
     :okButtonProps="{ class: { 'jee-hidden': disableSubmit } }"
     @cancel="handleCancel"
   >
-    <task-detail-list ref="realList" @ok="submitCallback" :disabled="disableSubmit" />
-    <!-- <smart-supervision-form ref="realForm" @ok="submitCallback" :disabled="disableSubmit"/> -->
+    <survey-by-id-list ref="realList" @ok="submitCallback" :disabled="disableSubmit" />
   </j-modal>
 </template>
 
 <script>
 import { getAction } from '../../../api/manage'
-import TaskDetailList from './TaskDetailList.vue'
+import SurveyByIdList from './SurveyByIdList.vue'
 export default {
-  name: 'TaskDetailModal',
-  components: { TaskDetailList },
+  name: 'SurveyDetailModel',
+  components: { SurveyByIdList },
   data() {
     return {
       title: '',
@@ -40,7 +39,7 @@ export default {
     edit(surveyId,paperName) {
       this.visible = true
       console.log(surveyId)
-      this.title = paperName+'调查结果'
+      this.title = paperName+'参与人问卷详情'
       // this.title = "【" + record.titile + "】"
       // this.anntId = record.id
       this.$nextTick(() => {

@@ -1,6 +1,6 @@
 <template>
   <a-card :bordered="false">
-<!--     操作按钮区域-->
+    <!-- 操作按钮区域 -->
     <div class="table-operator">
       <!--<a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>-->
       <a-button type="primary" icon="download" @click="handleExportXls('调查结果')">导出</a-button>
@@ -29,8 +29,8 @@
       @change="handleTableChange"
     >
       <span slot="action" slot-scope="text, record">
-        <!-- <a-divider type="vertical" />
-          <a @click="checkDetail(record)">详情</a> -->
+<!--         <a-divider type="vertical" />-->
+          <a @click="checkDetail(record)" :class="isDisabled(record)">详情</a>
       </span>
     </a-table>
     <!-- </div> -->
@@ -51,7 +51,7 @@ import { ACCESS_TOKEN,TENANT_ID } from '@/store/mutation-types'
 import Vue from 'vue'
 
 export default {
-  name: 'TaskDetailList',
+  name: 'SurveyByIdList',
   //   mixins: [JeecgListMixin],
   components: {},
   data() {
@@ -100,75 +100,43 @@ export default {
       queryParam: {},
       // 表头
       columns: [
-        // {
-        //   title: '#',
-        //   dataIndex: 'rowIndex',
-        //   key: 'rowIndex',
-        //   width: 60,
-        //   align: 'center',
-        //   customRender: function (t, r, index) {
-        //     return parseInt(index) + 1
-        //   },
-        // },
         {
-          title: '题目',
+          title: '#',
+          dataIndex: 'rowIndex',
+          key: 'rowIndex',
+          width: 60,
           align: 'center',
-          dataIndex: 'question',
-          key:'question',
-          customRender: (value, row, index) => {
-            const obj = {
-              children: value,
-              attrs: {},
-            };
-            obj.attrs.rowSpan = this.mergeCell(value,this.dataSource,Number(index)+Number(this.ipagination.pageSize * (this.ipagination.current - 1)),'question')
-            //执行renderData函数，对表格数据进行合并处理，其中tableData为表格的数据，pageSize为表格每一页有多少条数，current为当前页数,'xxx'为表格这一列的标识，即dataIndex
-            return obj;
-          }
+          customRender: function (t, r, index) {
+            return parseInt(index) + 1
+          },
         },
         {
-          title: '详情',
+          title: '参与人',
           align: 'center',
-          children: [
-            {
-              title: '选项',
-              dataIndex: 'choice',
-              key: 'choice',
-              align: 'center'
-            },
-            {
-              title: '人数占比',
-              dataIndex: 'counter',
-              key: 'counter',
-              align: 'center'
-            },
-            ]
+          dataIndex: 'personName',
         },
-        // {
-        //   title: '单位',
-        //   align: 'center',
-        //   dataIndex: 'deptName',
-        // },
-        // {
-        //   title: '答题人',
-        //   align: 'center',
-        //   dataIndex: 'personName',
-        // },
-        // {
-        //   title: '调查结果',
-        //   align: 'center',
-        //   dataIndex: 'examGrade',
-        // },
+        {
+          title: '是否已参与调查',
+          align: 'center',
+          dataIndex: 'examGrade',
+        },
+        {
+          title: '操作',
+          dataIndex: 'action',
+          align:"center",
+          width:100,
+          scopedSlots: { customRender: 'action' }
+        }
       ],
       //   detailModal: { visible: false, url: '' },
       url: {
-        list: '/SmartPaper/smartPeople/getCountByOptions',
+        list: '/SmartPaper/smartPeople/getScoreBySurveyId',
         delete: '/sys/annountCement/delete',
         deleteBatch: '/sys/annountCement/deleteBatch',
         releaseDataUrl: '/sys/annountCement/doReleaseData',
         reovkeDataUrl: 'sys/annountCement/doReovkeData',
-        //exportXlsUrl: 'sys/annountCement/exportXls',
         importExcelUrl: 'sys/annountCement/importExcel',
-        exportXlsUrl: '/SmartPaper/smartPeople/exportOptionStaXls',
+        exportXlsUrl: '/SmartPaper/smartPeople/exportExamGradeXls',
       },
     }
   },
@@ -190,34 +158,31 @@ export default {
     }
   },
   methods: {
-    //  合并单元格
-    mergeCell(text,dataSource,index,key){
-      if(dataSource.length > 0){
-        //判断上一行该列数据是否一样,这里需要判断是否分页，index % this.pageSize  == 0，表示分页后的第一条数据，需要将这条数据与前一页进行合并
-        if(index !== 0 && text === dataSource[index - 1][key] && index % this.ipagination.pageSize !== 0){
-          return 0
-        }
-        let rowSpan = 1
-        //判断下一行是否相等
-        for(let i = index + 1;i < dataSource.length;i++){
-          if(text !== dataSource[i][key]){
-            break
-          }
-          rowSpan++
-        }
-        return rowSpan
-      }
-    },
     edit(surveyId,paperName) {
-      console.log(surveyId)
       this.surveyId = surveyId
-      this.title =  paperName+'调查结果'
+      this.title =  paperName+'参与人问卷详情'
       this.$nextTick(() => {
         // this.anntId = record.id
         // console.log(this.anntId)
         this.loadData( surveyId,1)
       })
       //   this.$emit('ok')
+    },
+    checkDetail(record){
+      let Detail= this.$router.resolve({
+        //要跳转的页面的名称
+        name:"SurveyDetail",
+        //传参
+        query:{"personId":record.personId,"surveyId":this.surveyId}
+      })
+      //以新窗口打开
+      window.open(Detail.href,'_blank')
+    },
+    isDisabled(record){
+     if (record.examGrade === "未参与调查"){
+        //console.log('No发布');
+        return "disabled";
+      }
     },
     loadData(surveyId,arg) {
       if (!this.url.list) {
@@ -407,7 +372,12 @@ export default {
 </script>
 <style scoped lang="less">
 @import '~@assets/less/common.less';
-
+.disabled {
+  pointer-events: none;
+  filter: alpha(opacity=50); /*IE滤镜，透明度50%*/
+  -moz-opacity: 0.5; /*Firefox私有，透明度50%*/
+  opacity: 0.5; /*其他，透明度50%*/
+}
 /** 查看详情弹窗的样式 */
 .detail-modal {
   .detail-iframe {

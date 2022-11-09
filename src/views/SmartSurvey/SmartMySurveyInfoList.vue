@@ -124,6 +124,11 @@
             dataIndex: 'examEndtime'
           },
           {
+            title:'是否已完成',
+            align:"center",
+            dataIndex: 'isFinish_dictText',
+          },
+          {
             title: '操作',
             dataIndex: 'action',
             align:"center",
@@ -158,14 +163,14 @@
         let nowDate = new Date().getTime();
         let startTime = record.examStarttime;
         let deadline = record.examEndtime;
-        console.log('deadline',deadline);
         let startDate = new Date(
           Date.parse(startTime.replace(/-/g, "/"))
         ).getTime();
         let deadlineDate = new Date(
           Date.parse(deadline.replace(/-/g, "/"))
         ).getTime();
-        if (nowDate < deadlineDate && startDate < nowDate) {
+        console.log(record)
+        if (nowDate < deadlineDate && startDate < nowDate && record.isFinish === '0') {
           //激活开始考试
           console.log('激活开始考试');
         } else {
@@ -198,6 +203,7 @@
         fieldList.push({type:'string',value:'examName',text:'调查问卷名称',dictCode:''})
         fieldList.push({type:'datetime',value:'examStarttime',text:'调查问卷开始时间'})
         fieldList.push({type:'datetime',value:'examEndtime',text:'调查问卷结束时间'})
+        fieldList.push({type:'string',value:'isFinish',text:'是否已完成',dictCode:'is_finish'})
         this.superFieldList = fieldList
       }
     }

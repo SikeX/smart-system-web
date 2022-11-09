@@ -443,6 +443,14 @@ export const constantRouterMap = [
     }
   },
   {
+    path: '/SurveyDetail',
+    name: 'SurveyDetail',
+    component: () => import( '@/views/SmartSurvey/modules/SurveyDetail.vue'),
+    meta: {
+      title: '修改调查问卷'
+    }
+  },
+  {
     path: '/mySurvey',
     name: 'mySurvey',
     component: () => import( '@/views/SmartSurvey/mySurvey.vue'),

@@ -15,7 +15,7 @@
                 <j-search-select-tag
                   placeholder="请选择调查问卷名称"
                   v-model="queryParam.id"
-                  dict="smart_paper,paper_name,id,paper_type = '2'"
+                  dict="smart_paper,paper_name,id,paper_type = '2' and paper_status='2'"
                   :async="true">
                 </j-search-select-tag>
               </a-form-item>
@@ -32,11 +32,9 @@
       <!-- 查询区域-END -->
 
       <!-- 操作按钮区域 -->
-      <div class="table-operator">
-        <!--<a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>-->
-        <a-button @click="createTestPaper"  type="primary" icon="plus">创建调查问卷</a-button>
-
-      </div>
+<!--      <div class="table-operator">-->
+<!--        <a-button @click="createTestPaper"  type="primary" icon="plus">创建调查问卷</a-button>-->
+<!--      </div>-->
 
       <!-- table区域-begin -->
       <div>
@@ -80,19 +78,9 @@
           </template>
 
           <span slot="action" slot-scope="text, record">
-          <!--<a @click="handleEdit(record)">编辑</a>-->
-          <a @click="handleIssueSurvey(record)" :class="isDisabled(record)">发布问卷</a>
-          <a-divider type="vertical" />
-          <a @click="editTestPaper(record.id)" :class="isDisabled(record)">编辑问卷</a>
+            <a @click="showScore(record)">查看选择详情</a>
             <a-divider type="vertical" />
-             <a @click="updateSurveyTime(record.id)" :class="updateDisabled(record)">修改时间</a>
-          <a-divider type="vertical" />
-          <a-popconfirm title="确定取消吗?" @confirm="() => handleUnIssueSurvey(record.id)">
-            <a :class="isunDisabled(record)">取消发布</a>
-          </a-popconfirm>
-<!--          <a @click="handleUnIssueSurvey(record.id)" :class="isunDisabled(record)">取消发布</a>-->
-<!--          <a-divider type="vertical" />-->
-<!--          <a @click="showScore(record)">查看调查结果</a>-->
+            <a @click="showAllSurvey(record)">查看参与人问卷详情</a>
         </span>
         </a-table>
       </div>
@@ -100,9 +88,7 @@
 
     <smart-paper-modal ref="modalForm" @ok="modalFormOk"></smart-paper-modal>
     <task-detail-modal ref="scoreModal" @ok="modalFormOk"></task-detail-modal>
-    <!-- 发布调查问卷弹框 -->
-    <ReleaseTest ref="releaseTestDialog" @ok="modalFormOk"/>
-    <UpdateSurveyTime ref = "UpdateSurveyTimeDialog" @ok="modalFormOk"/>
+    <survey-detail-model ref="surveyDetailModel" @ok="modalFormOk"/>
   </a-card>
 </template>
 
@@ -114,24 +100,23 @@
   import SmartPaperModal from './modules/SmartPaperModal'
   import {filterMultiDictText} from '@/components/dict/JDictSelectUtil'
   import { httpAction,putAction, postAction,getAction } from '@/api/manage'
-  import ReleaseTest from './modules/ReleaseTest'
-  import UpdateSurveyTime from './modules/UpdateSurveyTime'
   import TaskDetailModal from './modules/TaskDetailModal.vue'
+  import SurveyDetailModel from '@views/SmartSurvey/modules/SurveyDetailModel'
 
   export default {
-    name: 'SmartSurveyList',
+    name: 'SmartSurveyStatisticsList',
     mixins:[JeecgListMixin, mixinDevice],
     components: {
+      SurveyDetailModel,
       SmartPaperModal,
-      ReleaseTest,
-      TaskDetailModal,
-      UpdateSurveyTime
+      TaskDetailModal
     },
     data () {
       return {
         queryParam:{
           id:'',
-          paperType:'2'
+          paperType:'2',
+          paperStatus:'2'//已发布
         },
         description: '试卷表管理页面',
         // 表头
@@ -249,70 +234,10 @@
         this.searchQuery();
       },
       showScore(record) {
-        console.log(record)
         this.$refs.scoreModal.edit(record.id,record.paperName)
       },
-      isDisabled(record){
-        if ( record.paperStatus === "0") {
-          //激活开始考试
-          //console.log('激活发布');
-        } else if ( record.paperStatus === "2"){
-          //console.log('No发布');
-          return "disabled";
-        }
-      },
-      updateDisabled(record){
-        if ( record.paperStatus === "0"){
-          //console.log('No发布');
-          return "disabled";
-        }
-      },
-      isunDisabled(record){
-        //超过截止时间，不可取消
-        let currentDate = new Date().getTime();
-        let deadline = Date.parse(record.examEndtime);
-        let able = false
-        if(deadline !== {} && deadline < currentDate){
-          able = true
-        }
-        // console.log(able)
-        if ( record.paperStatus === "0"){
-          //未发布或问卷已开始，取消发布不可用
-          return "disabled";
-        }
-      },
-      //去创建新试卷
-      createTestPaper() {
-        const { href } = this.$router.resolve({
-          name: "createSurvey",
-          params: { opt: 'addSurvey'}
-        });
-        const win  = window.open(href, "_blank");
-        const loop = setInterval(item => {
-          if (win.closed) {
-            clearInterval(loop);
-            this.refresh();
-          }
-        }, 1000);
-      },
-      // 编辑试卷
-      editTestPaper(id) {
-        console.log(id);
-        const { href } = this.$router.resolve({
-          name: "editSurvey",
-          params: { opt: 'edit', id}
-        });
-        const win = window.open(href, "_blank");
-        const loop = setInterval(item => {
-          if (win.closed) {
-            clearInterval(loop);
-            this.$ref.table.reload();
-          }
-        }, 1000);
-      },
-      updateSurveyTime(id){
-        let surveyId = id
-        this.$refs.UpdateSurveyTimeDialog.UpdateSurveyTime(surveyId)
+      showAllSurvey(record){
+        this.$refs.surveyDetailModel.edit(record.id,record.paperName)
       },
       detailPage(id){
         console.log(id);
@@ -328,25 +253,6 @@
           }
         }, 1000);
   },
-      //试卷发布
-      handleIssueSurvey(record){
-        console.log(record)
-        let paperId = record.id
-        this.$refs.releaseTestDialog.releaseTest(paperId)
-      },
-      //取消发布
-      handleUnIssueSurvey(paperId){
-        let url = "/SmartExam/smartRelease/unreleaseSurvey/" + paperId;
-        postAction(url).then((res) => {
-          if (res.success) {
-            this.$message.success("取消发布成功！")
-          } else {
-            this.$message.error("取消发布失败！")
-          }
-        }).finally(() => {
-          this.loadData()
-        })
-      },
       initDictConfig(){
       },
       getSuperFieldList(){
@@ -372,17 +278,5 @@
   filter: alpha(opacity=50); /*IE滤镜，透明度50%*/
   -moz-opacity: 0.5; /*Firefox私有，透明度50%*/
   opacity: 0.5; /*其他，透明度50%*/
-}
-.ant-card-head{
-  min-height: 48px;
-  margin-bottom: -1px;
-  padding: 0 24px;
-  color: rgba(0, 0, 0, 0.85);
-  font-weight: 500;
-  font-size: 24px;
-  background: transparent;
-  border-bottom: 1px  #e8e8e8;
-  border-radius: 2px 2px 0 0;
-  zoom: 1;
 }
 </style>
