@@ -180,9 +180,10 @@
 //import Tinymce from '@/components/Tinymce'
 import chapter from './api/edu/chaptercopy'
 import video from './api/edu/videocopy'
-
+import { JeecgListMixin } from '@/mixins/JeecgListMixin'
 
 export default {
+    mixins: [JeecgListMixin],
 //  components: { Tinymce },
   data() {
     return {
