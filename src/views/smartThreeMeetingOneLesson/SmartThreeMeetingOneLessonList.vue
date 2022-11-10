@@ -5,6 +5,17 @@
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="审核状态">
+              <a-select v-model="queryParam.verifyStatus" placeholder="请选择审核状态">
+                <a-select-option value="0">不通过</a-select-option>
+                <a-select-option value="1">通过</a-select-option>
+                <a-select-option value="2">待审核</a-select-option>
+                <a-select-option value="3">免审</a-select-option>
+                <a-select-option value="4">待提交</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
             <a-form-item label="单位">
               <j-select-depart
                 placeholder="请选择单位"
@@ -21,7 +32,7 @@
             </a-form-item>
           </a-col>
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
-            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+            <span style="float: left; overflow: hidden" class="table-page-search-submitButtons">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
               <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
               <a @click="handleToggleSearch" style="margin-left: 8px">
@@ -101,13 +112,7 @@
         </template>
         <template slot="fileSlot" slot-scope="text">
           <span v-if="!text" style="font-size: 12px; font-style: italic">无文件</span>
-          <a-button
-            v-else
-            :ghost="true"
-            type="primary"
-            icon="download"
-            size="small"
-            @click="downloadFile(text)">
+          <a-button v-else :ghost="true" type="primary" icon="download" size="small" @click="downloadFile(text)">
             下载
           </a-button>
         </template>
@@ -163,144 +168,143 @@ import SmartThreeMeetingOneLessonModal from './modules/SmartThreeMeetingOneLesso
 import { filterMultiDictText } from '@/components/dict/JDictSelectUtil'
 import '@/assets/less/TableExpand.less'
 
-  export default {
-    name: 'SmartThreeMeetingOneLessonList',
-    mixins: [JeecgListMixin],
-    components: {
-      SmartThreeMeetingOneLessonModal
-    },
-    data () {
-      return {
-        description: '三会一课管理页面',
-        // 表头
-        columns: [
-          {
-            title: '#',
-            dataIndex: '',
-            key: 'rowIndex',
-            width: 60,
-            align: 'center',
-            customRender: function (t, r, index) {
-              return parseInt(index) + 1
-            }
+export default {
+  name: 'SmartThreeMeetingOneLessonList',
+  mixins: [JeecgListMixin],
+  components: {
+    SmartThreeMeetingOneLessonModal,
+  },
+  data() {
+    return {
+      description: '三会一课管理页面',
+      // 表头
+      columns: [
+        {
+          title: '#',
+          dataIndex: '',
+          key: 'rowIndex',
+          width: 60,
+          align: 'center',
+          customRender: function (t, r, index) {
+            return parseInt(index) + 1
           },
-          {
-            title: '审核状态',
-            align: 'center',
-            dataIndex: 'verifyStatus',
-            scopedSlots: { customRender: 'verify' }
-          },
-          {
-            title: '单位',
-            align: 'center',
-            dataIndex: 'departmentId'
-          },
-          {
-            title: '类型',
-            align: 'center',
-            dataIndex: 'type_dictText'
-          },
-          {
-            title: '主题',
-            align: 'center',
-            dataIndex: 'theme'
-          },
-          {
-            title: '内容摘要',
-            align: 'center',
-            dataIndex: 'content'
-          },
-          {
-            title: '主持人',
-            align: 'center',
-            dataIndex: 'hostName'
-          },
-          {
-            title: '记录人',
-            align: 'center',
-            dataIndex: 'recorderName'
-          },
-          {
-            title: '地点',
-            align: 'center',
-            dataIndex: 'place'
-          },
-          {
-            title: '时间',
-            align: 'center',
-            dataIndex: 'time'
-          },
-
-          {
-            title: '备注',
-            align: 'center',
-            dataIndex: 'remark'
-          },
-          {
-            title: '创建人',
-            align: 'center',
-            dataIndex: 'createBy'
-          },
-          {
-            title: '创建日期',
-            align: 'center',
-            dataIndex: 'createTime'
-          },
-          // {
-          //   title:'审核状态',
-          //   align:"center",
-          //   dataIndex: 'verifyStatus'
-          // },
-          {
-            title: '操作',
-            dataIndex: 'action',
-            align: 'center',
-            fixed: 'right',
-            width: 147,
-            scopedSlots: { customRender: 'action' }
-          }
-        ],
-        url: {
-          list: '/smartThreeMeetingOneLesson/smartThreeMeetingOneLesson/list',
-          delete: '/smartThreeMeetingOneLesson/smartThreeMeetingOneLesson/delete',
-          deleteBatch: '/smartThreeMeetingOneLesson/smartThreeMeetingOneLesson/deleteBatch',
-          exportXlsUrl: '/smartThreeMeetingOneLesson/smartThreeMeetingOneLesson/exportXls',
-          importExcelUrl: '/smartThreeMeetingOneLesson/smartThreeMeetingOneLesson/importExcel',
-          verify: '/smartThreeMeetingOneLesson/smartThreeMeetingOneLesson/submitVerify'
         },
-        dictOptions: {},
-        superFieldList: []
-      }
-    },
-    created() {
-      this.getSuperFieldList()
-    },
-    computed: {
-      importExcelUrl: function() {
-        return `${window._CONFIG['domianURL']}/${this.url.importExcelUrl}`
-      }
-    },
-    methods: {
-      initDictConfig() {
+        {
+          title: '审核状态',
+          align: 'center',
+          dataIndex: 'verifyStatus',
+          scopedSlots: { customRender: 'verify' },
+        },
+        {
+          title: '单位',
+          align: 'center',
+          dataIndex: 'departmentId',
+        },
+        {
+          title: '类型',
+          align: 'center',
+          dataIndex: 'type_dictText',
+        },
+        {
+          title: '主题',
+          align: 'center',
+          dataIndex: 'theme',
+        },
+        {
+          title: '内容摘要',
+          align: 'center',
+          dataIndex: 'content',
+        },
+        {
+          title: '主持人',
+          align: 'center',
+          dataIndex: 'hostName',
+        },
+        {
+          title: '记录人',
+          align: 'center',
+          dataIndex: 'recorderName',
+        },
+        {
+          title: '地点',
+          align: 'center',
+          dataIndex: 'place',
+        },
+        {
+          title: '时间',
+          align: 'center',
+          dataIndex: 'time',
+        },
+
+        {
+          title: '备注',
+          align: 'center',
+          dataIndex: 'remark',
+        },
+        {
+          title: '创建人',
+          align: 'center',
+          dataIndex: 'createBy',
+        },
+        {
+          title: '创建日期',
+          align: 'center',
+          dataIndex: 'createTime',
+        },
+        // {
+        //   title:'审核状态',
+        //   align:"center",
+        //   dataIndex: 'verifyStatus'
+        // },
+        {
+          title: '操作',
+          dataIndex: 'action',
+          align: 'center',
+          fixed: 'right',
+          width: 147,
+          scopedSlots: { customRender: 'action' },
+        },
+      ],
+      url: {
+        list: '/smartThreeMeetingOneLesson/smartThreeMeetingOneLesson/list',
+        delete: '/smartThreeMeetingOneLesson/smartThreeMeetingOneLesson/delete',
+        deleteBatch: '/smartThreeMeetingOneLesson/smartThreeMeetingOneLesson/deleteBatch',
+        exportXlsUrl: '/smartThreeMeetingOneLesson/smartThreeMeetingOneLesson/exportXls',
+        importExcelUrl: '/smartThreeMeetingOneLesson/smartThreeMeetingOneLesson/importExcel',
+        verify: '/smartThreeMeetingOneLesson/smartThreeMeetingOneLesson/submitVerify',
       },
-      getSuperFieldList() {
-        let fieldList = []
-         fieldList.push({ type: 'string', value: 'departmentId', text: '单位', dictCode: '' })
-         fieldList.push({ type: 'string', value: 'hostName', text: '主持人', dictCode: '' })
-         fieldList.push({ type: 'string', value: 'recorderName', text: '记录人', dictCode: '' })
-         fieldList.push({ type: 'string', value: 'place', text: '地点', dictCode: '' })
-         fieldList.push({ type: 'datetime', value: 'time', text: '时间' })
-         fieldList.push({ type: 'string', value: 'type', text: '类型', dictCode: 'shyk' })
-         fieldList.push({ type: 'string', value: 'theme', text: '主题', dictCode: '' })
-         fieldList.push({ type: 'Text', value: 'content', text: '内容摘要', dictCode: '' })
-         fieldList.push({ type: 'string', value: 'remark', text: '备注', dictCode: '' })
-         fieldList.push({ type: 'string', value: 'createBy', text: '创建人', dictCode: '' })
-         fieldList.push({ type: 'datetime', value: 'createTime', text: '创建日期' })
-         fieldList.push({ type: 'string', value: 'verifyStatus', text: '审核状态', dictCode: '' })
-        this.superFieldList = fieldList
-      }
+      dictOptions: {},
+      superFieldList: [],
     }
-  }
+  },
+  created() {
+    this.getSuperFieldList()
+  },
+  computed: {
+    importExcelUrl: function () {
+      return `${window._CONFIG['domianURL']}/${this.url.importExcelUrl}`
+    },
+  },
+  methods: {
+    initDictConfig() {},
+    getSuperFieldList() {
+      let fieldList = []
+      fieldList.push({ type: 'string', value: 'departmentId', text: '单位', dictCode: '' })
+      fieldList.push({ type: 'string', value: 'hostName', text: '主持人', dictCode: '' })
+      fieldList.push({ type: 'string', value: 'recorderName', text: '记录人', dictCode: '' })
+      fieldList.push({ type: 'string', value: 'place', text: '地点', dictCode: '' })
+      fieldList.push({ type: 'datetime', value: 'time', text: '时间' })
+      fieldList.push({ type: 'string', value: 'type', text: '类型', dictCode: 'shyk' })
+      fieldList.push({ type: 'string', value: 'theme', text: '主题', dictCode: '' })
+      fieldList.push({ type: 'Text', value: 'content', text: '内容摘要', dictCode: '' })
+      fieldList.push({ type: 'string', value: 'remark', text: '备注', dictCode: '' })
+      fieldList.push({ type: 'string', value: 'createBy', text: '创建人', dictCode: '' })
+      fieldList.push({ type: 'datetime', value: 'createTime', text: '创建日期' })
+      fieldList.push({ type: 'string', value: 'verifyStatus', text: '审核状态', dictCode: '' })
+      this.superFieldList = fieldList
+    },
+  },
+}
 </script>
 <style scoped>
 @import '~@assets/less/common.less';

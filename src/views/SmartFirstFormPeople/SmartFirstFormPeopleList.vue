@@ -6,6 +6,17 @@
           <!--查询区域-->
           <div class="extra-wrapper" slot="tabBarExtraContent">
             <a-row :gutter="24">
+              <a-col :xl="6" :lg="7" :md="8" :sm="24">
+                <a-form-item label="审核状态">
+                  <a-select v-model="queryParam.verifyStatus" placeholder="请选择审核状态">
+                    <a-select-option value="0">不通过</a-select-option>
+                    <a-select-option value="1">通过</a-select-option>
+                    <a-select-option value="2">待审核</a-select-option>
+                    <a-select-option value="3">免审</a-select-option>
+                    <a-select-option value="4">待提交</a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
               <a-col span="8">
                 <j-input placeholder="请输入年份" v-model="queryParam.year" width="60%" />
               </a-col>

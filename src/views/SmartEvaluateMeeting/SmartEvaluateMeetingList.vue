@@ -21,6 +21,17 @@
             </a-form-item>
           </a-col>
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="审核状态">
+              <a-select v-model="queryParam.verifyStatus" placeholder="请选择审核状态">
+                <a-select-option value="0">不通过</a-select-option>
+                <a-select-option value="1">通过</a-select-option>
+                <a-select-option value="2">待审核</a-select-option>
+                <a-select-option value="3">免审</a-select-option>
+                <a-select-option value="4">待提交</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
             <span style="float: left; overflow: hidden" class="table-page-search-submitButtons">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
               <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>

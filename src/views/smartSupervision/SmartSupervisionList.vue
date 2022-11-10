@@ -5,6 +5,17 @@
       <a-form layout="inline" @keyup.enter.native="searchQuery">
         <a-row :gutter="24">
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="审核状态">
+              <a-select v-model="queryParam.verifyStatus" placeholder="请选择审核状态">
+                <a-select-option value="0">不通过</a-select-option>
+                <a-select-option value="1">通过</a-select-option>
+                <a-select-option value="2">待审核</a-select-option>
+                <a-select-option value="3">免审</a-select-option>
+                <a-select-option value="4">待提交</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
             <a-form-item label="单位">
               <j-select-depart
                 placeholder="请选择单位"
@@ -13,6 +24,22 @@
                 :multi="false"
                 :treeOpera="true"
               ></j-select-depart>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="日期查询">
+              <j-date placeholder="请选择日期" v-model="queryParam.supervisionTime"></j-date>
+            </a-form-item>
+          </a-col>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="审核状态">
+              <a-select v-model="queryParam.verifyStatus" placeholder="请选择审核状态">
+                <a-select-option value="0">不通过</a-select-option>
+                <a-select-option value="1">通过</a-select-option>
+                <a-select-option value="2">待审核</a-select-option>
+                <a-select-option value="3">免审</a-select-option>
+                <a-select-option value="4">待提交</a-select-option>
+              </a-select>
             </a-form-item>
           </a-col>
           <a-col :xl="6" :lg="7" :md="8" :sm="24">
@@ -158,6 +185,12 @@ export default {
           },
         },
         {
+          title: '审核状态',
+          align: 'center',
+          dataIndex: 'verifyStatus',
+          scopedSlots: { customRender: 'verify' },
+        },
+        {
           title: '创建人',
           align: 'center',
           dataIndex: 'createBy_dictText',
@@ -179,12 +212,6 @@ export default {
           customRender: function (text) {
             return !text ? '' : text.length > 10 ? text.substr(0, 10) : text
           },
-        },
-        {
-          title: '审核状态',
-          align: 'center',
-          dataIndex: 'verifyStatus',
-          scopedSlots: { customRender: 'verify' },
         },
         {
           title: '操作',

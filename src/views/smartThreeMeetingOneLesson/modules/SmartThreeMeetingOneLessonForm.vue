@@ -4,6 +4,17 @@
       <!-- 主表单区域 -->
       <a-form-model ref="form" :model="model" :rules="validatorRules" slot="detail">
         <a-row>
+          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-form-item label="审核状态">
+              <a-select v-model="queryParam.verifyStatus" placeholder="请选择审核状态">
+                <a-select-option value="0">不通过</a-select-option>
+                <a-select-option value="1">通过</a-select-option>
+                <a-select-option value="2">待审核</a-select-option>
+                <a-select-option value="3">免审</a-select-option>
+                <a-select-option value="4">待提交</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
           <a-col :span="24">
             <a-form-model-item label="类型" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="type">
               <j-dict-select-tag type="list" v-model="model.type" dictCode="shyk" placeholder="请选择类型" />
@@ -89,7 +100,7 @@
           </a-col> -->
           <a-col :span="24">
             <a-form-model-item label="附件" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="files">
-              <a-button v-if='!disabled' icon="camera" @click="eloamScan">高拍仪拍照</a-button>
+              <a-button v-if="!disabled" icon="camera" @click="eloamScan">高拍仪拍照</a-button>
               <eloam-modal ref="modalForm" @ok="scanOk"></eloam-modal>
               <j-upload v-model="model.files"></j-upload>
             </a-form-model-item>
