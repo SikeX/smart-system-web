@@ -36,7 +36,18 @@
         </a-collapse>
       </div>
     </a-card>
-    <a-card title="三资信息" :bordered="false" style="width: 100%"> </a-card>
+    <a-card title="三资信息" :bordered="false" style="width: 100%">
+      <div style="padding: 20px 0">
+        <a-collapse v-model="activeKey">
+          <a-collapse-panel key="9" header="现有资产资源情况">
+            <resource-list :data="resourceList" />
+          </a-collapse-panel>
+          <a-collapse-panel key="11" header="现有资金情况">
+            <project-list :data="projectList" />
+          </a-collapse-panel>
+        </a-collapse>
+      </div>
+    </a-card>
   </div>
 </template>
 
@@ -45,6 +56,8 @@ import { getAction } from '../../api/manage'
 import SelectVillageDepart from '../../components/common/SelectVillageDepart.vue'
 import HomeList from './modules/HomeList.vue'
 import SelectVillageStreetDepart from '@/components/common/SelectVillageStreetDepart'
+import ResourceList from './modules/ResourceList.vue'
+import ProjectList from './modules/ProjectList'
 
 export default {
   name: 'Home',
@@ -52,6 +65,8 @@ export default {
     SelectVillageDepart,
     HomeList,
     SelectVillageStreetDepart,
+    ResourceList,
+    ProjectList,
   },
   created() {
     // this.getData()
@@ -60,6 +75,7 @@ export default {
     return {
       location: '',
       model: {},
+      resourceList: [],
     }
   },
   methods: {
@@ -67,6 +83,22 @@ export default {
       getAction('/wePowerInfo/getInfo', { locationId: this.location }).then((res) => {
         if (res.success) {
           this.model = res.result
+        } else {
+          this.$message.error(res.message)
+        }
+      })
+      getAction('/wePowerInfo/getResourceInfo', { locationId: this.location }).then((res) => {
+        if (res.success) {
+          this.resourceList = res.result.records
+          console.log(this.resourceList)
+        } else {
+          this.$message.error(res.message)
+        }
+      })
+      getAction('/wePowerInfo/getResourceMoney', { locationId: this.location }).then((res) => {
+        if (res.success) {
+          this.projectList = res.result.records
+          console.log(this.resourceList)
         } else {
           this.$message.error(res.message)
         }
