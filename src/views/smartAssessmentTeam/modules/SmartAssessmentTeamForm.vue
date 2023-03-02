@@ -9,6 +9,11 @@
             </a-form-model-item>
           </a-col>
           <a-col :span="24">
+            <a-form-model-item label="考核年度" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="assessmentYear">
+              <a-input-number v-model="model.assessmentYear" placeholder="请输入考核年度" :min="0" style="width: 100%"></a-input-number>
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="24">
             <a-form-model-item label="组长" :labelCol="labelCol" :wrapperCol="wrapperCol" prop="teamLeader">
               <j-select-user-by-dep v-model="model.teamLeader" :multi="false" />
             </a-form-model-item>
@@ -74,6 +79,9 @@
           teamName: [
             { required: true, message: '请输入考核组名称!'},
             {validator: this.validateTeamName}
+          ],
+          assessmentYear: [
+            { required: true, message: '请输入考核年度!'},
           ],
           teamLeader: [
             { required: true, message: '请选择组长!'},

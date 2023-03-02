@@ -10,6 +10,11 @@
                 <a-input placeholder="请输入考核组名称( *查询内容* 可模糊匹配 )" v-model="queryParam.teamName"></a-input>
               </a-form-item>
             </a-col>
+            <a-col :xl="6" :lg="7" :md="8" :sm="24">
+              <a-form-item label="考核年度">
+                <a-input placeholder="请输入考核年度" v-model="queryParam.assessmentYear"></a-input>
+              </a-form-item>
+            </a-col>
             <a-col :xl='6' :lg='7' :md='8' :sm='24'>
             <span style='float: left;overflow: hidden;' class='table-page-search-submitButtons'>
               <a-button type='primary' @click='searchQuery' icon='search'>查询</a-button>
@@ -153,6 +158,11 @@
             title:'名称',
             align:"center",
             dataIndex: 'teamName'
+          },
+          {
+            title:'年度',
+            align:"center",
+            dataIndex: 'assessmentYear'
           },
           {
             title:'创建时间',
