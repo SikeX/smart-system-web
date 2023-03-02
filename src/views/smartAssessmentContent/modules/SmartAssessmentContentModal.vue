@@ -54,7 +54,7 @@
           <a-form-model-item v-if='model.isKey === 1' label='评分考核组' :labelCol='labelCol' :wrapperCol='wrapperCol'
                              prop='assTeam' >
 <!--            <j-search-select-tag v-model='model.assTeam' dict='smart_assessment_teamwheredel_flag=0,team_name,id' :disabled="disableSubmit"/>-->
-            <j-multi-select-tag v-model='model.assTeam' dictCode='smart_assessment_team,team_name,id,del_flag=0' :disabled="disableSubmit" placeholder="请选择评分考核组"/>
+            <j-multi-select-tag v-model='model.assTeam' :dictCode='teamCondition' :disabled="disableSubmit" placeholder="请选择评分考核组"/>
           </a-form-model-item>
           <a-form-model-item v-show='false' label='是否考核要点' :labelCol='labelCol' :wrapperCol='wrapperCol' prop='isKey'>
             <j-switch v-model='model.isKey' :options='[1, 0]' :disabled="disableSubmit"></j-switch>
@@ -79,13 +79,18 @@ export default {
       type: String,
       default: '',
       required: false
+    },
+    mainInfo: {
+      type: Object,
+      default: Object,
+      required: false
     }
   },
   watch: {
     mainId: {
       immediate: true,
       handler(val) {
-
+        this.teamCondition = 'smart_assessment_team,team_name,id,del_flag=0 AND assessment_year=' + this.mainInfo.assessmentYear
         // let params = {
         //   mission_id: val,
         //   is_key: 0
@@ -97,6 +102,7 @@ export default {
   data() {
     return {
       condition: '',
+      teamCondition: '',
       title: '操作',
       width: 800,
       visible: false,
