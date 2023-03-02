@@ -99,7 +99,7 @@
       </a-table>
     </div>
 
-    <smartAssessmentContent-modal ref='modalForm' @ok='modalFormOk' :mainId='mainId'></smartAssessmentContent-modal>
+    <smartAssessmentContent-modal ref='modalForm' @ok='modalFormOk' :mainId='mainId' :mainInfo='mainInfo'></smartAssessmentContent-modal>
   </a-card>
 </template>
 
