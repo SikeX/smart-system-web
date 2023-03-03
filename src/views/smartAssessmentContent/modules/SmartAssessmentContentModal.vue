@@ -27,7 +27,7 @@
           </a-form-model-item>
           <a-form-model-item v-if='model.isKey === 1' label='分值' :labelCol='labelCol' :wrapperCol='wrapperCol'
                              prop='point'>
-            <a-input-number v-model='model.point' placeholder='请输入分值' style='width: 100%' :min="0"
+            <a-input-number v-model='model.point' placeholder='请输入分值' style='width: 100%' :min="0" :step="0.1"
                             :disabled="disableSubmit"/>
           </a-form-model-item>
           <a-form-model-item v-if='model.isKey === 1' label='评分考核单位' :labelCol='labelCol' :wrapperCol='wrapperCol'
