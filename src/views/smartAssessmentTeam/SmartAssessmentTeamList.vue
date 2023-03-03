@@ -102,6 +102,9 @@
                 <a @click="handleDetail(record)">详情</a>
               </a-menu-item>
               <a-menu-item>
+                <a @click="handleCopy(record)">复制负责单位</a>
+              </a-menu-item>
+              <a-menu-item>
                 <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
                   <a>删除</a>
                 </a-popconfirm>
@@ -216,6 +219,16 @@
     methods: {
       showDepartList(record) {
         this.$refs.departListModal.edit(record)
+      },
+      handleCopy(record) {
+        let c_record = {
+          assessmentYear: parseInt(record['assessmentYear']) + 1,
+          departs: record['departs']
+        }
+
+        this.$refs.modalForm.edit(c_record);
+        this.$refs.modalForm.title = "新增";
+        this.$refs.modalForm.disableSubmit = false;
       },
       initDictConfig(){
       },

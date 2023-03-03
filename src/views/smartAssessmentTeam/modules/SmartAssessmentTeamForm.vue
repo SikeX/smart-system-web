@@ -142,6 +142,7 @@
         if(value){
           var params = {
             departIds: this.model.departs,
+            assessmentYear: this.model.assessmentYear,
             dataId: this.model.id
           };
           getAction("/smartAssessmentTeam/smartAssessmentTeam/duplicateCheck",params).then((res)=>{
